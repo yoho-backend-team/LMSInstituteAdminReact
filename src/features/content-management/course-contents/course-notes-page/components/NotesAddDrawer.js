@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseNote } from '../services/noteServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 const CourseNotesAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
@@ -23,7 +24,7 @@ const CourseNotesAddDrawer = (props) => {
   const [notesPdf, setnotesPdf] = useState('');
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
+  const [files, setFiles] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
     const data = {
@@ -64,7 +65,7 @@ const CourseNotesAddDrawer = (props) => {
   const defaultValues = {
     description: '',
     title: '',
-    branch: selectedBranchId,
+    branch: '',
     course: ''
   };
 
@@ -81,46 +82,64 @@ const CourseNotesAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(notesPdf);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    var bodyFormData = new FormData();
-    bodyFormData.append('branch_id', data.branch?.branch_id);
-    bodyFormData.append('course_id', data.course?.course_id);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('document', notesPdf);
-    console.log(bodyFormData);
+    const note_data = {
+      branch : data.branch.uuid,
+      course : data.course._id,
+      institute : useInstitute().getInstituteId(),
+      title  : data.title,
+      description : data.description,
+      file : data.pdf_file
+    }
+    
 
-    const result = await addCourseNote(bodyFormData);
+    const result = await addCourseNote(note_data);
 
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);
+      setValue("")
+      setFiles([])
       reset();
       toggle();
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      });
-      toast.error(errorMessage.trim());
+      
+      toast.error(result?.message);
     }
   };
 
   const handleSetPdf = (data) => {
     setnotesPdf(data);
-    setValue('pdf_file', data);
+    if (data.size > 1048576) {
+      return toast.success("pdf upload lesser than 1mb")
+    }
+    // setValue('pdf_file', data);
   };
 
   const handleClose = () => {
+    setnotesPdf("")
+    setValue("")
+    setValue("branch","")
+    setFiles([])
     setValue('contact', Number(''));
     toggle();
-    reset();
+    reset({
+      ...defaultValues,
+      branch: null,
+      course: '',
+    });
   };
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        ...defaultValues,
+        branch: null,
+      });
+    }
+  }, [open, reset, selectedBranchId]);
+  
 
   return (
     <Drawer
@@ -131,8 +150,10 @@ const CourseNotesAddDrawer = (props) => {
       ModalProps={{ keepMounted: true }}
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
-      <Header>
-        <Typography variant="h5">Add Notes</Typography>
+      <Header sx={{ paddingBottom: 0 }}>
+        <Typography variant="h2 " sx={{border:2,borderColor:"#0cce7b", fontSize: '1.4rem', fontWeight:"bold", borderRadius: 50, px: 2, py: 1 }}>
+        Add Notes
+        </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -149,10 +170,17 @@ const CourseNotesAddDrawer = (props) => {
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6), mt: 0 ,pt:0 }}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{
+            borderRadius: '8px', // Optional: Rounded corners
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Shadow effect
+            padding: '16px', // Add spacing inside the form
+            margin: '16px auto', // Center the form and add spacing outside
+            maxWidth: '600px', // Optional: Limit the form's width
+            backgroundColor: '#fff' // Optional: Background color
+          }}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} files={files} setFiles={setFiles} setValue={setValue} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
           </Grid>
 
@@ -160,7 +188,6 @@ const CourseNotesAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
               render={() => (
                 <Autocomplete
                   fullWidth
@@ -170,7 +197,7 @@ const CourseNotesAddDrawer = (props) => {
                     getActiveCoursesByBranch(newValue);
                   }}
                   options={branches ?? []}
-                  getOptionLabel={(option) => option.branch_name}
+                  getOptionLabel={(option) => option.branch_identity}
                   renderInput={(params) => (
                     <TextField
                       sx={{ mb: 2 }}
@@ -189,7 +216,6 @@ const CourseNotesAddDrawer = (props) => {
             <Controller
               name="course"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
                   value={value}
@@ -216,7 +242,6 @@ const CourseNotesAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -224,7 +249,7 @@ const CourseNotesAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Title"
                   onChange={onChange}
-                  placeholder="John Doe"
+                  placeholder="Testing , developing ,etc"
                   error={Boolean(errors.title)}
                   helperText={errors.title?.message}
                 />
@@ -235,7 +260,6 @@ const CourseNotesAddDrawer = (props) => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -243,7 +267,7 @@ const CourseNotesAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="description"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="Description about the Notes"
                   error={Boolean(errors.description)}
                   {...(errors.description && { helperText: errors.description.message })}
                 />

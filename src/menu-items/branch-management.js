@@ -32,7 +32,7 @@ const pages = {
           icon: icons.IconGitBranch,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_branch_view')
+          visible: hasPermission('can_read_branches','Branches')
         }
       ]
     }

@@ -1,17 +1,11 @@
-import { CardContent, TextField } from '@mui/material';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import { CardContent } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
-import Icon from 'components/icon';
+import StudyMaterialSkelton from 'components/cards/Skeleton/ContentSkeleton/MaterialSkelton';
 import StatusDialog, { default as ModulesDeleteModal } from 'components/modal/DeleteModel';
-import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import ModuleAddDrawer from 'features/content-management/course-contents/course-modules-page/components/ModuleAddDrawer';
+import ModuleCard from 'features/content-management/course-contents/course-modules-page/components/ModuleCard';
 import ModuleEdit from 'features/content-management/course-contents/course-modules-page/components/ModuleEdit';
 import ModuleHeader from 'features/content-management/course-contents/course-modules-page/components/ModuleTableHeader';
 import ModuleView from 'features/content-management/course-contents/course-modules-page/components/ModuleView';
@@ -24,6 +18,8 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const Modules = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -35,9 +31,22 @@ const Modules = () => {
   const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [refetch, setrefetch] = useState(false);
+  const [reFetch, setRefetch] = useState(false);
   const [statusValue, setStatusValue] = useState({});
+  const { show, hide } = useSpinner()
+  const [page,setPage] = useState(1)
 
-  console.log(selectedDeleteId);
+  const dispatch = useDispatch();
+  const Module = useSelector(selectCourseModules);
+  const ModuleLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const institute_id = useInstitute().getInstituteId()
+
+  useEffect(() => {
+    dispatch(getAllCourseModules(
+      { branch_id: selectedBranchId,institute_id:institute_id, page: '1' }
+    ));
+  }, [dispatch, selectedBranchId, refetch]);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -46,12 +55,11 @@ const Modules = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log(result.data);
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
   const userStatusObj = {
-    1: 'success',
-    0: 'error'
+    true: 'success',
+    false: 'error'
   };
 
   const handleRowClick = (params) => {
@@ -64,17 +72,22 @@ const Modules = () => {
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
-    const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
-    };
-    const response = await updateCourseModulesStatus(data);
-    if (response.success) {
-      toast.success(response.message);
+    try {
+     show() 
+     const data = {
+      is_active: !statusValue?.is_active,
+      module_id: statusValue?.uuid
+     };
+     const response = await updateCourseModulesStatus(data);
+     toast.success(response.message);
       setRefetch((state) => !state);
-    } else {
+      dispatch(getAllCourseModules(
+        { branch_id: selectedBranchId,institute_id:institute_id, page: page }
+      ));
+    } catch (error) {
       toast.error(response.message);
+    }finally{
+      hide()
     }
   };
 
@@ -84,7 +97,6 @@ const Modules = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('toogle pressed');
   };
 
   const handleDelete = useCallback((itemId) => {
@@ -93,7 +105,7 @@ const Modules = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedRow.id };
+    const data = { id: selectedRow.uuid };
     const result = await deleteCourseModule(data);
     if (result.success) {
       toast.success(result.message);
@@ -103,165 +115,10 @@ const Modules = () => {
     }
   };
 
-  const dispatch = useDispatch();
-  const Module = useSelector(selectCourseModules);
-  const ModuleLoading = useSelector(selectLoading);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(Module);
-  useEffect(() => {
-    dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: '1' }));
-  }, [dispatch, selectedBranchId, refetch]);
-
-  const RowOptions = ({ row }) => {
-    return (
-      <OptionsMenu
-        menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-        options={[
-          {
-            text: 'View',
-            icon: <Icon icon="tabler:eye" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                setViewModalOpen(true);
-                handleRowClick(row);
-              }
-            }
-          },
-          {
-            text: 'Edit',
-            icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                toggleEditUserDrawer();
-                handleRowClick(row);
-              }
-            }
-          },
-          {
-            text: 'Delete',
-            icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                handleDelete();
-                handleRowClick(row);
-              }
-            }
-          }
-        ]}
-      />
-    );
-  };
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  const columns = [
-    {
-      minWidth: 150,
-      headerName: 'Id',
-      field: 'employee_id',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 1,
-      minWidth: 320,
-      field: 'title',
-      headerName: 'Title',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                sx={{
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.title}
-              </Typography>
-              <Typography
-                sx={{
-                  color: 'text.secondary',
-                  fontSize: '0.75rem',
-                  mt: 1
-                }}
-              >
-                {row?.description}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-    {
-      minWidth: 220,
-      field: 'course',
-      headerName: 'course',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography
-              sx={{
-                color: 'text.secondary',
-                textTransform: 'capitalize'
-              }}
-            >
-              {row?.institute_branch_courses?.course_name}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-    {
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <div>
-            <TextField
-              size="small"
-              select
-              value={row?.is_active}
-              label="status"
-              id="custom-select"
-              sx={{
-                color: userStatusObj[row?.is_active]
-              }}
-              onChange={(e) => handleStatusValue(e, row)}
-              SelectProps={{
-                sx: {
-                  borderColor: row.is_active === '1' ? 'success' : 'error',
-                  color: userStatusObj[row?.is_active]
-                }
-              }}
-            >
-              <MenuItem value={1}>Active</MenuItem>
-              <MenuItem value={0}>Inactive</MenuItem>
-            </TextField>
-          </div>
-        );
-      }
-    },
-    {
-      minWidth: 180,
-      sortable: false,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions row={row} />
-    }
-  ];
 
-  console.log(selectedRow);
   return (
     <>
       <Grid container spacing={2}>
@@ -269,35 +126,47 @@ const Modules = () => {
           <ModuleHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         <Grid item xs={12}>
-          <Card>
+          <Grid>
             {ModuleLoading ? (
-              <ContentSkeleton />
+              <StudyMaterialSkelton />
             ) : (
-              <DataGrid
-                sx={{ p: 2 }}
-                autoHeight
-                getRowHeight={() => 'auto'}
-                rows={Module?.data}
-                columns={columns}
-                disableRowSelectionOnClick
-                hideFooterPagination
-                hideFooter
-              />
+              <Grid container spacing={2} sx={{ marginLeft: "20px", marginTop: "20px"}} >
+              {
+                Module?.data?.map((module,index) => (
+                  <Grid item xs={12} sm={6} md={4} key={module?.id}>
+                    <ModuleCard
+                      index={index}
+                      page={page}
+                      name={module?.title}
+                      description={module?.description}
+                      courseName={module?.course?.course_name}
+                      initialStatus={module?.is_active}
+                      module={module}
+                      handleStatusValue={handleStatusValue}
+                      handleRowClick={handleRowClick}
+                      setViewModalOpen={setViewModalOpen}
+                      toggleEditUserDrawer={toggleEditUserDrawer}
+                      handleDelete={handleDelete}
+                    />
+                  </Grid>
+                ))
+              }
+              </Grid>
             )}
-            {Module?.last_page !== 1 && (
+            { !ModuleLoading && Module?.last_page !== 1 && Module?.last_page !== 0 && (
               <CardContent>
                 <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
                   <Pagination
                     count={Module?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllCourseModules({ branch_id: selectedBranchId,institute_id:institute_id, page: page }));
                     }}
                   />
                 </Grid>
               </CardContent>
             )}
-          </Card>
+          </Grid>
         </Grid>
 
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} setRefetch={setrefetch} />
@@ -306,6 +175,7 @@ const Modules = () => {
           open={ModulesDeleteModalOpen}
           setOpen={setModulesDeleteModalOpen}
           description="Are you sure you want to delete this Modules?"
+          failureDescription="Delete request has been cancelled "
           title="Delete"
           handleSubmit={handleContentDelete}
         />

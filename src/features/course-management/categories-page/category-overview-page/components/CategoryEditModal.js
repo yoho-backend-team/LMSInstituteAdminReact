@@ -12,10 +12,13 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../../services/courseCategoryServices';
+import client from 'api/client';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
+import { useSpinner } from 'context/spinnerContext';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
-  const image = 'https://www.svgrepo.com/download/508699/landscape-placeholder.svg';
 
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
@@ -53,8 +56,9 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   });
 
   const [inputValue, setInputValue] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState(category?.image);
   const [selectedImage, setSelectedImage] = useState('');
+  const { show, hide } = useSpinner()
 
   // Function to handle closing the dialog
   const handleClose = useCallback(() => {
@@ -64,17 +68,22 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   }, [setValue, handleEditClose, reset]);
 
   // Function to handle image input change
-  const handleInputImageChange = useCallback((file) => {
+  const handleInputImageChange = useCallback(async(file) => {
+    show()
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
+    const image = files[0]
+    if (image.size > 1048576) {
+      hide()
+      return toast.success("image upload lesser than 1mb")
     }
+    const data = new FormData()
+    data.append("file",files[0])
+    const response = await client.file.upload(data)
+    setSelectedImage(response?.data?.file)
+    setImgSrc(response?.data.file)
+    setValue("image",response?.data?.file)
+    hide()
   }, []);
 
   // Styled components
@@ -102,20 +111,23 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
 
   // Effect to set the default value for category_name field
   useEffect(() => {
-    setValue('category_name', category?.category_name || ''); // Set the default value for category_name
+    setValue('category_name', category?.category_name || '');
+    setValue("image",category?.image) 
+    // Set the default value for category_name
   }, [category?.category_name, setValue]);
 
   // Form submission handler
   const onSubmit = useCallback(
     async (data) => {
-      const inputData = new FormData();
-      inputData.append('category_id', category?.category_id);
-      inputData.append('logo', selectedImage);
-      inputData.append('category_name', data?.category_name);
-      inputData.append('id', category?.id);
-
+      
+      const data1 ={
+            category_name:data.category_name,
+            image : category?.image?category.image:data.image,
+            id:category.uuid
+      }
       try {
-        const result = await updateCourseCategory(inputData);
+        show()
+        const result = await updateCourseCategory(data1);
         if (result.success) {
           setCategoryRefetch((state) => !state);
           toast.success(result.message);
@@ -124,6 +136,8 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
         }
       } catch (error) {
         console.log(error);
+      }finally{
+        hide()
       }
     },
     [category, selectedImage, setCategoryRefetch]
@@ -136,12 +150,12 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 600 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 500,borderRadius: 2  } }}
       >
         <DialogTitle
           id="user-view-edit"
           sx={{
-            textAlign: 'center',
+            ml:-7,mt:-3,
             fontSize: '1.5rem !important',
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
@@ -161,14 +175,21 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
                 {!selectedImage && (
                   <ImgStyled
-                    src={category?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}` : imgSrc}
+                    src={category?.image ? `${getImageUrl(category.image)}` : imagePlaceholder}
                     alt="Profile Pic"
                   />
                 )}
 
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                {selectedImage && <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" />}
+              </Box>
                 <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" sx={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', 
+                  },py:0.8,ml:13,mb:3
+                }}>
                     Upload New Image
                     <input
                       hidden
@@ -177,15 +198,14 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                       accept="image/png, image/jpeg"
                       onChange={handleInputImageChange}
                       id="account-settings-upload-image"
+                      
                     />
                   </ButtonStyled>
                 </div>
-              </Box>
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="category_name"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
@@ -201,11 +221,16 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                 />
               </Grid>
               <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                  Submit
-                </Button>
-                <Button variant="tonal" color="error" onClick={handleClose}>
+                <Button variant="contained" color="error" onClick={handleClose} sx={{ mr: 3, backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', } }}>
                   Cancel
+                </Button>
+                <Button type="submit" variant="contained" sx={{backgroundColor: 'black',
+                  color: 'white','&:hover': {
+                    backgroundColor: '#353636', }}} >
+                  Save Changes
                 </Button>
               </Grid>
             </Grid>

@@ -1,54 +1,49 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, styled } from '@mui/material';
+import { Grid, styled, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import CloseIcon from '@mui/icons-material/Close';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { addCourseCategory } from '../../services/courseCategoryServices';
+import { getImageUrl } from 'utils/imageUtils';
+import client from 'api/client';
+import { useSpinner } from 'context/spinnerContext';
 
 const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
-  const image =
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-
-  // Function to handle error messages
-  const showErrors = useCallback((field, valueLen, min) => {
-    if (valueLen === 0) {
-      return `${field} field is required`;
-    } else if (valueLen > 0 && valueLen < min) {
-      return `${field} must be at least ${min} characters`;
-    } else {
-      return '';
-    }
-  }, []);
-
-  // Schema for form validation
   const schema = useMemo(
     () =>
       yup.object().shape({
         category: yup
           .string()
           .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
-          .required('Category Name is required')
+          .required('Category Name is required'),
+        image: yup
+          .string()
+          .required("Category Image is required")
       }),
-    [showErrors]
+    []
   );
-
+  
   const defaultValues = {
-    course: ''
+    category: '',
+    image: ''
   };
 
-  // Form control using react-hook-form
   const {
     reset,
     control,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -56,158 +51,204 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
     resolver: yupResolver(schema)
   });
 
-  const [inputValue, setInputValue] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+  const { show, hide } = useSpinner()
 
   const handleClose = useCallback(() => {
     reset();
     handleAddClose();
   }, [reset, handleAddClose]);
 
-  // Function to handle image input change
-  const handleInputImageChange = useCallback((file) => {
-    const reader = new FileReader();
+  const handleInputImageChange = useCallback(async (file) => {
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
+    const image = files[0]
+     if (image.size > 1048576) {
+     return toast.success("image upload lesser than 1mb")
+    }
+    show()
+    if (files && files[0]) {
+      const img = new Image();
+      img.src = URL.createObjectURL(files[0]);
+
+      img.onload = async () => {
+        // Check if the resolution is within the allowed range
+        // if ((img.width >= 300 && img.width <= 388)) {
+          const data = new FormData();
+          data.append("file", files[0]);
+
+          const response = await client.file.upload(data);
+          setSelectedImage(response.data.file);
+          setValue("image",response?.data?.file)
+          setImgSrc(response.data.file);
+          hide()
+        // } else {
+        //   hide()
+        //   toast.error('Image resolution must be between 300x300 and 388x300 pixels');
+        // }
+      };
+
+      img.onerror = () => {
+        hide()
+        toast.error('Failed to load image');
+      };
     }
   }, []);
 
-  // Styled components
+  const handleRemoveImage = useCallback(() => {
+    setSelectedImage('');
+    setImgSrc('');
+  }, []);
+
   const ImgStyled = useMemo(
     () =>
       styled('img')(({ theme }) => ({
-        width: 100,
-        height: 100,
-        marginRight: theme.spacing(2),
-        borderRadius: theme.shape.borderRadius
+        width: 150,
+        height: 150,
+        marginBottom: theme.spacing(2),
+        borderRadius: theme.shape.borderRadius,
+        border: `1px solid ${theme.palette.divider}`,
+        objectFit: 'cover'
       })),
     []
   );
 
-  const ButtonStyled = useMemo(
-    () =>
-      styled(Button)(({ theme }) => ({
-        [theme.breakpoints.down('sm')]: {
-          width: '100%',
-          textAlign: 'center'
-        }
-      })),
-    []
-  );
-
-  // Form submission handler
   const onSubmit = useCallback(
     async (data) => {
-      var bodyFormData = new FormData();
-      bodyFormData.append('logo', selectedImage);
-      bodyFormData.append('category_name', data.category);
-
-      const result = await addCourseCategory(bodyFormData);
-
-      if (result.success) {
+      try {
+        show()
+        const result = await addCourseCategory({ category_name: data.category, image: selectedImage });
         reset();
         handleAddClose();
         setCategoryRefetch((state) => !state);
         toast.success(result.message);
         setSelectedImage('');
-        setImgSrc(image);
-      } else {
-        toast.error(result.message);
+        setImgSrc('');
+      } catch (error) {
+        hide()
+        toast.error(error.message);
+      }finally{
+        hide()
       }
     },
     [selectedImage, reset, handleAddClose, setCategoryRefetch]
   );
-
   return (
-    <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="user-view-edit"
-        aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 600 } }}
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="user-view-edit"
+      aria-describedby="user-view-edit-description"
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 500, borderRadius: 2 } }}
+    >
+      <DialogTitle
+        id="user-view-edit"
+        sx={{
+          ml:-7,mt:-3,
+          fontSize: '1.5rem !important',
+          fontWeight: 'bold',
+          px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
+          pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
+        }}
       >
-        <DialogTitle
-          id="user-view-edit"
-          sx={{
-            textAlign: 'center',
-            fontSize: '1.5rem !important',
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
-            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
-          }}
-        >
-          Add Category
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
-            pb: (theme) => `${theme.spacing(5)} !important`,
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-          }}
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-                <ImgStyled src={imgSrc} alt="Profile Pic" />
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload
-                    <input
-                      hidden
-                      type="file"
-                      value={inputValue}
-                      accept="image/png, image/jpeg"
-                      onChange={handleInputImageChange}
-                      id="account-settings-upload-image"
-                    />
-                  </ButtonStyled>
-                </div>
-              </Box>
-
+        Add Category
+      </DialogTitle>
+        <Typography variant="caption" color="textSecondary" sx={{mx:4,ml:3,color:'grey',fontSize: '0.9rem !important',}}>
+        Create a new course category with an image.
+              </Typography>
+      <DialogContent
+        sx={{
+          pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
+          pb: (theme) => `${theme.spacing(5)} !important`,
+          px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+        }}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+          <Grid item xs={12}>
               <Controller
                 name="category"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
                     value={value}
-                    sx={{ mb: 4 }}
                     label="Category Name"
                     onChange={onChange}
-                    placeholder="John Doe"
+                    placeholder="Enter category name"
                     error={Boolean(errors.category)}
-                    {...(errors.category && { helperText: errors.category.message })}
+                    helperText={errors.category ? errors.category.message : ''}
                   />
                 )}
               />
             </Grid>
-            <Grid sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="error" onClick={handleClose}>
-                Cancel
-              </Button>
+
+            <Grid item xs={12} display="flex" justifyContent="center" flexDirection="column" alignItems="center">
+              {imgSrc ? (
+                <>
+                  <ImgStyled src={getImageUrl(imgSrc)} alt="Category" />
+                  <Box>
+                    <Button variant="outlined" color="error" onClick={handleRemoveImage} startIcon={<CloseIcon />}>
+                      Remove
+                    </Button>
+                  </Box>
+                </>
+              ) : (
+                <Button variant="contained" component="label" 
+                startIcon={<Icon icon="tabler:upload" />}
+                sx={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', 
+                  },px:5,py:0.8
+                }} >
+                  Upload Image
+                  <input
+                    hidden
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    onChange={handleInputImageChange}
+                    
+                  />
+                </Button>
+              )}
+              <Typography variant="caption" color="grey" sx={{m:2}}>
+              Recommended: 388x300 pixels <br />
+              Accepted formats: PNG, JPEG
+              </Typography>
+              { errors.image &&
+              <Typography  sx={{ color: "#EA5455", fontSize: "0.75rem",fontWeight: 400}}>
+                {errors?.image?.message}
+              </Typography>
+              }
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </Grid>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button variant="contained"  onClick={handleClose} sx={{ mr: 2,
+                  backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', 
+                  } }}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" sx={{backgroundColor: 'black',
+                  color: 'white','&:hover': {
+                    backgroundColor: '#353636', }}}>
+              Create category
+            </Button>
+          </Box>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 CategoryAddModal.propTypes = {
-  open: PropTypes.any,
-  handleAddClose: PropTypes.any,
-  setCategoryRefetch: PropTypes.any
+  open: PropTypes.bool,
+  handleAddClose: PropTypes.func.isRequired,
+  setCategoryRefetch: PropTypes.func.isRequired
 };
 
 export default CategoryAddModal;

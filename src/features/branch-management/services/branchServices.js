@@ -1,20 +1,18 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
-const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-management/institute-branches`;
+const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/`;
 
 export const getAllBranchesByInstitute = async (data) => {
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}/get-by-institute?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.branch.getAll(data)
+
     // Check if the response status is successful
-    if (response.data.status) {
+    console.log("Branch Response",response)
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -29,135 +27,96 @@ export const getAllBranchesByInstitute = async (data) => {
   }
 };
 
-export const getActiveBranches = async () => {
+export const getActiveBranches = async (params) => {
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}/list-branch-by-auth-user`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Active Branches. Status: ${response.status}`);
-    }
+    const response = await client.branch.getAll(params)
+   return response
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getActiveBranches:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 
 export const addBranch = async (data) => {
   try {
-    const response = await axios.post(`${BRANCH_API_ENDPOINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
+    const response = await client.branch.create(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Branch created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Branch' };
-    }
+    return { success: true, message: 'Branch created successfully' };
   } catch (error) {
     console.error('Error in addBranch:', error);
-    throw error;
+    return { success: false, message: error.response.data.message? error.response.data.message : 'Failed to create Branch' };
   }
 };
 
 export const deleteBranch = async (data) => {
   try {
-    const response = await axios.delete(`${BRANCH_API_ENDPOINT}/delete`, {
+    const response = await axios.delete(`${BRANCH_API_ENDPOINT}${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params: data
     });
 
-    if (response.data.status) {
-      return { success: true, message: 'Branch deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Branch' };
-    }
+    return { success: true, message: 'Branch deleted successfully' };
   } catch (error) {
     console.error('Error in deleteBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to delete Branch' };
   }
 };
 
 export const updateBranch = async (data) => {
   try {
-    const response = await axios.post(`${BRANCH_API_ENDPOINT}/update`, data, {
+    const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Branch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Branch' };
-    }
+    
+    return { success: true, message: 'Branch updated successfully' };
   } catch (error) {
     console.error('Error in updateBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to update Branch' };
   }
 };
 
 export const updateBranchStatus = async (data) => {
-  console.log(data);
   try {
-    const response = await axios.post(`${BRANCH_API_ENDPOINT}/status-change`, data, {
+    const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Branch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Branch' };
-    }
+   
+    return { success: true, message: 'Branch updated successfully' };
   } catch (error) {
     console.error('Error in updateBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const getBranchById = async (data) => {
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}/get-by-branch-id`, {
+    const response = await axios.get(`${BRANCH_API_ENDPOINT}${data.branch_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params: data
     });
-    console.log('getBranchById:', response);
+    
     // Check if the response status is successful
+    
     if (response.data.status) {
       return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch BranchesById. Status: ${response.status}`);
     }
-  } catch (error) {
+  } 
+  catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getBranchById:', error);
     // Throw the error again to propagate it to the calling function/component

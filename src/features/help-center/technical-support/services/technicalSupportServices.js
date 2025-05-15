@@ -1,18 +1,19 @@
 // TechnicalSupportService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const TECHNICAL_SUPPORT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/TechnicalSupport-management/TechnicalSupport`;
 
 export const getAllTechnicalSupports = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/read-all-student-notifications`, {
+    const response = await axios.get(`${TECHNICAL_SUPPORT_API_ENDPOINT}/read-all-student-notifications`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { branch_id: selectedBranchId }
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -34,7 +35,7 @@ export const searchTechnicalSupports = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -55,7 +56,7 @@ export const addTechnicalSupport = async (data) => {
     const response = await axios.post(`${TECHNICAL_SUPPORT_API_ENDPOINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -75,7 +76,7 @@ export const deleteTechnicalSupport = async (TechnicalSupportId) => {
     const response = await axios.delete(`${TECHNICAL_SUPPORT_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: TechnicalSupportId }
     });
@@ -96,12 +97,11 @@ export const updateTechnicalSupport = async (data) => {
     const response = await axios.put(`${TECHNICAL_SUPPORT_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'TechnicalSupport updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TechnicalSupport' };

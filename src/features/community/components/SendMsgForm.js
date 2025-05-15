@@ -5,15 +5,17 @@ import CustomTextField from 'components/mui/text-field';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { getAllBatchChats, sendMessage } from './../services/communityServices';
+import { getUserDetails } from 'utils/check-auth-state';
 
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(0.6),
   boxShadow: theme.shadows[1],
+  backgroundColor: "#2A2F32",
+  padding: "15px",
+  gap: "20px",
   justifyContent: 'space-between',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper
 }));
 
 const Form = styled('form')(({ theme }) => ({
@@ -21,48 +23,53 @@ const Form = styled('form')(({ theme }) => ({
 }));
 
 const SendMsgForm = (props) => {
-  const { selectedBatch, setChats } = props;
+  const { selectedBatch, setChats ,socket} = props;
   const [msg, setMsg] = useState('');
-  console.log(selectedBatch);
+  const user = getUserDetails()
+
   const getMessages = async () => {
-    const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?.batch_community?.institute_branch_comm_id });
+    const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?._id });
     if (result) {
       setChats(result?.data?.data);
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(getMessages, 5000);
-    getMessages();
-    return () => clearInterval(intervalId);
-  }, [selectedBatch]);
+  // useEffect(() => {
+  //   const intervalId = setInterval(getMessages, 5000);
+  //   getMessages();
+  //   return () => clearInterval(intervalId);
+  // }, [selectedBatch]);
 
   const handleSendMsg = async (e) => {
     e.preventDefault();
+    socket.emit("sendMessage", { senderId : user?._id, content: msg, groupId : selectedBatch?._id, name : user?.full_name || user?.first_name  }, (response) => {
+    });
 
-    const data = {
-      inst_batch_community_id: selectedBatch?.batch_community?.id,
-      message: msg
-    };
-
-    const response = await sendMessage(data);
-    if (response) {
-      getMessages(selectedBatch);
-    }
+    // const response = await sendMessage(data);
+    // if (response) {
+    //   getMessages(selectedBatch);
+    // }
 
     setMsg('');
   };
+  
+  console.log('Selected Batch:', selectedBatch);
+console.log('Socket Connected:', socket?.connected);
+
 
   return (
-    <Form onSubmit={handleSendMsg}>
+    <Form onSubmit={handleSendMsg} sx={{ backgroundColor: "#2A2F32"}}>
       <ChatFormWrapper>
-        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: "20px", backgroundColor: "#202C33" }}>
           <CustomTextField
             fullWidth
             value={msg}
             placeholder="Type your message here…"
             onChange={(e) => setMsg(e.target.value)}
             sx={{
+              borderRadius: "8px",
+              backgroundColor: "#2A3942",
+              color: "white",
               '& .Mui-focused': { boxShadow: 'none !important' },
               '& .MuiInputBase-input:not(textarea).MuiInputBase-inputSizeSmall': {
                 p: (theme) => theme.spacing(1.875, 2.5)

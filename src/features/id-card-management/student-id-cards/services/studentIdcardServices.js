@@ -1,30 +1,15 @@
 // studentIdCardService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
-const STUDENT_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/id-card-management/student`;
+const STUDENT_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/studentidcard`;
 
 export const getAllStudentIdCards = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ID_CARDS_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Student Id Cards. Status: ${response.status}`);
-    }
+    const response = await client.id_cards.student.get_all(data)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllStudentIdCards:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
@@ -34,7 +19,7 @@ export const searchStudentIdCards = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -55,7 +40,7 @@ export const addStudentIdCard = async (data) => {
     const response = await axios.post(`${STUDENT_ID_CARDS_API_ENDPOINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -75,7 +60,7 @@ export const deleteStudentIdCard = async (StudentIdCardId) => {
     const response = await axios.delete(`${STUDENT_ID_CARDS_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: StudentIdCardId }
     });
@@ -96,12 +81,11 @@ export const updateStudentIdCard = async (data) => {
     const response = await axios.put(`${STUDENT_ID_CARDS_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentIdCard updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentIdCard' };
@@ -112,16 +96,15 @@ export const updateStudentIdCard = async (data) => {
   }
 };
 
-export const updateStudentIdCardStatus = async (data) => {
+export const updateStudentIdCardStatus = async (uuid, data) => {
   try {
-    const response = await axios.post(`${STUDENT_ID_CARDS_API_ENDPOINT}/status-update`, data, {
+    const response = await axios.put(`${STUDENT_ID_CARDS_API_ENDPOINT}/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Student updated successfully' };
     } else {

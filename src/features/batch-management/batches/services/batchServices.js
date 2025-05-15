@@ -1,99 +1,63 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
-const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/batch-management/institute-batches`;
+const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute`;
 
 export const getAllBatchesByBranch = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.batch.getAll(data)
+    console.log('batches response in services:', response);
+
     // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batches. Status: ${response.status}`);
-    }
+
+    return response;   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllBatches:', error);
 
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
 export const getAllBatches = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/get-all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batches. Status: ${response.status}`);
-    }
+    const response = await client.batch.getAll(data)
+   
+    return { success: true, data: response.data };
+   
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllBatches:', error);
-
+ 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch batches. Status: ${error}`);
   }
 };
 export const getBatchesByCourse = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/get-batch-by-course-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    console.log('batches sending data:', data);
+    const response = await client.batch.getAll(data)
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batches. Status: ${response.status}`);
-    }
-  } catch (error) {
+    console.log('batch api response',response.data);
+    
+      return { success: true, data: response.data };
+      
+     } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllBatches:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch batches. Status: ${error}`);
   }
 };
 
 export const getBatchDetails = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.batch.getWithId(data)
+
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return {
         success: true,
-        data: response?.data?.data
+        data: response?.data
       };
     } else {
       // If the response status is not successful, throw an error
@@ -113,11 +77,11 @@ export const getAllActiveBatchesByCourse = async (data) => {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-course-id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -136,14 +100,9 @@ export const getAllActiveBatchesByCourse = async (data) => {
 
 export const addBatch = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.batch.create(data)
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'Batch created successfully' };
     } else {
       return { success: false, message: 'Failed to create batch' };
@@ -156,63 +115,33 @@ export const addBatch = async (data) => {
 
 export const deleteBatch = async (data) => {
   try {
-    const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.batch.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Batch deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Batch' };
-    }
+    return { success: true, message: 'Batch deleted successfully' };
   } catch (error) {
     console.error('Error in deleteBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateBatch = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.batch.update(data)
 
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'Batch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update batch' };
-    }
+    return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
     console.error('Error in updateBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateBatchStatus = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/status-change`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Batch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update batch' };
-    }
+    const response = await client.batch.update(data)
+ 
+    return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
     console.error('Error in updateBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };

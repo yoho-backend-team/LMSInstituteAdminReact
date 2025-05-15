@@ -32,7 +32,7 @@ const pages = {
           icon: icons.IconCalendarEvent,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_attendances_view')
+          visible: hasPermission('can_view_student_attendances','Student Attendances')
         },
         {
           id: 'teaching-staff-attendances',
@@ -42,19 +42,19 @@ const pages = {
           url: '/attendance-management/teaching-staff-attendances',
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_teaching_staff_attendance_view')
+          visible: hasPermission('can_view_teaching_staff_attendance',"TeachingStaff Attendances")
         },
-        {
-          id: 'non-teaching-staff-attendances',
-          title: 'Non Teaching Staff Attendances',
-          icon: IconCalendarEvent,
-          type: 'item',
-          url: '/attendance-management/non-teaching-staff-attendances',
-          target: false,
+        // {
+        //   id: 'non-teaching-staff-attendances',
+        //   title: 'Non Teaching Staff Attendances',
+        //   icon: IconCalendarEvent,
+        //   type: 'item',
+        //   url: '/attendance-management/non-teaching-staff-attendances',
+        //   target: false,
 
-          breadcrumbs: false,
-          visible: hasPermission('inst_perm_non_teaching_staff_attendance_view')
-        }
+        //   breadcrumbs: false,
+        //   visible: hasPermission('can_view_non_teaching_staff_attendance','NonTeachingStaff Attendances')
+        // }
       ]
     }
   ]

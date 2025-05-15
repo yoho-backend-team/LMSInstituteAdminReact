@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 
-// material-ui
+
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Typography } from '@mui/material';
 
-// project imports
+
 import MainCard from 'components/cards/MainCard';
 import SkeletonEarningCard from 'components/cards/Skeleton/EarningCard';
 
-// assets
+
 import Icon from 'components/icon';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -51,7 +51,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const CoursesCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
-  console.log('dataCheck', branchData.InstituteUserCount);
   return (
     <>
       {isLoading ? (
@@ -62,7 +61,20 @@ const CoursesCard = ({ isLoading, branchData }) => {
             <Grid container direction="column">
               <Grid item>
                 <Grid container sx={{justifyContent:'center',display:'flex'}}>
-                  <Grid item >
+                  <Grid item xs={6} sx={{ display: "flex", justifyContent: "center"}} >
+                    <Avatar  
+                      variant="rounded"
+                      sx={{
+                        ...theme.typography.commonAvatar,
+                        ...theme.typography.largeAvatar,
+                        backgroundColor: theme.palette.primary[800],
+                        mt: 1
+                      }}
+                    >
+                      <Icon icon="tabler:books" color="white" />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs={6} sx={{ display: "flex", justifyContent: "center",zIndex: 1000}} >
                     <Avatar  
                       variant="rounded"
                       sx={{
@@ -81,7 +93,7 @@ const CoursesCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.StaffCount}
+                      {branchData.courses ?? 0}
                     </Typography>
                   </Box>
 
@@ -100,7 +112,7 @@ const CoursesCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.StaffCount}
+                      {branchData.batches ?? 0}
                     </Typography>
                   </Box>
 

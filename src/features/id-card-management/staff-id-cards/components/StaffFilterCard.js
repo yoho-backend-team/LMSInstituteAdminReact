@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -9,17 +9,25 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StaffFilterCard = (props) => {
   const dispatch = useDispatch();
 
-  const { handleSearch, selectedBranchId, searchValue, filterstatusValue, handleFilterByStatus } = props;
+  const { handleSearch, selectedBranchId, searchValue, filterstatusValue } = props;
 
   const [staffValue, setStaffValue] = useState('');
+  const [statusValue, setStatusValue] = useState('');
 
   const handleFilterByStaffType = (e) => {
     setStaffValue(e.target.value);
-    const data = { type: e.target.value, branch_id: selectedBranchId };
+    const data = { type: e.target.value, branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' };
+    dispatch(getAllStaffIdCards(data));
+  };
+
+  const handleFilterByStatus = (e) => {
+    setStatusValue(e.target.value);
+    const data = { isActive: e.target.value, branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' };
     dispatch(getAllStaffIdCards(data));
   };
 
@@ -27,9 +35,10 @@ const StaffFilterCard = (props) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Card>
-            <CardHeader title="ID card" />
-            <CardContent sx={{ pt: 0 }}>
+            <Typography variant='h2'>Staff ID card</Typography>
+          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
+            {/* <CardHeader sx={{textAlign:'center'}} title="Staff ID card" /> */}
+            <CardContent sx={{ pt: 0, display: "none" }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -41,7 +50,7 @@ const StaffFilterCard = (props) => {
                   >
                     <MenuItem value="">Select Option</MenuItem>
                     <MenuItem value="teaching">Teaching</MenuItem>
-                    <MenuItem value="non_teaching">Non Teaching</MenuItem>
+                    <MenuItem value="nonteaching">Non Teaching</MenuItem>
                   </TextField>
                 </Grid>
 
@@ -51,11 +60,11 @@ const StaffFilterCard = (props) => {
                     fullWidth
                     label="Status"
                     defaultValue={''}
-                    SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
+                    SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
                     <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
+                    <MenuItem value={true}>Active</MenuItem>
+                    <MenuItem value={false}>Inactive</MenuItem>
                   </TextField>
                 </Grid>
 
@@ -72,11 +81,11 @@ const StaffFilterCard = (props) => {
 };
 
 StaffFilterCard.propTypes = {
-  handleSearch: PropTypes.any,
-  selectedBranchId: PropTypes.any,
-  searchValue: PropTypes.any,
-  filterstatusValue: PropTypes.any,
-  handleFilterByStatus: PropTypes.any
+  handleSearch: PropTypes.func,
+  selectedBranchId: PropTypes.string,
+  searchValue: PropTypes.string,
+  filterstatusValue: PropTypes.string,
+  handleFilterByStatus: PropTypes.func
 };
 
 export default StaffFilterCard;

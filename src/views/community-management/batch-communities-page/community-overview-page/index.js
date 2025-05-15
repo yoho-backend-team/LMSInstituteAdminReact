@@ -12,6 +12,10 @@ import SidebarLeft from 'features/community/components/SidebarLeft';
 import { getAllCommunities } from 'features/community/redux/communityThunks';
 import { selectCommunities } from 'features/community/redux/communitySelectors';
 import { getCommunityDetails } from 'features/community/services/communityServices';
+import { io } from 'socket.io-client';
+import { useSpinner } from 'context/spinnerContext';
+import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem } from 'utils/localStroageService';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -31,7 +35,9 @@ const Community = () => {
   const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(communities);
+  const { showSpinner, hideSpinner } = useSpinner();
+  const [messages, setMessages] = useState([]);
+
   const theme = useTheme();
   const dispatch = useDispatch();
   const hidden = useMediaQuery(theme.breakpoints.down('lg'));
@@ -40,6 +46,7 @@ const Community = () => {
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
   const sidebarWidth = smAbove ? 360 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
+  const [socket, setSocket] = useState(null);
 
   const statusObj = {
     busy: 'error',
@@ -49,11 +56,54 @@ const Community = () => {
   };
 
   useEffect(() => {
-    const data = {
-      institute_branch_id: selectedBranchId
+    const socket = io(process.env.REACT_APP_PUBLIC_API_URL);
+    setSocket(socket);
+  }, []);
+
+  const userData = getSecureItem("userData");
+  const institute = getSecureItem('institute');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = {
+        branchid: selectedBranchId,
+        userId: userData._id,
+        instituteId: institute._id
+      };
+
+      const response = await dispatch(getAllCommunities(data));
+      if (response && response.data.data && response.data.data.length > 0) {
+        const chatId = response.data.data[0]._id;
+        const updatedData = { ...data, chatId };
+      }
     };
-    dispatch(getAllCommunities(data));
-  }, [dispatch, selectedBranchId]);
+    fetchData();
+  }, [dispatch, selectedBranchId, userData._id, institute._id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = {
+        branchid: selectedBranchId,
+        userId: userData._id,
+        instituteId: institute._id
+      };
+
+      const response = await dispatch(getAllCommunities(data));
+
+      if (response && response.data.data && response.data.data.length > 0) {
+        const chatId = response.data.data[0]._id;
+        const updatedData = { ...data, chatId };
+
+        const messages = await getAllBatchChats(updatedData);
+        if (messages) {
+          setChats(messages.data);
+        }
+      }
+    };
+
+    fetchData();
+  }, [dispatch, selectedBranchId, chats]);
+
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
@@ -61,14 +111,38 @@ const Community = () => {
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = async () => {
-    const result = await getCommunityDetails({ batch_id: selectedBatch?.batch_community?.institute_batch_id });
-    if (result) {
-      setCommunityDetails(result?.data?.data);
+    console.log("Profile sidebar toggle clicked!");
+    
+    if (!selectedBatch) {  // Exit if no batch is selected
+      console.warn("⚠️ selectedBatch is null! Cannot fetch community details.");
+      return;  
     }
-    console.log('result  yuyueyu ', result);
+    try {
+      const result = await getCommunityDetails({ chatId: selectedBatch._id });
+  
+      if (result) {
+        console.log("✅ Community details fetched:", result.data);
+        setCommunityDetails(result.data);
+      } else {
+        console.warn("❌ Failed to fetch community details.");
+      }
+    } catch (error) {
+      console.error("🔥 Error fetching community details:", error);
+    }
+  
+    setUserProfileRightOpen((prev) => {
+      console.log("🟢 Toggling userProfileRightOpen:", !prev);
+      return !prev;
+    });
+  
+
+    const result = await getCommunityDetails({ chatId: selectedBatch._id });
+    if (result) {
+      setCommunityDetails(result?.data);
+    }
     setUserProfileRightOpen(!userProfileRightOpen);
   };
-  console.log(selectChat);
+
   const [loading, setLoading] = useState(true);
 
   useTimeout(() => {
@@ -114,9 +188,13 @@ const Community = () => {
             handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
             communities={communities}
             setChats={setChats}
+            chats={chats}
             setSelectedBatch={setSelectedBatch}
             setCommunityDetails={setCommunityDetails}
             communityDetails={communityDetails}
+            socket={socket}
+            setMessages={setMessages}
+            messages={messages}
           />
           <ChatContent
             store={store}
@@ -134,6 +212,9 @@ const Community = () => {
             selectedBatch={selectedBatch}
             setChats={setChats}
             communityDetails={communityDetails}
+            socket={socket}
+            messages={messages}
+            setMessages={setMessages}
           />
         </Box>
       )}

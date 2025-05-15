@@ -6,7 +6,9 @@ export const getAllBatches = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllBatches(data); // Implement this function in your services
-    dispatch(setBatches(response?.data?.data));
+    console.log('batches response in thunks:', response);
+    dispatch(setBatches(response));
+    return response?.course_id;
   } catch (error) {
     console.error(error);
   } finally {

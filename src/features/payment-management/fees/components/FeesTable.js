@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -31,6 +31,10 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
+import jsPDF from 'jspdf';
+import { useInstitute } from 'utils/get-institute-details';
+import NoDataFoundComponent from 'components/empty/noDataFound';
+// import { useSpinner } from 'context/spinnerContext';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -42,9 +46,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row) => {
   if (row?.students?.image) {
-    return (
-      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.students?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
-    );
+    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.paid_amount}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -52,7 +54,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.name || 'John Doe')}
+        {getInitials(row?.student?.data?.data?.fullname || '')}
       </Avatar>
     );
   }
@@ -75,7 +77,6 @@ const userStatusObj = {
 };
 
 const FeesTable = () => {
-  // ** State
   const [dates, setDates] = useState([]);
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -84,6 +85,7 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  // const { show, hide } = useSpinner();
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -100,6 +102,7 @@ const FeesTable = () => {
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
+
   useEffect(() => {
     dispatch(
       getAllStudentFees({
@@ -115,6 +118,14 @@ const FeesTable = () => {
 
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
+  };
+  const handleDownload = (row) => {
+    const doc = new jsPDF();
+    doc.text(`Transaction ID: ${row.transaction_id}`, 10, 10);
+    doc.text(`Student Name: ${row.student.full_name}`, 10, 20);
+    doc.text(`Amount Paid: $${row.paid_amount || 0}`, 10, 30);
+    doc.text(`Payment Date: ${row.payment_date}`, 10, 40);
+    doc.save(`Transaction_${row.transaction_id}.pdf`);
   };
 
   const handleOnChangeRange = (dates) => {
@@ -133,9 +144,11 @@ const FeesTable = () => {
   };
 
   const [batches, setBatches] = useState([]);
+
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      institute_id: useInstitute().getInstituteId()
     };
     getBatches(data);
   }, [selectedBranchId]);
@@ -158,7 +171,7 @@ const FeesTable = () => {
 
   // Handle branch deletion
   const handleFeeDelete = async () => {
-    const result = await deleteStudentFee({ id: selectedFeeDeleteId });
+    const result = await deleteStudentFee({ transaction_id: selectedFeeDeleteId });
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -171,6 +184,21 @@ const FeesTable = () => {
     setFeesViewUserOpen(!feesViewOpen);
   };
 
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentFees({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+    },
+    [dispatch]
+  );
+
+  // const history = StudentFees?.payment_history || [];
+  // console.log(history,'history')
+  // console.log(StudentFees,"selectedRows")
+
   const defaultColumns = [
     {
       flex: 0.1,
@@ -178,8 +206,8 @@ const FeesTable = () => {
       field: 'id',
       headerName: 'ID',
       renderCell: ({ row }) => (
-        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-          {`#${row.id}`}
+        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row?.studentfee_id}`}>
+          {`#${row?.id}`}
         </Typography>
       )
     },
@@ -188,7 +216,12 @@ const FeesTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transaction_id}</Typography>
+
+      renderCell: ({ row }) => {
+        // Assuming payment_history is an array and you want to show the first entry
+        const paymentHistory = row?.payment_history?.[0] || {};
+        return <Typography sx={{ color: 'text.secondary' }}>{paymentHistory.transaction_id || 'N/A'}</Typography>;
+      }
     },
     {
       flex: 1.25,
@@ -201,10 +234,10 @@ const FeesTable = () => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.students.first_name}
+                {row?.student?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row.students.email}
+                {row?.student?.email}
               </Typography>
             </Box>
           </Box>
@@ -216,14 +249,22 @@ const FeesTable = () => {
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+      renderCell: ({ row }) => {
+        // Assuming payment_history is an array and you want to show the first entry
+        const paymentHistory = row?.payment_history?.[0] || {};
+        return <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${paymentHistory.paid_amount || 0}`}</Typography>;
+      }
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.payment_date}</Typography>
+      renderCell: ({ row }) => {
+        // Assuming payment_history is an array and you want to show the first entry
+        const paymentHistory = row?.payment_history?.[0] || {};
+        return <Typography sx={{ color: 'text.secondary' }}>{paymentHistory.payment_date || 'N/A'}</Typography>;
+      }
     },
     {
       flex: 1.25,
@@ -231,13 +272,14 @@ const FeesTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
+        const isActive = row?.is_active;
         return (
           <CustomChip
             rounded
             skin="light"
             size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
+            label={isActive ? 'Active' : 'Inactive'}
+            color={isActive ? 'success' : 'error'}
             sx={{ textTransform: 'capitalize' }}
           />
         );
@@ -256,7 +298,7 @@ const FeesTable = () => {
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <OptionsMenu
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 1 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
@@ -285,14 +327,17 @@ const FeesTable = () => {
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete();
-                    handleRowClick(row);
+                    handleDelete(row._id);
+                    handleRowClick(row._id);
                   }
                 }
               },
               {
                 text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
+                icon: <Icon icon="tabler:download" fontSize={20} />,
+                menuItemProps: {
+                  onClick: () => handleDownload(row)
+                }
               }
             ]}
           />
@@ -300,16 +345,42 @@ const FeesTable = () => {
       )
     }
   ];
+  const [isFilterCardVisible, setIsFilterCardVisible] = useState(false);
+
+  const toggleFilterCard = () => {
+    setIsFilterCardVisible(!isFilterCardVisible);
+  };
+  console.log(selectedRows, 'selectedros');
 
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Fee" />
+          {/* Card Header */}
+          <FeesCardHeader
+            selectedBranchId={selectedBranchId}
+            selectedRows={selectedRows}
+            toggles={toggleFilterCard}
+            toggle={toggleAddUserDrawer}
+            setRefetch={setRefetch}
+          />
+        </Grid>
+        {isFilterCardVisible && (
+        <Grid item xs={12}>
+          <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+            {/* <CardHeader title="Fee" /> */}
             <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    value={searchValue}
+                    fullWidth
+                    placeholder="Search Fee"
+                    onChange={(e) => handleSearch(e)}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
                     options={batches}
@@ -323,12 +394,12 @@ const FeesTable = () => {
                       dispatch(getAllStudentFees(data));
                     }}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch_name || ''}
+                    getOptionLabel={(options) => options.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <DatePicker
                     isClearable
                     selectsRange
@@ -353,25 +424,39 @@ const FeesTable = () => {
               </Grid>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid>)}
         <Grid item xs={12}>
-          {/* Card Header */}
-          <FeesCardHeader
-            selectedBranchId={selectedBranchId}
-            selectedRows={selectedRows}
-            toggle={toggleAddUserDrawer}
-            setRefetch={setRefetch}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
             {StudentFeesLoading ? (
               <FeesTableSkeleton />
-            ) : (
+            ) : StudentFees?.data?.length > 0 ? (
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
+                  },
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
+                    }
+                  },
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
+                  }
+                }}
                 autoHeight
                 pagination
+                style={{ overflowX: 'scroll' }}
                 rowHeight={62}
                 rows={StudentFees?.data}
                 columns={columns}
@@ -379,6 +464,16 @@ const FeesTable = () => {
                 disableRowSelectionOnClick
                 hideFooterPagination
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+                disableColumnMenu={true}
+                disableColumnFilter={true}
+                disableColumnSorting={true}
+              />
+            ) : ( 
+              <NoDataFoundComponent
+                title="No Student Fees Found"
+                description="No Student Fees found for the selected criteria"
+                buttonText="Add Student Fees"
+                onAdd={toggleAddUserDrawer}
               />
             )}
             {StudentFees?.last_page !== 1 && (
@@ -419,6 +514,7 @@ const FeesTable = () => {
         title="Delete"
         handleSubmit={handleFeeDelete}
       />
+          
     </DatePickerWrapper>
   );
 };

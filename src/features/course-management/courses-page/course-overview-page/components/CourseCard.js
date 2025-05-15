@@ -22,14 +22,15 @@ const CourseCard = (props) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const imageUrl = course?.logo
-    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.logo}`
+  const imageUrl = course?.image
+    ? `${process.env.REACT_APP_PUBLIC_API_URL}/${course.image}`
     : 'https://assets.newredo.com/large_image_default_4f2d3c136b.png';
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid,
+      category:course.category.uuid
     };
     const response = await updateCourseStatus(data);
     if (response.success) {
@@ -48,7 +49,12 @@ const CourseCard = (props) => {
   const maxCharacters = 100;
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card sx={{ ...sx }}>
+      <Card sx={{ ...sx,
+       transition: "transform 0.3s ease",
+       ":hover" : {
+           transform: "translateY(-8px)",
+           boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"
+      } }}>
         <CardContent sx={{ pb: 0 }}>
           <CardMedia sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }} image={imageUrl}>
             <CustomChip
@@ -62,14 +68,14 @@ const CourseCard = (props) => {
                   height: '2rem'
                 }
               }}
-              label={course?.learning_format}
+              label={course?.class_type}
               rounded
               color={
-                course?.learning_format === 'online'
+                course.class_type.includes('online')
                   ? 'success'
-                  : course?.learning_format === 'offline'
+                  : course.class_type.includes('offline')
                   ? 'primary'
-                  : course?.learning_format === 'hybrid'
+                  : course.class_type.includes('hybrid')
                   ? 'secondary'
                   : 'warning'
               }
@@ -79,27 +85,36 @@ const CourseCard = (props) => {
           </CardMedia>
         </CardContent>
         <CardContent>
-          <Box>
-            <CustomChip
-              sx={{ px: 0, py: 2 }}
-              skin="light"
-              label={course?.course?.course_categories?.category_name}
-              rounded
-              color="secondary"
-              size="small"
-              variant="outlined"
-            />
-          </Box>
+        <Box>
+  <CustomChip
+    sx={{
+      backgroundColor: "#CCFBF1", 
+      color: "#065F46", 
+      fontWeight: 600, 
+      borderRadius: "8px", 
+      padding: "6px 3px", 
+      fontSize: "0.875rem", 
+    }}
+    skin="light"
+    label={course?.category?.category_name}
+    rounded
+    color="secondary"
+    size="small"
+    variant="outlined"
+  />
+</Box>
+
           <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column', height: '50px' }}>
             <Typography
-              variant="h4"
+              variant="h3"
               sx={{
                 mt: 1.5,
                 overflow: 'hidden',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
-                textOverflow: 'ellipsis'
+                textOverflow: 'ellipsis',
+                color:"#14B8A6"
               }}
             >
               {course?.course_name &&
@@ -123,39 +138,83 @@ const CourseCard = (props) => {
               }}
             >
               <Icon icon="tabler:augmented-reality" fontSize={20} />
-              <Typography sx={{ color: 'text.secondary' }}>{course?.course?.course_module?.length} Modules</Typography>
+              <Typography   variant="body2" 
+  sx={{ color: "gray.600",fontSize:"15px",fontWeight:500,mt:"2px" }} >{course?.coursemodules?.length} Modules</Typography>
             </Grid>
             <Grid>
-              <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>
-                ₹ {course?.course_price}
+              <Typography   variant="h6" 
+  sx={{ fontWeight: "800",fontSize:"18px", color: "gray.300" }} >
+                ₹ {course?.price ? course?.price : course?.current_price}
               </Typography>
             </Grid>
           </Box>
         </CardContent>
         <CardActions className="demo-space-x" sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Grid sx={{ mt: 1 }}>
-            <TextField
-              size="small"
-              select
-              sx={{ width: 100 }}
-              label="Status"
-              SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
-            >
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
-            </TextField>
-          </Grid>
-          <Button
-            component={Link}
-            to="courses/view"
-            state={{ id: course?.course_id }}
-            size="medium"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 0.4, py: 0.8, width: 100 }}
-          >
-            View
-          </Button>
+        <Box 
+  sx={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: 1, 
+    border: '1px solid #E0E0E0', 
+    borderRadius: '8px', 
+    padding: '6px 12px', 
+    width: 'fit-content',
+    backgroundColor: 'white',
+    
+  }}
+>
+
+  <Box 
+    sx={{ 
+      width: 10, 
+      height: 10, 
+      borderRadius: '50%', 
+      backgroundColor: course?.is_active ? 'green' : 'gray' 
+    }} 
+  />
+  
+
+  <TextField
+    size="small"
+    select
+    variant="standard"
+    value={ course?.is_active} 
+    onChange={(e) => handleStatusValue(e, course)}
+    sx={{
+      minWidth: 100,
+      '& .MuiInputBase-root': {
+        border: 'none',
+      },
+      '& .MuiSelect-select': {
+        padding: 0, 
+      },
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none !important', 
+      }
+    }}
+  >
+    <MenuItem value="true">Active</MenuItem>
+    <MenuItem value="false">Inactive</MenuItem>
+  </TextField>
+</Box>
+<Button
+  component={Link}
+  to="courses/view"
+  state={{ id: course?.uuid }}
+  sx={{
+    fontSize: "10px",
+    padding: "4px 25px", 
+    minHeight: "38px", 
+    background: "linear-gradient(to right, #14B8A6, #10B981)", 
+    color: "white",
+    boxShadow: "0px 4px 6px rgba(20, 184, 166, 0.25)", 
+    "&:hover": {
+      background: "linear-gradient(to right, #0D9488, #059669)",
+    }
+  }}
+>
+  View
+</Button>
         </CardActions>
       </Card>
 

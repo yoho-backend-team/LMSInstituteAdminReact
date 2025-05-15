@@ -11,6 +11,9 @@ import PropTypes from 'prop-types';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
 import UserProfileRight from './UserProfileRight';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { getImageUrl } from 'utils/imageUtils';
 
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -20,7 +23,7 @@ const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   flexDirection: 'column',
   justifyContent: 'center',
-  backgroundColor: theme.palette.action.hover
+  backgroundColor: "#2A2F32"
 }));
 
 const ChatContent = (props) => {
@@ -40,14 +43,40 @@ const ChatContent = (props) => {
     chats,
     selectedBatch,
     setChats,
-    communityDetails
+    communityDetails,
+    socket,setMessages,messages
   } = props;
+  
+  const [permissionGranted, setPermissionGranted] = useState(false);
+
+  useEffect(() => {
+    if (typeof Notification !== "undefined") {
+
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          setPermissionGranted(true);
+        }
+      });
+    }
+  }, []);
 
   const handleStartConversation = () => {
     if (!mdAbove) {
       handleLeftSidebarToggle();
     }
   };
+  useEffect(()=>{
+    socket.on("newMessage", (message, callback) => {
+      setMessages((messages) => [...messages, message]);
+      if (callback) callback({ status: "success" });
+      // if (permissionGranted) {
+      //   new Notification(communityDetails?.group, {
+      //     body: message.message,
+      //   });
+      // }
+    });
+  },[])
+  console.log(messages,"messages",selectedBatch)
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
@@ -68,8 +97,9 @@ const ChatContent = (props) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: 'background.paper',
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`
+              backgroundColor: '#2A2F32',
+              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              boxShadow: '0px 4px 10px -4px rgba(0, 0, 0, 0.1)'
             }}
           >
             {mdAbove ? null : (
@@ -100,27 +130,27 @@ const ChatContent = (props) => {
                   />
                 }
               >
-                {selectedChat?.avatar ? (
-                  <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat?.avatar} alt={selectedChat?.fullName} />
+                {selectedChat?.batch?.course?.image ? (
+                  <MuiAvatar sx={{ width: 38, height: 38 }} src={getImageUrl(selectedChat?.batch?.course?.image)} alt={selectedChat?.batch?.batch_name} />
                 ) : (
                   <CustomAvatar
                     skin="light"
                     color={selectedChat?.avatarColor}
                     sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                   >
-                    {getInitials(selectedBatch?.batch_community?.batch?.batch_name)}
+                    {getInitials(selectedBatch?.batch?.batch_name)}
                   </CustomAvatar>
                 )}
               </Badge>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h5">{selectedBatch?.batch_community?.batch?.batch_name}</Typography>
-                <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
-                  {selectedBatch?.batch_community?.batch?.institute_course_branch?.course_name}
+                <Typography variant="h5" sx={{ color: "white"}}>{selectedBatch?.batch?.batch_name}</Typography>
+                <Typography sx={{ color: "white", fontSize: 10, mt: 0.5 }}>
+                  {selectedBatch?.batch?.course?.course_name}
                 </Typography>
               </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: "none", alignItems: 'center' }}>
               <OptionsMenu
                 menuProps={{ sx: { mt: 2 } }}
                 icon={<Icon icon="tabler:dots-vertical" />}
@@ -130,8 +160,8 @@ const ChatContent = (props) => {
             </Box>
           </Box>
 
-          {selectedChat ? <ChatLog hidden={hidden} data={selectedChat} /> : null}
-          <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
+          {messages ? <ChatLog hidden={hidden} data={messages} socket={socket} /> : null}
+          <SendMsgForm store={store} socket={socket} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
           <UserProfileRight
             store={store}
             hidden={hidden}
@@ -151,20 +181,21 @@ const ChatContent = (props) => {
             ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
           }}
         >
-          <MuiAvatar
-            sx={{
-              mb: 6,
-              pt: 8,
-              pb: 7,
-              px: 7.5,
-              width: 110,
-              height: 110,
-              boxShadow: 3,
-              backgroundColor: 'background.paper'
-            }}
-          >
-            <Icon icon="tabler:message" fontSize="3.125rem" />
-          </MuiAvatar>
+<MuiAvatar
+  sx={{
+    mb: 6,
+    width: 110,
+    height: 110,
+    boxShadow: 3,
+    backgroundColor: '#0CCE7F',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Icon icon="tabler:message" fontSize="3rem" />
+</MuiAvatar>
+
           <Box
             onClick={handleStartConversation}
             sx={{

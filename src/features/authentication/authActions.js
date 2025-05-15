@@ -1,47 +1,99 @@
 // authActions.js
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
-const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/login`;
+import client from 'api/client';
+import { HTTP_END_POINTS } from 'api/client/http_end_points';
+import secureLocalStorage from 'react-secure-storage';
+import { setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
+// import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
+// import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
+const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
-import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
-import { requestForToken } from '../../firebase';
+// import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
+// import { requestForToken } from '../../firebase';
 export const login = (username, password) => async (dispatch) => {
   let data = {
-    username: username,
+    email: username,
     password: password
   };
   try {
-    // Make API request to login
     const response = await axios.post(LOGIN_API_ENDPOINT, data, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
 
-    console.log(response);
+    if (response.data.data.otpVerify) {
+      setOtp(response.data.data);
+      toast.success(response.data.message);
+      return { otpVerify: true };
+    }
 
-    if (response.data.status) {
-      // Store token and user ID in localStorage
-      localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userData', JSON.stringify(response.data.userData));
-      localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
-      localStorage.setItem('branches', JSON.stringify(response.data.branches));
-      // Dispatch success action
+    setIsAuthenticated(true);
+    setToken(response.data.data.token);
+    setUserData(response.data.data.user);
+    setPermissions(response.data.data.permissions);
+    setBranches(response.data.data.branches);
+    setInstitute(response.data.data.institute);
+   setSelectedBranchId(response.data.data.branches[3]?.uuid || response.data.data.branches[0]?.uuid);
+
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: {
+        token: response.data.data.token,
+        userData: response.data.data.user,
+        permissions: response.data.data.permissions,
+        branches: response.data.data.branches,
+        institute: response.data.data.institute,
+        selectedBranchId: response.data.data.branches[0]?.uuid
+      }
+    });
+
+    console.log(response.data.data.branches[0]?.uuid)
+    window.location.replace('/');
+    toast.success('Login Successful');
+    return { success: true, message: 'Login successfully' };
+  } catch (error) {
+    dispatch({
+      type: 'LOGIN_FAILURE',
+      payload: error?.response?.data?.message
+    });
+    throw new Error(error?.response?.data?.message);
+  }
+};
+
+export const VerifyOtp = (otp, email, token) => async (dispatch) => {
+  const data = {
+    otp: otp,
+    email: email,
+    token: token
+  };
+  try {
+    const response = await client.users.verifyOtp(data);
+
+    if (response.status === 'success') {
+      setIsAuthenticated(true);
+      setToken(response.data.token);
+      setUserData(response.data.user);
+      setPermissions(response.data.permissions);
+      setBranches(response.data.branches);
+      setInstitute(response.data.institute);
+      secureLocalStorage.removeItem('otp');
+      console.log(response, 'response');
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
           token: response.data.token,
-          userData: response.data.userData,
+          userData: response.data.user,
           permissions: response.data.permissions,
           branches: response.data.branches,
-          selectedBranchId: response.data.branches[0]?.branch_id
+          institute: response.data.institute,
+          selectedBranchId: response.data.branches[0]?.uuid
         }
       });
-      const fcmToken = await requestForToken();
-      const updateToken = await updateFcmToken({ fcm_token: fcmToken });
-      console.log(updateToken);
+      // const fcmToken = await requestForToken();
+      // const updateToken = await updateFcmToken({ fcm_token: fcmToken });
+
       window.location.replace('/');
       toast.success('Login Successful');
       return { success: true, message: 'Login successfully' };
@@ -54,7 +106,6 @@ export const login = (username, password) => async (dispatch) => {
       return { success: false, message: 'Failed to delete group' };
     }
   } catch (error) {
-    // Dispatch error action
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error.response.data.message
@@ -62,33 +113,34 @@ export const login = (username, password) => async (dispatch) => {
   }
 };
 
-export const logout = () => async (dispatch) => {
+export const logout = (data) => async (dispatch) => {
   try {
-    // Make API request to login
-    const response = await axios.post(
-      LOGOUT_API_ENDPOINT,
-      {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
-    console.log(response);
-    if (response.data.status) {
+    // const response = await axios.post(
+    //   LOGOUT_API_ENDPOINT,
+    //   {},
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${localStorage.getItem('token')}`
+    //     }
+    //   }
+    // );
+    const response = await client.users.logout(data);
+
+    if (response.status) {
       // Remove token and user ID from localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('userData');
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('branches');
+      secureLocalStorage.removeItem('token');
+      secureLocalStorage.removeItem('userData');
+      secureLocalStorage.removeItem('permissions');
+      secureLocalStorage.removeItem('isAuthenticated');
+      secureLocalStorage.removeItem('branches');
+      secureLocalStorage.removeItem('institute');
 
       // Dispatch logout action
       dispatch({
         type: 'LOGOUT',
         payload: {
-          message: response.data.message
+          message: response.message
         }
       });
       window.location.replace('/login');

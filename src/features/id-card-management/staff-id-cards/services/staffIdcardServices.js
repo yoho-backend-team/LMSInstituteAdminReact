@@ -1,18 +1,19 @@
 // StaffIdCardService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
-const STAFF_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/id-card-management/staff`;
+const STAFF_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/staffidcard`;
 
 export const getAllStaffIdCards = async (data) => {
   try {
-    const response = await axios.get(`${STAFF_ID_CARDS_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${STAFF_ID_CARDS_API_ENDPOINT}/${data?.instituteid}/${data?.branchid}?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -34,7 +35,7 @@ export const searchStaffIdCards = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -55,7 +56,7 @@ export const addStaffIdCard = async (data) => {
     const response = await axios.post(`${STAFF_ID_CARDS_API_ENDPOINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -75,7 +76,7 @@ export const deleteStaffIdCard = async (StaffIdCardId) => {
     const response = await axios.delete(`${STAFF_ID_CARDS_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: StaffIdCardId }
     });
@@ -96,12 +97,11 @@ export const updateStaffIdCard = async (data) => {
     const response = await axios.put(`${STAFF_ID_CARDS_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StaffIdCard updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StaffIdCard' };
@@ -112,16 +112,15 @@ export const updateStaffIdCard = async (data) => {
   }
 };
 
-export const updateStaffIdCardStatus = async (data) => {
+export const updateStaffIdCardStatus = async (uuid, data) => {
   try {
-    const response = await axios.post(`${STAFF_ID_CARDS_API_ENDPOINT}/status-update`, data, {
+    const response = await axios.put(`${STAFF_ID_CARDS_API_ENDPOINT}/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Staff updated successfully' };
     } else {

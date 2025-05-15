@@ -1,52 +1,57 @@
-// groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
-const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket`;
-const STUDENT_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket`;
+const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/ticket/`;
+const STUDENT_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/ticket/`;
 
 export const getAllStudentTickets = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_TICKET_END_POINT}/get-by-type?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('getAllStudentTickets:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
+    const response = await client.ticket.student_tickets(data)    
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentTickets. Status: ${response.status}`);
-    }
   } catch (error) {
-    // Log the error for debugging purposes
+ 
     console.error('Error in getAllStudentTickets:', error);
+    throw new Error(`Failed to fetch Students Ticket. Status: ${error?.response?.data?.message}`);
 
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
 
 export const updateStudentTicket = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_TICKET_UPDATE_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client?.ticket?.update_student_ticket(data)
+  
+    return { success: true, message: 'StudentTicket updated successfully' };
 
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'StudentTicket updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update StudentTicket' };
-    }
   } catch (error) {
     console.error('Error in updateStudentTicket:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
+  }
+};
+
+
+
+export const getStudentTicketWithId = async (data) => {
+  try {
+    const response = await client.ticket.student_ticket_with_id(data)
+    // Check if the response status is successful
+    return response;
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllStaffTickets:', error);
+    // Throw the error again to propagate it to the calling function/component
+    throw new Error(`Failed to fetch StaffTickets. Status: ${error?.response?.data?.message}`);
+  }
+};  
+
+
+export const updateStudentstatusTicket = async (data) => {
+  try {
+    const response = await client.ticket.update_student_status_ticket(data)
+
+    return { success: true, message: 'Student Ticket updated successfully' };
+  } catch (error) {
+    console.error('Error in updateStaffTicket:', error);
+    return { success: false, message: error?.response?.data?.message };
   }
 };

@@ -1,46 +1,53 @@
 // NonTeachingStaffservice.js
+import client from 'api/client';
 import axios from 'axios';
+import { useInstitute } from 'utils/get-institute-details';
+import { useBranchId } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
 
-const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/non-teaching-staff`;
+const NON_TEACHING_STAFF_API_END_POINT_get = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes`;
+
+const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/`;
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
+    const BranchId=data.branch_id
+    const instituteUUID = JSON.parse(localStorage.getItem("institute") || "{}")?.uuid;
+    const token = localStorage.getItem('token');
+    // const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}branches/${useBranchId()}/non-teaching-staff/`, {
+    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${instituteUUID}/branches/${BranchId}/non-teaching-staff/`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params: data
+      
     });
 
-    console.log('Non-teachingStaffs:', response);
-
     // Check if the response status is successful
-    if (response.data.status) {
-      return response;
+    if (response.data) {
+      return { success: true, data: response.data.data};
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch NonTeachingStaffs. Status: ${response.status}`);
+      throw new Error(`Failed to fetch non teaching staffs. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllNonTeachingStaffs:', error);
+    console.error('Error in non teaching staffs:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
+
 export const getAllActiveNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/active`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -60,10 +67,10 @@ export const getAllActiveNonTeachingStaffs = async (data) => {
 
 export const searchNonTeachingStaffs = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/search`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -81,13 +88,12 @@ export const searchNonTeachingStaffs = async (searchQuery) => {
 
 export const addNonTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/Non-teaching-staff/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'NonTeachingStaff created successfully' };
@@ -100,14 +106,13 @@ export const addNonTeachingStaff = async (data) => {
   }
 };
 
-export const deleteNonTeachingStaff = async (nonTeachingStaffId) => {
+export const deleteNonTeachingStaff = async (data) => {
   try {
-    const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/non-teaching-staff/${data?.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: nonTeachingStaffId }
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+      }
     });
 
     if (response.data.status) {
@@ -117,24 +122,26 @@ export const deleteNonTeachingStaff = async (nonTeachingStaffId) => {
     }
   } catch (error) {
     console.error('Error in deleteNonTeachingStaff:', error);
-    throw error;
+    throw error;  
   }
 };
 
 export const updateNonTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/update`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/update/${data.id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        }
       }
-    });
-    console.log(response);
+    );
+
     if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'NonTeachingStaff updated successfully' };
+      return { success: true, message: response.data.message, response: response.data };
     } else {
-      return { success: false, message: 'Failed to update NonTeachingStaff' };
+      return { success: false, message: 'Failed to update non-teaching staff' };
     }
   } catch (error) {
     console.error('Error in updateNonTeachingStaff:', error);
@@ -144,26 +151,43 @@ export const updateNonTeachingStaff = async (data) => {
 
 export const nonTeachingStaffById = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('non-teachingStaff:', response);
+    const response = await client.users.getnonstaffWithId(data)
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
+    if (response.status) {
+      return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+      throw new Error(`Failed to fetch a Nonstaff. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in teaching staffs:', error);
+    console.error('Error in fetching  Nonstaff:', error);
 
     // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+export const nonteachstaffStatusChange = async (uuid, data) => {
+  try {
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/updatestatus/${uuid}`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        }
+      }
+    );
+
+    if (response.data.status) {
+      return { success: true, message: response.data.message };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in staff status change:', error);
     throw error;
   }
 };

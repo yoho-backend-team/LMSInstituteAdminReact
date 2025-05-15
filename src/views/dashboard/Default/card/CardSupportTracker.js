@@ -107,7 +107,7 @@ const CardSupportTracker = () => {
   };
 
   return (
-    <Card sx={{ minHeight: 320 }}>
+    <Card sx={{ minHeight: 320, display : "none" }}>
       <CardContent sx={{ pt: 5 }}>
         <Grid container spacing={6}>
           <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

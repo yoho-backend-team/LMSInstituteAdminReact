@@ -15,10 +15,22 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { deleteTeachingStaff } from '../services/teachingStaffServices';
 import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSelector } from 'react-redux';
+import { getImageUrl } from 'utils/imageUtils';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Divider } from "@mui/material";
+import {Paper } from "@mui/material";
+import PhoneIcon from '@mui/icons-material/Phone';
 
-const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
+
+const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
+  
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { getInstituteId } = useInstitute();
+  const instituteId = getInstituteId();
 
   const handleDelete = () => {
     setStaffDeleteModelOpen(true);
@@ -26,7 +38,11 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
   
   const Navigate = useNavigate();
   const handleStaffDelete = async () => {
-    const data = { id: staffID };
+    const data = { id: staffID,
+      instituteId,
+      branchid: selectedBranchId,
+
+     };
     const result = await deleteTeachingStaff(data);
 
     if (result.success) {
@@ -41,67 +57,220 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
   if (staff) {
     return (
       <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12}>
           <Card>
             <CardContent sx={{ pb: 4 }}>
-              <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
-                Details
+              <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase',fontWeight:"700",fontSize:"20px"  ,  background: "linear-gradient(to right, #8B5CF6, #6366F1)",
+        color: "white", borderTopLeftRadius: "8px",
+        borderTopRightRadius: "8px",
+        padding: "16px" ,mt:-3,ml:-3,mr:-3}}>
+               
+              <AccountCircleOutlinedIcon sx={{ marginRight: 1,marginBottom:"-5px" }} />
+               User Details
               </Typography>
               <Box sx={{ pt: 4 }}>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.users?.username}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.email}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.teachingStaff?.designation}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.gender}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{formattedDate(`${staff?.teachingStaff?.dob}`)}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.teachingStaff?.phone_number}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.teachingStaff?.alternate_number}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.education_qualification}</Typography>
-                </Box>
+              <Typography variant="h6"  color="text.primary" sx={{fontSize:"20px",fontWeight:"500"}}>
+        Personal Information
+      </Typography>
+      <Grid item xs={12} >
+      <Paper
+        sx={{
+          p: 3,
+          borderRadius: 3,
+          bgcolor: "white", 
+          boxShadow: "none", 
+          border: "none",
+        }}
+      >
+        
+       
+        <Grid container spacing={2} >
+          {[
+            { label: "Username", value: staff?.full_name, icon: "mdi:account" },
+            { label: "Email", value: staff?.email, icon: "mdi:email" },
+            { label: "Role", value: staff?.userDetail?.designation, icon: "mdi:briefcase" },
+            { label: "Gender", value: staff?.gender,icon: "mdi:gender-male"},
+            { label: "Date of Birth", value: staff?.dob, icon: "mdi:calendar" },
+          ].map((item, index) => (
+            <Grid item xs={12} sm={6} key={index}>
+              <Paper
+               sx={{
+                display: "flex",
+                alignItems: "center",
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "rgba(123, 97, 255, 0.08)", 
+                transition: "background 0.3s ease",
+                "&:hover": {
+                  bgcolor: "rgba(123, 97, 255, 0.2)", 
+                },
+              }}
+              
+              >
+                <Icon icon={item.icon} fontSize={20} style={{ marginRight: 10, color: "#7B61FF" }} />
                 <Box>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>
-                    {staff?.teachingStaff?.address_line_1}, {staff?.teachingStaff?.address_line_2}
+                  <Typography sx={{ fontWeight: 500, color: "grey" }}>
+                    {item.label}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.city}</Typography>
+                  <Typography sx={{ color: "text.primary" }}>
+                    {item.value || "N/A"}
+                  </Typography>
                 </Box>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    </Grid>
+    <Box my={2} sx={{color:"lightgrey"}}> 
+  <Divider />
+</Box>
+ 
+<Typography variant="h6"  color="text.primary" sx={{fontSize:"20px",fontWeight:"500"}}>
+       Contact Information
+      </Typography>
+      <Grid item xs={12}>
+      <Paper
+        sx={{
+          p: 3,
+          borderRadius: 3,
+          bgcolor: "white", 
+          boxShadow: "none", 
+          border: "none",
+        }}
+      >
+             <Grid container spacing={2} >
+          {[
+            { label: "Primary Number", value: staff?.contact_info?.phone_number, icon: "mdi:phone"},
+            { label: "Alternative Number", value:staff?.contact_info?.alternate_phone_number, icon: "mdi:phone" },
+            
+          ].map((item, index) => (
+            <Grid item xs={12} sm={6} key={index}>
+              <Paper
+               sx={{
+                display: "flex",
+                alignItems: "center",
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "rgba(123, 97, 255, 0.08)", 
+                transition: "background 0.3s ease",
+                "&:hover": {
+                  bgcolor: "rgba(123, 97, 255, 0.2)", 
+                },
+              }}
+              
+              >
+                <Icon icon={item.icon} fontSize={20} style={{ marginRight: 10, color: "#7B61FF" }} />
+                <Box>
+                  <Typography sx={{ fontWeight: 500, color: "grey" }}>
+                    {item.label}
+                  </Typography>
+                  <Typography sx={{ color: "text.primary" }}>
+                    {item.value || "N/A"}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+          ))}
+          </Grid>
+          </Paper>
+          </Grid>
+          <Box my={2} sx={{color:"lightgrey"}}> 
+  <Divider />
+</Box>            
+<Typography variant="h6"  color="text.primary" sx={{fontSize:"20px",fontWeight:"500"}}>
+       Additional Information
+      </Typography> 
+      <Grid item xs={12}>
+      <Paper
+        sx={{
+          p: 3,
+          borderRadius: 3,
+          bgcolor: "white", 
+          boxShadow: "none", 
+          border: "none",
+        }}
+      >
+             <Grid container spacing={2} >
+          {[
+            { label: "Qualification", value:staff?.qualification, icon: "mdi:school",
+              
+            
+            },
+            { 
+              label: "Address", 
+              value: (
+                <>
+                  <Typography sx={{ color: "text.primary" }}>{staff?.contact_info?.address1}</Typography>
+                  <Typography sx={{ color: "text.primary" }}>{staff?.contact_info?.address2}</Typography>
+                  <Typography sx={{ color: "text.primary" }}>{staff?.contact_info?.city}</Typography>
+                </>
+              
+              )
+              , icon: "mdi:map-marker"
+
+            }
+            
+            
+            
+            
+          ].map((item, index) => (
+            <Grid item xs={12} sm={12} key={index}>
+              <Paper
+               sx={{
+                display: "flex",
+                alignItems: "center",
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "rgba(123, 97, 255, 0.08)", 
+                transition: "background 0.3s ease",
+                "&:hover": {
+                  bgcolor: "rgba(123, 97, 255, 0.2)", 
+                },
+              }}
+              
+              >
+                <Icon icon={item.icon} fontSize={20} style={{ marginRight: 10, color: "#7B61FF" }} />
+                <Box>
+                  <Typography sx={{ fontWeight: 500, color: "grey" }}>
+                    {item.label}
+                  </Typography>
+                  <Typography sx={{ color: "text.primary" }}>
+                    {item.value || "N/A"}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+          ))}
+          </Grid>
+          </Paper>
+          </Grid>   
+                
+              
               </Box>
             </CardContent>
 
-            <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
               <Box
                 component={Link}
-                to={`teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`}
-                state={{ staff: staff?.teachingStaff, id: staff?.teachingStaff?.id }}
+                to={`teaching-staffs/${staff?.uuid}/edit`}
+                state={{ staff: staff, id: staff?.uuid }}
+                
               >
-                <Button variant="contained" sx={{ mr: 2, width: 100 }}>
+                <Button variant="contained" 
+                 sx={{
+                  mr: 2, 
+                  width: 100,
+                  flex: 1,
+                  px:2,
+                  background: "linear-gradient(to right, #8B5CF6, #6366F1)", 
+                  "&:hover": { background: "linear-gradient(to right, #7C3AED, #4F46E5)" }
+                }}>
                   Edit
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.teachingStaff?.id)}>
+                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.uuid)}>
                   Delete
                 </Button>
               </Box>
@@ -120,17 +289,13 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
 
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {staff?.teachingStaff?.staff_course?.map((course, index) => (
+            {staff?.userDetail?.course?.map((course, index) => (
               <Grid item key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
                       sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                      image={
-                        course?.courses?.logo
-                          ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.courses?.logo}`
-                          : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'
-                      }
+                      image={getImageUrl(course?.image)}
                     >
                       <CustomChip
                         sx={{
@@ -143,14 +308,14 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
                             height: '2rem'
                           }
                         }}
-                        label={course?.courses?.learning_format}
+                        label={course?.class_type?.[0]}
                         rounded
                         color={
-                          course?.courses?.learning_format === 'online'
+                          course?.class_type?.[0] === 'online'
                             ? 'success'
-                            : course?.courses?.learning_format === 'offline'
+                            : course?.class_type?.[0] === 'offline'
                             ? 'primary'
-                            : course?.courses?.learning_format === 'hybrid'
+                            : course?.class_type?.[0] === 'hybrid'
                             ? 'secondary'
                             : 'warning'
                         }
@@ -163,7 +328,7 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.courses?.course?.course_categories?.category_name}
+                        label={course?.category?.category_name}
                         rounded
                         color="secondary"
                         size="small"
@@ -172,9 +337,9 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
                       />
                     </Box>
                     <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="h4">{course?.courses?.course_name}</Typography>
+                      <Typography variant="h4">{course?.course_name}</Typography>
                       <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
-                        {course.courses?.course_overview}
+                        {course?.overview}
                       </Typography>
                     </Box>
                     <Box
@@ -195,13 +360,13 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
                       >
                         <Icon icon="tabler:augmented-reality" fontSize={20} />
                         <Typography sx={{ color: 'text.secondary' }}>
-                          <span style={{ fontWeight: 'bold', fontSize: 18, marginRight: 2 }}> {course?.courses?.course_module_count}</span>
+                          <span style={{ fontWeight: 'bold', fontSize: 18, marginRight: 2 }}> {course?.coursemodules?.length}</span>
                           Modules
                         </Typography>
                       </Grid>
                       <Grid>
                         <Typography variant="h4" sx={{ color: 'text.secondary', mr: 1 }}>
-                          ₹ {course?.courses?.course_price}
+                          ₹ {course?.price}
                         </Typography>
                       </Grid>
                     </Box>
@@ -214,13 +379,13 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
                       <CustomChip
                         skin="light"
                         sx={{ px: 2, py: 2.3 }}
-                        label={course?.courses?.course?.is_active === 1 ? 'Active' : 'Inactive'}
+                        label={course?.is_active ? 'Active' : 'Inactive'}
                         rounded
-                        color={course?.courses?.course?.is_active === 1 ? 'success' : 'error'}
+                        color={course?.is_active ? 'success' : 'error'}
                         size="medium"
                       />
                     </Box>
-                    <Button component={Link} to="view " size="medium" variant="contained" color="primary">
+                    <Button component={Link} state={{ id : course?.uuid }} to="/course-management/courses/view " size="medium" variant="contained" color="primary">
                       View Details
                     </Button>
                   </CardActions>
@@ -238,7 +403,6 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
 
 UserViewAccount.propTypes = {
   staff: PropTypes.any,
-  formattedDate: PropTypes.any,
   staffID: PropTypes.any,
   setRefetch: PropTypes.any
 };

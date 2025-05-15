@@ -19,9 +19,17 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addStudentNotification } from '../services/studentNotificationServices';
+import { useSpinner } from 'context/spinnerContext';
+import { title } from '_mock/text';
+import { useInstitute } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
+
+import { Modal } from "@mui/material";
+
 
 const NotificationAddDrawer = (props) => {
   const { open, toggle, setStudentNotificationRefetch } = props;
+  const { show, hide } = useSpinner();
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -53,7 +61,7 @@ const NotificationAddDrawer = (props) => {
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId, branch_id: selectedBranchId };
+    const data = { course: courseId, branch_id: selectedBranchId };
     const result = await getBatchesByCourse(data);
 
     if (result?.success) {
@@ -82,12 +90,11 @@ const NotificationAddDrawer = (props) => {
       .string()
       .required('Title is required')
       .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
-    body: yup
-      .string()
-      .required('Body is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+    description: yup.string().required('Body is required'),
     course: yup.object().required('Course is required'),
-    batch: yup.object().required('Batch is required')
+    batch: yup.object().required('Batch is required'),
+    notification_type: yup.string().required('Type is required'),
+    link: yup.string().optional()
   });
 
   const defaultValues = {
@@ -95,7 +102,9 @@ const NotificationAddDrawer = (props) => {
     batch: null,
     students: [],
     title: '',
-    body: ''
+    description: '',
+    notification_type: '',
+    link: ''
   };
 
   const {
@@ -118,28 +127,36 @@ const NotificationAddDrawer = (props) => {
     toggle();
   };
 
+  const instituteId = secureLocalStorage.getItem('userData') ? JSON.parse(secureLocalStorage.getItem('userData')).institute_id : null;
+
   const onSubmit = async (data) => {
-    const bodyFormData = new FormData();
-    selectedStudents?.forEach((student) => {
-      bodyFormData.append('student_ids[]', student.student_id);
-    });
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('course', data.course.course_id);
-    bodyFormData.append('batch', data.batch.batch_id);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
+    try {
+      show();
+      const studentIds = data?.students?.map((user) => user?._id);
+      const notification = {
+        institute: useInstitute().getInstituteId(),
+        course: data?.course?._id,
+        batch: data?.batch?._id,
+        branch: selectedBranchId,
+        title: data?.title,
+        body: data?.description,
+        student: studentIds,
+        link: data?.link,
+        type: data?.notification_type
+      };
 
-    const result = await addStudentNotification(bodyFormData);
-
-    if (result.success) {
+      const result = await addStudentNotification(notification);
       toast.success(result.message);
       handleClose();
       setStudentNotificationRefetch((state) => !state);
-    } else {
-      toast.error(result.message);
+      hide();
+    } catch (error) {
+      toast.error(error?.message);
+    } finally {
+      hide();
     }
   };
+
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
@@ -168,20 +185,40 @@ const NotificationAddDrawer = (props) => {
   };
 
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+ 
+
+    <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    ModalProps={{ keepMounted: true }}
+    BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.5)" } }} 
+     
+  >
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "90%", sm: 500, md: 600 },
+        height: "auto",  
+        maxHeight: "80vh", 
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+        overflowY: "auto",
+        transition: "all 0.3s ease-in-out",
+      }}
     >
-      <Header>
-        <Typography variant="h5">Add Notification</Typography>
+     <Header sx={{mt:-7}}>
+        <Typography variant="h2" sx={{ml:-4}} >Add Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
           sx={{
+            mr:-7,
             p: '0.438rem',
             borderRadius: 1,
             color: 'text.primary',
@@ -191,33 +228,15 @@ const NotificationAddDrawer = (props) => {
             }
           }}
         >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
+          <Icon icon="tabler:x" fontSize="1.125rem"  />
         </IconButton>
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-            <ImgStyled src={imgSrc} alt="Profile Pic" />
-            <div>
-              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                Upload
-                <input
-                  hidden
-                  type="file"
-                  value={inputValue}
-                  accept="image/png, image/jpeg"
-                  onChange={handleInputImageChange}
-                  id="account-settings-upload-image"
-                />
-              </ButtonStyled>
-            </div>
-          </Box>
-
           <Grid item xs={12} sm={12}>
             <Controller
               name="course"
               control={control}
-              rules={{ required: 'Course field is required' }}
               render={({ field }) => (
                 <Autocomplete
                   {...field}
@@ -227,9 +246,9 @@ const NotificationAddDrawer = (props) => {
                   onChange={(event, newValue) => {
                     field.onChange(newValue);
                     setValue('course', newValue);
-                    getActiveBatchesByCourse(newValue?.course_id);
+                    getActiveBatchesByCourse(newValue?._id);
                   }}
-                  value={activeCourse.find((course) => course.course_id === (field.value ? field.value.course_id : null)) || null}
+                  value={activeCourse.find((course) => course._id === (field.value ? field.value._id : null)) || null}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -249,7 +268,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="batch"
               control={control}
-              rules={{ required: 'Batch field is required' }}
               render={({ field }) => (
                 <Autocomplete
                   {...field}
@@ -259,7 +277,7 @@ const NotificationAddDrawer = (props) => {
                   onChange={(event, newValue) => {
                     field.onChange(newValue);
                     setValue('batch', newValue);
-                    getStudentsByBatch(newValue?.batch_id);
+                    getStudentsByBatch(newValue?.uuid);
                   }}
                   value={field.value}
                   renderInput={(params) => (
@@ -274,14 +292,13 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="students"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value } }) => (
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
                   options={students}
-                  getOptionLabel={(option) => option?.first_name || ''}
+                  getOptionLabel={(option) => option?.full_name || ''}
                   value={value}
                   onChange={(e, newValue) => {
                     setValue('students', newValue);
@@ -309,15 +326,15 @@ const NotificationAddDrawer = (props) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option?.first_name}
+                      {option?.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value?.map((option, index) => (
                         <CustomChip
-                          key={option?.student_id}
-                          label={option?.first_name}
+                          key={option?._id}
+                          label={option?.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue?.splice(index, 1);
@@ -330,7 +347,53 @@ const NotificationAddDrawer = (props) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option?.student_id === value?.student_id}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="notification_type"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Autocomplete
+                  multiple={false}
+                  freeSolo // Allow custom input
+                  disableCloseOnSelect={false}
+                  id="select-multiple-chip"
+                  options={['Notification','Placement','Alert','Remainder','Warning','Payment','Attendance','Classes','Events','Holiday']} // Add default options here
+                  getOptionLabel={(option) => option}
+                  value={value || ''} // Ensure the value is handled correctly
+                  onChange={(event, newValue) => {
+                    onChange(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label={'Notification type'}
+                      error={Boolean(errors.notification_type)}
+                      helperText={errors?.notification_type ? errors.notification_type.message : null}
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowY: 'hidden', overflowX: 'auto', maxHeight: 55 }
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </li>
+                  )}
                 />
               )}
             />
@@ -340,7 +403,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -348,7 +410,7 @@ const NotificationAddDrawer = (props) => {
                   label="Title"
                   value={value}
                   onChange={onChange}
-                  placeholder="Placeholder"
+                  placeholder="New Course Announcement"
                   error={Boolean(errors.title)}
                   helperText={errors.title ? errors.title.message : null}
                 />
@@ -358,9 +420,8 @@ const NotificationAddDrawer = (props) => {
 
           <Grid item xs={12} sm={12}>
             <Controller
-              name="body"
+              name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -368,9 +429,9 @@ const NotificationAddDrawer = (props) => {
                   label="Body"
                   value={value}
                   onChange={onChange}
-                  placeholder="Placeholder"
-                  error={Boolean(errors.body)}
-                  helperText={errors.body ? errors.body.message : null}
+                  placeholder="We are excited to announce a new course, JS, starting on start_date. This course will cover brief_course_description. Enroll now to secure your spot and gain valuable insights into course_topic."
+                  error={Boolean(errors.description)}
+                  helperText={errors.description ? errors.description.message : null}
                   multiline
                   rows={4}
                 />
@@ -378,17 +439,69 @@ const NotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="link"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  label="Link"
+                  value={value}
+                  onChange={onChange}
+                  error={Boolean(errors?.link)}
+                  helperText={errors?.link ? errors?.link.message : null}
+                />
+              )}
+            />
+          </Grid>
+
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'flex-end', mt: 4 }}>
+
+            <Button 
+            variant="tonal"
+            onClick={handleClose}
+           sx={{ 
+            mr: 3,
+            backgroundColor: 'white', 
+            color: 'black', 
+            border: '1px solid #D3D3D3',  
+            '&:hover': {
+              backgroundColor: '#f0f0f0',  
+              color: 'text.secondary',  
+            },
+            transition: 'all 0.3s ease',
+                }}>
               Cancel
             </Button>
+
+            <Button type="submit" variant="contained" 
+            sx={{
+              backgroundColor: '#1976d2', 
+              color: 'white',  
+              '&:hover': {
+                backgroundColor: '#1565c0',  
+              },
+              '&:active': {
+                backgroundColor: '#0d47a1',  
+              },
+              transition: 'all 0.3s ease',  
+            }}>
+              Add Notification
+            </Button>
+
           </Box>
         </form>
       </Box>
-    </Drawer>
+     
+
+     
+       
+    </Box>
+
+  </Modal>
+   
   );
 };
 

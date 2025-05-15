@@ -17,6 +17,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
 import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
@@ -32,10 +34,15 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup
+    full_name: yup
       .string()
       .required('Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets'),
+      password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/^[a-zA-Z0-9]+$/, 'Password should only contain alphabets and numbers'),
     email: yup
       .string()
       .required('Email is required')
@@ -69,10 +76,10 @@ const StepperLinearWithValidation = () => {
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
     branch: yup.string().required('Branch is required'),
-    username: yup
-      .string()
-      .required('Username is required')
-      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
+    // username: yup
+    //   .string()
+    //   .required('Username is required')
+    //   .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
   // ** States
@@ -82,6 +89,7 @@ const StepperLinearWithValidation = () => {
 
   const defaultPersonalValues = {
     name: '',
+    password:"",
     email: '',
     phone: '',
     alt_phone: '',
@@ -95,8 +103,8 @@ const StepperLinearWithValidation = () => {
     branch: selectedBranchId,
     designation: '',
     education_qualification: '',
-    username: '',
-    logo: ''
+    logo: '',
+    staffId:''
   };
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -106,9 +114,7 @@ const StepperLinearWithValidation = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log(result.data);
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const {
@@ -143,7 +149,8 @@ const StepperLinearWithValidation = () => {
       alt_phone: Number(''),
       description: '',
       joining_date: '',
-      designation: ''
+      designation: '',
+      staffId:"",
     });
   };
 
@@ -190,6 +197,10 @@ const StepperLinearWithValidation = () => {
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    const image = files[0]
+     if (image.size > 1048576) {
+      return toast.success("image upload lesser than 1mb")
+    }
     if (files && files.length !== 0) {
       reader.onload = () => setLogoSrc(reader.result);
       reader.readAsDataURL(files[0]);
@@ -201,15 +212,52 @@ const StepperLinearWithValidation = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
-  console.log(logo);
+  
+
+  const getInstituteDetails = () => {
+    if(typeof(secureLocalStorage) !== "undefined"){
+    const institute = secureLocalStorage.getItem("institute")
+    return JSON.parse(institute)
+    }else{
+     return undefined
+    }
+}
+
+
 
   const onSubmit = async () => {
+    const formData = personalControl._formValues;
+   
+    const non_teaching_staffdata = {
+      email: formData.email,
+      full_name: formData.full_name,
+      password: formData.password,
+      institute_id: useInstitute().getInstituteId(),
+      branch_id: secureLocalStorage.getItem("selectedBranchId"),
+      username: formData.username,
+      dob: convertDateFormat(formData.date_of_birth),
+      gender: formData.gender,
+      qualification: formData.education_qualification,
+      contact_info: {
+        state: formData.state,
+        city: formData.city,
+        pincode: formData.pin_code,
+        address1: formData.address_line_one,
+        address2: formData.address_line_two,
+        phone_number: formData.phone,
+        alternate_phone_number: formData.alt_phone
+        
+      },
+      designation: formData.designation,
+      staffId:formData.staffId,
+      role: formData.role
+    };
     const personalData = personalControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
 
-      data.append('name', personalData?.name);
+      data.append('name', personalData?.full_name);
       data.append('email', personalData?.email);
       data.append('phone_number', personalData?.phone);
       data.append('alternate_number', personalData?.alt_phone);
@@ -228,7 +276,7 @@ const StepperLinearWithValidation = () => {
       data.append('education_qualification', personalData?.education_qualification);
 
       try {
-        const result = await addNonTeachingStaff(data);
+        const result = await addNonTeachingStaff(non_teaching_staffdata);
 
         if (result.success) {
           toast.success(result.message);
@@ -283,9 +331,10 @@ const StepperLinearWithValidation = () => {
                   </div>
                 </Box>
               </Grid>
+              
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="name"
+                  name="full_name"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -295,9 +344,30 @@ const StepperLinearWithValidation = () => {
                       label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
-                      error={Boolean(personalErrors['name'])}
+                      error={Boolean(personalErrors['full_name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
-                      helperText={personalErrors?.name?.message}
+                      helperText={personalErrors?.full_name?.message}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="password"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label="Password"
+                      type="password"
+                      onChange={onChange}
+                      placeholder=""
+                      error={Boolean(personalErrors['password'])}
+                      aria-describedby="stepper-linear-personal-institute_name"
+                      helperText={personalErrors?.password?.message}
                     />
                   )}
                 />
@@ -364,8 +434,8 @@ const StepperLinearWithValidation = () => {
                       aria-describedby="stepper-linear-personal-gender"
                       helperText={personalErrors?.gender?.message}
                     >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
+                      <MenuItem value="Male">Male</MenuItem>
+                      <MenuItem value="Female">Female</MenuItem>
                       <MenuItem value="other">Other</MenuItem>
                     </CustomTextField>
                   )}
@@ -393,8 +463,8 @@ const StepperLinearWithValidation = () => {
                       {...(personalErrors['branch'] && { helperText: 'This field is required' })}
                     >
                       {activeBranches.map((item, index) => (
-                        <MenuItem key={index} value={item.branch_id}>
-                          {item.branch_name}
+                        <MenuItem key={index} value={item.id}>
+                          {item.branch_identity}
                         </MenuItem>
                       ))}
                     </TextField>

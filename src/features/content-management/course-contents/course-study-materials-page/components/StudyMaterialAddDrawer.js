@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,6 +15,9 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseStudyMaterial } from '../services/studyMaterialServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
+import { white } from 'precise-ui/dist/es6/colors';
 
 const StudyMaterialAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
@@ -22,6 +25,8 @@ const StudyMaterialAddDrawer = (props) => {
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [files, setFiles] = useState([]);
+  const { show, hide } = useSpinner();
 
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
@@ -80,34 +85,43 @@ const StudyMaterialAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('branch_id', data.branch?.branch_id);
-    bodyFormData.append('course_id', data.course?.course_id);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('document', studymaterialPdf);
+    try {
+      show();
+      console.log(data, 'data');
+      const Study_data = {
+        title: data.title,
+        description: data.description,
+        branch: data.branch.uuid,
+        course: data.course._id,
+        institute: useInstitute().getInstituteId(),
+        file: data.pdf_file
+      };
 
-    const result = await addCourseStudyMaterial(bodyFormData);
-
-    if (result.success) {
+      const result = await addCourseStudyMaterial(Study_data);
       setRefetch((state) => !state);
       toast.success(result.message);
+      setstudymaterialPdf('');
       reset();
       toggle();
-    } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      });
-      toast.error(errorMessage.trim());
+    } catch (error) {
+      toast.error(error?.message);
+    } finally {
+      hide();
     }
   };
 
-  const handleSetPdf = (data) => {
+  const handleSetPdf = async (data) => {
     setstudymaterialPdf(data);
-    setValue('pdf_file', data);
+    if (data.size > 1048576) {
+     return toast.success("pdf upload lesser than 1mb")
+    }else{
+     const fileData = new FormData();
+     fileData.append('file', fileData);
+     setValue('pdf_file', data);
+     const file = await client.file.upload(data)
+     setValue("file",file.data.file)
+     toast.success("pdf uploaded")
+    }
   };
 
   const handleClose = () => {
@@ -125,9 +139,12 @@ const StudyMaterialAddDrawer = (props) => {
       ModalProps={{ keepMounted: true }}
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
-      <Header>
-        <Typography variant="h5">Add Study Material</Typography>
-        <IconButton
+      <Header sx={{ paddingBottom: 0 }}>
+        {/* <Chip color='success'  label="Add Study Material " sx={{fontSize:'16px', pb:0,mb:0}}/> */}
+        <Typography variant="h2 " sx={{border:2,borderColor:"#0cce7b", fontSize: '1.4rem',fontWeight:"bold", borderRadius: 50, px: 2, py: 1 }}>
+          Add Study Material
+        </Typography>
+        <IconButton 
           size="small"
           onClick={handleClose}
           sx={{
@@ -143,10 +160,26 @@ const StudyMaterialAddDrawer = (props) => {
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6), pt: 0, mt: 0 }}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{
+            borderRadius: '8px', // Optional: Rounded corners
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Shadow effect
+            padding: '16px', // Add spacing inside the form
+            margin: '16px auto', // Center the form and add spacing outside
+            maxWidth: '600px', // Optional: Limit the form's width
+            backgroundColor: '#fff' // Optional: Background color
+          }}
+        >
+          <Grid item xs={12} sm={12}>
+            <CoursePdfInput
+              setCourseNotePdf={handleSetPdf}
+              setValue={setValue}
+              files={files}
+              setFiles={setFiles}
+              className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`}
+            />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
           </Grid>
 
@@ -154,17 +187,16 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
               render={() => (
                 <Autocomplete
-                  fullWidth
+                  // fullWidth
                   // value={value}
                   onChange={(event, newValue) => {
                     setValue('branch', newValue);
                     getActiveCoursesByBranch(newValue);
                   }}
                   options={branches ?? []}
-                  getOptionLabel={(option) => option.branch_name}
+                  getOptionLabel={(option) => option.branch_identity}
                   renderInput={(params) => (
                     <TextField
                       sx={{ mb: 2 }}
@@ -183,7 +215,6 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="course"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
                   value={value}
@@ -192,7 +223,7 @@ const StudyMaterialAddDrawer = (props) => {
                   }}
                   options={activeCourse || []}
                   getOptionLabel={(option) => option.course_name || ''}
-                  fullWidth
+                  // fullWidth
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -210,7 +241,6 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -218,7 +248,7 @@ const StudyMaterialAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Title"
                   onChange={onChange}
-                  placeholder="John Doe"
+                  placeholder="Testing , developing ,etc"
                   error={Boolean(errors.title)}
                   helperText={errors.title?.message}
                 />
@@ -229,15 +259,14 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
                   value={value}
                   sx={{ mb: 2 }}
-                  label="description"
+                  label="Description"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="Description about the Study Material"
                   error={Boolean(errors.description)}
                   {...(errors.description && { helperText: errors.description.message })}
                 />

@@ -20,11 +20,10 @@ const DefaultPalette = () => {
   const skin = 'default';
   const mode = isDarkMode ? 'dark' : 'light';
   const whiteColor = '#FFF';
-  const lightColor = '47, 43, 61';
+  const lightColor = '47, 43, 77';
   const darkColor = '208, 212, 241';
   const darkPaperBgColor = '#2F3349';
-  const mainColor = mode === 'light' ? lightColor : darkColor;
-
+  const mainColor = mode === 'light' ? '#2F2B3D' : '#D0D4F1';
   // const primary = generatePrimaryObject('#D80032');
   // const secondary = generatePrimaryObject('#F79BD3');
   const defaultBgColor = () => {
@@ -57,7 +56,7 @@ const DefaultPalette = () => {
     // primary: primary,
     primary: {
       light: '#e3e1fc',
-      main: '#7367F0',
+      main: '#0CCE7F',
       dark: '#655BD3',
       800: '#2e2960',
       200: '#c7c2f9',

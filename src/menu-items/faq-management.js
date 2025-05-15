@@ -32,7 +32,7 @@ const pages = {
           icon: icons.IconHelp,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_faq_categories_view')
+          visible: hasPermission('can_read_institute_faq_categoreis','Faq Categories')
         },
         {
           id: 'Faqs',
@@ -42,7 +42,7 @@ const pages = {
           icon: icons.IconHelp,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_faqs_view')
+          visible: hasPermission('can_read_institute_faqs','Faqs')
         }
       ]
     }

@@ -1,31 +1,21 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
-const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/attendance-management/student`;
+const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
 export const getAllStudentAttendances = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/get-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
+    const response = await client.attedence.get_all_student_attedence(data)
+    // Check if the response stat
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentAttendances. Status: ${response.status}`);
-    }
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentAttendances:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch StudentAttendances. Status: ${error?.response?.data?.message}`);
   }
 };
 
@@ -34,7 +24,7 @@ export const searchStudentAttendances = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -55,7 +45,7 @@ export const addStudentAttendance = async (data) => {
     const response = await axios.post(`${STUDENT_ATTENDANCES_API_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -75,7 +65,7 @@ export const deleteStudentAttendance = async (StudentAttendanceId) => {
     const response = await axios.delete(`${STUDENT_ATTENDANCES_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: StudentAttendanceId }
     });
@@ -96,12 +86,11 @@ export const updateStudentAttendance = async (data) => {
     const response = await axios.put(`${STUDENT_ATTENDANCES_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentAttendance' };
@@ -114,50 +103,29 @@ export const updateStudentAttendance = async (data) => {
 
 export const getClassDetails = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/get-class-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.attedence.get_with_id(data)
+
     // Check if the response status is successful
-    if (response.data.status) {
-      return {
-        success: true,
-        data: response?.data
-      };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batch. Status: ${response.status}`);
-    }
+    return {
+      success: true,
+      data: response?.data
+    };
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getOfflineClassDetails:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch batch. Status: ${error?.response?.data?.message}`);
   }
 };
 
 export const updateStudentAttendanceStatus = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_ATTENDANCES_API_END_POINT}/status-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('Notesresponse:', response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'StudentAttendance status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update StudentAttendance status' };
-    }
+    const response = await client.attedence.mark_attedence(data)
+
+    return { success: true, message: 'StudentAttendance status updated successfully' };
   } catch (error) {
     console.error('Error in updateStudentAttendance:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };

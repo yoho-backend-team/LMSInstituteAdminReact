@@ -13,6 +13,11 @@ import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { updateUser } from 'features/user-management/users-page/services/userServices';
 import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
+import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
+import { profilePlaceholder } from 'utils/placeholders';
+import { useSpinner } from 'context/spinnerContext';
+import client from 'api/client';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -65,24 +70,18 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (userData) {
-      setValue('full_name', userData.name || '');
-      setValue('user_name', userData.username || '');
-      setValue('email', userData?.institution_users?.email || '');
-      setValue('contact', userData?.institution_users?.mobile || '');
-      setValue('designation', userData?.institution_users?.designation || '');
-      setValue('role', userData?.role_groups?.role?.id || '');
+      setValue('full_name', userData.first_name || '');
+      setValue('user_name', userData.last_name || '');
+      setValue('email', userData?.email || '');
+      setValue('contact', userData?.phone_number || '');
+      setValue('designation', userData?.role?.identity || '');
+      setValue('role', userData?.role?.identity || '');
     }
   }, [userData, setValue]);
   const handleClose = () => {
-    setValue('full_name', '');
-    setValue('user_name', '');
-    setValue('email', '');
-    setValue('contact', Number(''));
-    setValue('designation', '');
-    setValue('role', Number(''));
-    handleEditClose();
-    reset();
-    setSelectedImage(null);
+      handleEditClose();
+    
+    
   };
 
   const image = require('assets/images/avatar/1.png');
@@ -90,19 +89,19 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [groups, setGroups] = useState([]);
+  const { show, hide } = useSpinner();
 
   useEffect(() => {
     getGroups();
   }, []);
-
+  console.log(userData, 'userData');
   const getGroups = async () => {
     try {
-      const result = await getAllGroups();
+      const result = await getAllGroups({ institute_id: useInstitute().getInstituteId() });
       if (result.success) {
-        console.log('User Data:', result.data);
         setGroups(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -112,8 +111,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
+    borderRadius: 50
   }));
 
   const ButtonStyled = styled(Button)(({ theme }) => ({
@@ -123,7 +121,17 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   }));
 
-  const handleInputImageChange = (file) => {
+  const handleInputImageChange = async (file) => {
+    try {
+      show();
+      const { files } = file.target;
+      const form_data = new FormData();
+      form_data.append('file', files);
+      const response = await client.file.upload(form_data);
+    } catch (error) {
+    } finally {
+      hide();
+    }
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
@@ -136,10 +144,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   };
 
-  console.log(selectedImage);
-
   const onSubmit = async (data) => {
-    console.log(data);
     const InputData = new FormData();
     InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);
@@ -189,32 +194,56 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
         >
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {!selectedImage && (
                   <ImgStyled
-                    src={
-                      userData?.institution_users?.image
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`
-                        : imgSrc
-                    }
+                    src={userData?.image ? getImageUrl(userData?.image) : profilePlaceholder}
                     alt="Profile Pic"
+                    sx={{ position: 'relative' }} // Ensure ImgStyled has relative positioning
                   />
                 )}
 
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload New Image
-                    <input
-                      hidden
-                      type="file"
-                      value={inputValue}
-                      accept="image/png, image/jpeg"
-                      onChange={handleInputImageChange}
-                      id="account-settings-upload-image"
-                    />
-                  </ButtonStyled>
-                </div>
+                {selectedImage && (
+                  <ImgStyled
+                    src={userData?.image ? getImageUrl(userData?.image) : profilePlaceholder}
+                    alt="Profile Pic"
+                    sx={{ position: 'relative' }} // Ensure ImgStyled has relative positioning
+                  />
+                )}
+
+                {/* Button placed in the bottom-right of the image */}
+                <ButtonStyled
+                  component="label"
+                  variant="contained"
+                  htmlFor="account-settings-upload-image"
+                  sx={{
+                    position: 'absolute',
+                    bottom: '8px',
+                    right: '250px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    padding: 0,
+                    minWidth: '30px',
+                    minHeight: '30px'
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20" fill="#fff">
+                    <path d="M450 856h60V596l98 98 43-43-161-161-161 161 43 43 98-98v260ZM240 936q-33 0-56.5-23.5T160 856V296q0-33 23.5-56.5T240 216h480q33 0 56.5 23.5T800 296v560q0 33-23.5 56.5T720 936H240Zm0-80h480V296H240v560ZM240 296v560-560Z" />
+                  </svg>
+
+                  <input
+                    hidden
+                    type="file"
+                    value={inputValue}
+                    accept="image/png, image/jpeg"
+                    onChange={handleInputImageChange}
+                    id="account-settings-upload-image"
+                  />
+                </ButtonStyled>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -243,7 +272,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={value}
+                    value={value}
                     label="User Name"
                     onChange={onChange}
                     placeholder="John Doe"
@@ -263,7 +292,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     fullWidth
                     type="email"
                     label="Email"
-                    defaultValue={value}
+                    value={value}
                     onChange={onChange}
                     error={Boolean(errors.email)}
                     placeholder="johndoe@email.com"
@@ -280,8 +309,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    type="number"
-                    defaultValue={value}
+                    
+                    value={value}
                     label="Contact"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
@@ -300,7 +329,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={value}
+                    value={value}
                     label="Designation"
                     onChange={onChange}
                     placeholder="Business Development Executive"
@@ -320,7 +349,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   <TextField
                     select
                     fullWidth
-                    defaultValue={userData?.role_groups?.role?.id}
+                    defaultValue={userData?.role?.id}
                     onChange={(e) => {
                       setValue('role', e.target.value);
                     }}

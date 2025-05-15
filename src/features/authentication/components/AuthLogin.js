@@ -32,6 +32,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useSpinner } from 'context/spinnerContext';
 
 // import Google from 'assets/images/icons/social-google.svg';
 
@@ -42,6 +44,8 @@ const FirebaseLogin = ({ ...others }) => {
   const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
+  const { handleotppage } = others;
+  const { show, hide } = useSpinner();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -51,27 +55,36 @@ const FirebaseLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
+  console.log(theme.typography.customInput, 'customINput');
   return (
     <Formik
       initialValues={{
-        email: 'patroninternational',
-        password: 'patroninternational', //kVgfd3fk
+        email: 'chandran1@gmail.com',
+        password: 'Testpass@2024',
         submit: null
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string('Must be a valid username').max(255).required('Username is required'),
         password: Yup.string().max(255).required('Password is required')
       })}
-      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+      onSubmit= { async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
-            dispatch(login(values.email, values.password));
-            setStatus({ success: true });
-            setSubmitting(false);
+            show();
+            const response = await dispatch(login(values.email, values.password));
+
+            if (response?.otpVerify) {
+              hide();
+              handleotppage();
+            } else {
+              setStatus({ success: true });
+              setSubmitting(false);
+            }
           }
         } catch (err) {
+          hide();
           console.error(err);
+          toast.error(err?.message);
           if (scriptedRef.current) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -82,7 +95,7 @@ const FirebaseLogin = ({ ...others }) => {
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <form noValidate onSubmit={handleSubmit} {...others}>
-          <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
+          <FormControl variant="outlined" fullWidth error={Boolean(touched.email && errors.email)} sx={{ my: 1 }}>
             <InputLabel htmlFor="outlined-adornment-email-login">Username</InputLabel>
             <OutlinedInput
               id="outlined-adornment-email-login"
@@ -100,7 +113,7 @@ const FirebaseLogin = ({ ...others }) => {
             )}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
+          <FormControl variant="outlined" fullWidth error={Boolean(touched.password && errors.password)} sx={{ my: 1 }}>
             <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
             <OutlinedInput
               id="outlined-adornment-password-login"
@@ -132,14 +145,14 @@ const FirebaseLogin = ({ ...others }) => {
             )}
           </FormControl>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
               label="Remember me"
-            />
+            /> */}
 
             <Typography
               component={Link}
-              // onClick={others?.handleOtpPage}
+              onClick={others?.handleOtpPage}
               to="/forget-password"
               variant="subtitle1"
               color="secondary"

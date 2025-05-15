@@ -1,56 +1,57 @@
-import { Avatar, Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Icon from 'components/icon';
-import { default as CategoryDeleteModel, default as StatusChangeDialog } from 'components/modal/DeleteModel';
+import CategoryDeleteModel from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { deleteCourseCategory, updateCourseCategoryStatus } from '../../services/courseCategoryServices';
 import CategoryEditModal from './CategoryEditModal';
+import { getImageUrl } from 'utils/imageUtils';
+import { useSpinner } from 'context/spinnerContext';
 
 const CategoryCard = (props) => {
-  // Props
   const { category, setCategoryRefetch } = props;
 
-  // State
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryDeleteModelOpen, setCategoryDeleteModelOpen] = useState(false);
   const [selectedCategoryDeleteId, setSelectedCategoryDeleteId] = useState(null);
+  const { show, hide } = useSpinner()
 
-  // Memoized variables
-  const categoryLogoSrc = useMemo(() => `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}`, [category]);
+  const categoryLogoSrc = useMemo(() => `${getImageUrl(category?.image)}`, [category]);
 
-  // Event handlers
   const handleEditClick = useCallback(() => {
     setSelectedCategory(category);
     setEditModalOpen(true);
   }, [category]);
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedCategoryDeleteId(itemId);
     setCategoryDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleCategoryDelete = async () => {
+    show()
     const data = { id: selectedCategoryDeleteId };
     const result = await deleteCourseCategory(data);
     if (result.success) {
       toast.success(result.message);
       setCategoryRefetch((state) => !state);
+      hide()
     } else {
+      hide()
       toast.error(result.message);
     }
   };
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
     const response = await updateCourseCategoryStatus(data);
     if (response.success) {
@@ -68,81 +69,163 @@ const CategoryCard = (props) => {
 
   return (
     <Grid item xs={12} sm={6} lg={4}>
-      <Card sx={{ minHeight: 260 }}>
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          {/* Category Logo and Actions */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            {/* Category Logo */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Avatar alt="Category Logo" src={categoryLogoSrc} sx={{ width: 56, height: 56 }} />
-            </Box>
-            {/* Category Actions */}
-            <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <OptionsMenu
-                menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-                iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                options={[
-                  {
-                    text: 'Edit',
-                    icon: <Icon icon="tabler:edit" />,
-                    menuItemProps: {
-                      onClick: () => {
-                        handleEditClick();
-                      }
-                    }
-                  },
-                  {
-                    text: 'Delete',
-                    icon: <Icon icon="mdi:delete-outline" />,
-                    menuItemProps: {
-                      onClick: () => handleDelete(category?.id)
-                    }
-                  }
-                ]}
-              />
-            </Box>
-          </Box>
+      <Card
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 300,
+          boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.15)',
+          borderRadius: '15px',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-8px)',
+            boxShadow: '0 0.75rem 1.5rem rgba(0, 0, 0, 0.2)',
+          },
+        }}
+      >
+        {/* Image at the Top */}
+        <Box
+          sx={{
+            height: 150,
+            backgroundImage: `url(${categoryLogoSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderTopLeftRadius: '15px',
+            borderTopRightRadius: '15px',
+            imageRendering: "pixelated"
+          }}
+        />
 
-          <Typography
-            variant="h3"
-            sx={{
-              mb: 1,
-              mt: 2,
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              textOverflow: 'ellipsis'
-            }}
-          >
-            {category?.category_name}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
-            {category?.course?.length} Courses
-          </Typography>
-          {/* Category Status Selector */}
-          <Grid sx={{ mt: 2 }}>
-            <TextField
-              size="small"
-              select
-              width={100}
-              label="Status"
-              SelectProps={{ value: category?.is_active, onChange: (e) => handleStatusValue(e, category) }}
+        {/* Content at the Bottom */}
+        <CardContent
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: 2,
+            paddingTop: 3,
+          }}
+        >
+          <Box sx={{display:"flex",justifyContent:"space-between" ,alignItems:"center"}}>
+            <Typography
+               variant="h2"
+               sx={{
+                 fontSize: "1.5rem", 
+                 fontWeight: "bold",
+                 letterSpacing: "-0.01562em", 
+                 background: "linear-gradient(to bottom right, #10B981, #8B5CF6)",
+                 WebkitBackgroundClip: "text",
+                 WebkitTextFillColor: "transparent",
+                 display: "inline-block",
+               }}
+             
             >
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
-            </TextField>
-          </Grid>
+              {category?.category_name}
+            </Typography>
+            {category?.course?.length > 0 && (
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                {category?.course?.length} Courses
+              </Typography>
+            )}
+
+<OptionsMenu 
+  menuProps={{ 
+    sx: { 
+      '& .MuiMenuItem-root': { 
+        display: 'flex', 
+        flexDirection: 'row-reverse' 
+      },
+      '& .MuiMenuItem-root svg': { ml: 2 } 
+    } 
+  }}
+  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+  options={[
+    {
+      text: 'Edit',
+      icon: <Icon icon="tabler:edit" />,
+      menuItemProps: {
+        onClick: () => {
+          handleEditClick();
+        }
+      }
+    },
+    {
+      text: 'Delete',
+      icon: <Icon icon="mdi:delete-outline" />,
+      menuItemProps: {
+        onClick: () => handleDelete(category?.uuid)
+      }
+    }
+  ]}
+/>
+
+          </Box>
+          <span style={{mt:5,color:"grey",display:"inline-block"}}>Status</span>
+          <Box 
+  sx={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: 1, 
+    border: '1px solid #E0E0E0', 
+    borderRadius: '8px', 
+    padding: '6px 12px', 
+    width: 'fit-content',
+    backgroundColor: 'white',
+    mt:-2 
+  }}
+>
+
+  <Box 
+    sx={{ 
+      width: 10, 
+      height: 10, 
+      borderRadius: '50%', 
+      backgroundColor: category?.is_active ? 'green' : 'gray' 
+    }} 
+  />
+  
+
+  <TextField
+    size="small"
+    select
+    variant="standard"
+  
+    value={category?.is_active}
+    onChange={(e) => handleStatusValue(e, category)}
+    sx={{
+      minWidth: 100,
+      '& .MuiInputBase-root': {
+        border: 'none',
+      },
+      '& .MuiSelect-select': {
+        padding: 0, 
+      },
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none !important', 
+      },
+     
+      
+    }}
+  >
+    
+    <MenuItem  value="true">Active</MenuItem>
+    <MenuItem value="false">Inactive</MenuItem>
+    
+  </TextField>
+</Box>
+
+ 
         </CardContent>
       </Card>
-      {/* Category Edit Modal */}
+
       <CategoryEditModal
         category={selectedCategory}
         open={isEditModalOpen}
         handleEditClose={() => setEditModalOpen(false)}
         setCategoryRefetch={setCategoryRefetch}
       />
-      {/* Status Change Modal */}
+
       <StatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}

@@ -20,7 +20,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       field: 'id',
       headerName: 'ID',
       renderCell: ({ row }) => (
-        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
+        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row?.subscription_id}`}>
           {`#${row?.id}`}
         </Typography>
       )
@@ -30,14 +30,14 @@ const SubscriptionDataTable = ({ Subscription }) => {
       minWidth: 140,
       field: 'plan',
       headerName: 'Plan',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.transaction_id}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.subscriptionId?.identity}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.transactionHistory?.[0]?.amount || 0}`}</Typography>
     },
     {
       flex: 1.25,
@@ -46,7 +46,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       headerName: 'Issued Date',
       renderCell: ({ row }) => (
         <Typography sx={{ color: 'text.secondary' }}>
-          {row.start_date} - {row.end_date}
+          {row?.startDate} - {row?.endDate}
         </Typography>
       )
     },
@@ -55,7 +55,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       minWidth: 120,
       field: 'price',
       headerName: 'price',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.price || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row?.subscriptionId?.price || 0}`}</Typography>
     }
   ];
 
@@ -63,7 +63,32 @@ const SubscriptionDataTable = ({ Subscription }) => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <DataGrid
-          sx={{ p: 2 }}
+          sx={{ 
+            '& .MuiDataGrid-row' : {
+              border: "1px solid #e6e5e7",
+              borderLeft: "none",
+              borderRight: "none",
+            },
+            "& .MuiDataGrid-row" : {
+              border : "1px solid #e6e5e7",
+              borderLeft: "none",
+              borderRight: "none",
+              ":hover" : {
+                 backgroundColor : "#f5f5f7",
+                 border : "1px solid #e6e5e7",
+                 borderLeft: "none",
+                 borderRight: "none"
+              }
+            },
+            "& .MuiDataGrid-columnHeaders" : {
+                 border : "1px solid #e6e5e7",
+                 borderLeft: "none",
+                 borderRight: "none"
+            },
+            "& .MuiDataGrid-footerContainer" : {
+              border : "none"
+            }
+           }}
           autoHeight
           rowHeight={62}
           rows={Subscription}
@@ -71,6 +96,8 @@ const SubscriptionDataTable = ({ Subscription }) => {
           disableRowSelectionOnClick
           hideFooterPagination
           onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+          disableColumnFilter={true}
+          disableColumnMenu={true}
         />
       </Grid>
     </Grid>

@@ -43,7 +43,7 @@ const TeachingStaffSidebarLeft = (props) => {
       setAttendances(result.data.data);
     }
   };
-
+  
   const handleSidebarToggleSidebar = () => {
     handleAddEventSidebarToggle();
   };

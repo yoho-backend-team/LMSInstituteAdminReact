@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box,Card, CardContent, Grid, IconButton,Pagination } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
@@ -8,17 +8,25 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CourseStudyMaterialView from './CourseStudyMaterialView';
 
-const StudyMaterials = ({ materials }) => {
+const StudyMaterials = ({ materials=[] }) => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const handleRowClick = (params) => {
-    setSelectedRow(params);
+  const [page, setPage] = useState(1);
+  const pageSize = 6; 
+
+
+  const handleRowClick = (row) => {
+    setSelectedRow(row);
   };
 
   const handleViewClose = () => {
     setViewModalOpen(false);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   const RowOptions = ({ row }) => {
@@ -32,8 +40,17 @@ const StudyMaterials = ({ materials }) => {
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                console.log('Button Pressed');
                 setViewModalOpen(true);
+                handleRowClick(row);
+              }
+            }
+          },
+          {
+            text: 'Delete',
+            icon: <Icon icon="tabler:trash" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => {
+                setDeleteDialogOpen(true);
                 handleRowClick(row);
               }
             }
@@ -86,19 +103,85 @@ const StudyMaterials = ({ materials }) => {
   ];
 
   // ** State
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
+  // const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
+  const paginatedMaterials = materials.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <Box>
-      <DataGrid
+      {/* <DataGrid
         autoHeight
-        rows={materials}
+        rows={materials || []}
         columns={columns}
         checkboxSelection
         pageSizeOptions={[7, 10, 25, 50]}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-      />
+      /> */}
+
+<Grid container spacing={3}>
+        {paginatedMaterials.map((row) => (
+          <Grid item xs={12} sm={6} md={4} key={row.id}>
+
+            <Card  sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.3s ease',
+                background: 'linear-gradient(to bottom right, white, #f9fafb)',
+                border: '1px solid #e5e7eb',
+                '&:hover': {
+                  boxShadow: 6, // Equivalent to hover:shadow-lg
+                  transform: 'translateY(-4px)', // Equivalent to hover:-translate-y-1
+                  background: 'linear-gradient(to bottom right, rgba(0,123,255,0.05), rgba(0,123,255,0.1))'
+                }
+              }}>
+
+              <CardContent>
+<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+                <Typography variant="h3" sx={{ fontWeight: 600,color: 'text.primary' }}>
+                  {row.title}
+                </Typography>
+
+                <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      setViewModalOpen(true);
+                      handleRowClick(row);
+                    }}
+                  >
+                    <Icon icon="tabler:eye" fontSize={20} />
+                  </IconButton>
+
+</Box>
+
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2, color: 'gray', transition: 'color 0.3s',
+                    '&:hover': { color: 'text.primary' } }}>
+                  {row.description}
+                </Typography>
+
+                <Box sx={{display:'flex',justifyContent:'flex-end'}}>
+                  <RowOptions row={row} />
+                 
+                </Box>
+
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+
+{/* Pagination */}
+<Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Pagination
+          count={Math.ceil(materials.length / pageSize)}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
+
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

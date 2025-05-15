@@ -1,0 +1,72 @@
+/* Tour.css */
+.tour-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* Ensure it appears above all other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .tour-tooltip {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .tour-highlight {
+    position: absolute;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+  }
+  
+  .tour-controls {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .tour-button {
+    padding: 10px 20px;
+    background-color: #0CCE7F;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .tour-button:hover {
+    background-color: #0C9B62;
+  }
+  
+  .tour-button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+
+  
+  /* Add to Tour.css */
+.tour-tooltip {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  

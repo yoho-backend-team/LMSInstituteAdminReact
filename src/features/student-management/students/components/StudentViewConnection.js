@@ -15,6 +15,7 @@ import OptionsMenu from 'components/option-menu';
 import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -22,31 +23,30 @@ const Timeline = styled(MuiTimeline)({
   }
 });
 
-const UserViewConnection = ({ id }) => {
+const UserViewConnection = ({ id ,student}) => {
   const [activityLog, setActivityLog] = useState([]);
 
   useEffect(() => {
-    getUserLog(id);
+    getUserLog(student?.uuid);
   }, [id]);
-
+  
   const getUserLog = async (userId) => {
     try {
       const data = {
-        user_id: userId
+        id: userId
       };
       const result = await getUserActivityLog(data);
       if (result.success) {
-        console.log('ActivityLog:', result.data);
         setActivityLog(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(activityLog);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>

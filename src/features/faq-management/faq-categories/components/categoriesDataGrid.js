@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import FaqCategoriesAddDrawer from './FaqCategoriesAddDrawer';
 import FaqCategoriesEdit from './FaqCategoriesEdit';
 import FaqCategoriesTableHeader from './FaqCategoriesTableHeader';
+import toast from 'react-hot-toast';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -33,7 +34,6 @@ const CategoriesDataGrid = () => {
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
 
-  console.log(deletingItemId);
   const dispatch = useDispatch();
 
   const handleRowClick = (params) => {
@@ -46,14 +46,12 @@ const CategoriesDataGrid = () => {
   };
 
   const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
   };
 
   const studentCertificatesdata = [
@@ -223,7 +221,7 @@ const CategoriesDataGrid = () => {
                 // to: `/apps/invoice/delete/${row.id}`,
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
-                menuItemProps: {
+                menuItemProps: {  
                   onClick: () => {
                     handleDelete();
                   }
@@ -248,10 +246,9 @@ const CategoriesDataGrid = () => {
         setValue(val);
         const result = await searchUsers(val);
         if (result.success) {
-          console.log('Search results:', result.data);
           dispatch(setUsers(result.data));
         } else {
-          console.log(result.message);
+          toast.error(result?.message)
         }
       } catch (error) {
         console.log(error);

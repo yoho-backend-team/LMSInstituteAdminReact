@@ -1,69 +1,56 @@
 // TeachingStaffservice.js
+import client from 'api/client';
 import axios from 'axios';
+import { useBranchId, useInstitute } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem } from 'utils/localStroageService';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/teaching-staff`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff`;
+
+const TEACHING_STAFF_API_END_POINT_get = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/teaching-staff`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params: data
+      params: {
+        page: data.page,
+        is_active: data.is_active,
+        course: data.course
+      },
     });
 
-    console.log(response);
-
-    // Check if the response status is successful
     if (response.data.status) {
       return response;
     } else {
-      // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllTeachingStaffs:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
+
 export const getAllActiveTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client?.TeachingStaff.get(data);
 
-    console.log(response);
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
-    }
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllTeachingStaffs:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch TeachingStaffs. Status: ${error.response.data.message}`);
   }
 };
 
 export const searchTeachingStaffs = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/search`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -81,15 +68,17 @@ export const searchTeachingStaffs = async (searchQuery) => {
 
 export const addTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/create`, data, {
+    console.log("iam working before response 2");
+    console.log(data);
+    
+    const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff/register`, data, {
       headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${getSecureItem('token')}`
       }
     });
-    console.log(response);
+console.log(response,'response');
 
-    if (response.data.status) {
+    if (response.data) {
       return { success: true, message: 'TeachingStaff created successfully' };
     } else {
       return { success: false, message: 'Failed to create TeachingStaff' };
@@ -102,39 +91,40 @@ export const addTeachingStaff = async (data) => {
 
 export const deleteTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/delete`, data, {
+    const response = await axios.delete(`${TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/teaching-staff/${data?.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+      }
     });
-    console.log(response);
+
     if (response.data.status) {
-      return { success: true, message: 'TeachingStaff deleted successfully' };
+      return { success: true, message: 'NonTeachingStaff deleted successfully' };
     } else {
-      return { success: false, message: 'Failed to delete TeachingStaff' };
+      return { success: false, message: 'Failed to delete NonTeachingStaff' };
     }
   } catch (error) {
-    console.error('Error in deleteTeachingStaff:', error);
+    console.error('Error in deleteNonTeachingStaff:', error);
     throw error;
   }
 };
 
 export const updateTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/teaching-staff/update/${data.id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        }
+      }
+    );
+
     if (response.data.status) {
-      return { success: true, message: 'TeachingStaff updated successfully' };
+      return { success: true, message: response.data.message, response: response.data };
     } else {
-      return { success: false, message: 'Failed to update TeachingStaff' };
+      return { success: false, message: response.data.message || 'Failed to update teaching staff' };
     }
   } catch (error) {
     console.error('Error in updateTeachingStaff:', error);
@@ -142,42 +132,39 @@ export const updateTeachingStaff = async (data) => {
   }
 };
 
+export const getStaffClassesWithStaffId = async (data) => {
+  try {
+    const response = await client.TeachingStaff.getClasses(data);
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const TeachingStaffById = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('teachingStaff:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
+    const response = await client.users.getstaffWithId(data);
+    if (response.status) {
+      return { success: true, data: response.data };
     } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+      throw new Error(`Failed to fetch a Nonstaff. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in teaching staffs:', error);
-
-    // Throw the error again to propagate it to the calling function/component
+    console.error('Error in fetching Nonstaff:', error);
     throw error;
   }
 };
 
 export const staffChangePassword = async (data) => {
   try {
-    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/status-update`, data, {
+    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/change-password`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'User status updated successfully' };
     } else {
@@ -191,21 +178,28 @@ export const staffChangePassword = async (data) => {
 
 export const staffStatusChange = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/status`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Staff status updated successfully' };
+    const response = await client.TeachingStaff.update_staff(data);
+    if (response.status === "success") {
+      return { success: true, message: response.data.message };
     } else {
       return { success: false, message: response.data.message };
     }
   } catch (error) {
-    console.error('Error in staff:', error);
+    console.error('Error in staff status change:', error);
+    throw error;
+  }
+};
+
+export const staffById = async (data) => {
+  try {
+    const response = await client.users.getStudentWithId(data);
+    if (response.status) {
+      return { success: true, data: response.data };
+    } else {
+      throw new Error(`Failed to fetch a student. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error in fetching student:', error);
     throw error;
   }
 };

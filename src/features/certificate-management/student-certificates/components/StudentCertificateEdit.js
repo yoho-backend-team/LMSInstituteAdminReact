@@ -32,7 +32,7 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  name: yup
+  certificate_name: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required()
@@ -40,14 +40,12 @@ const schema = yup.object().shape({
 
 const defaultValues = {
   description: '',
-  name: ''
+  certificate_name: ''
 };
 
 const StudentCertificateEdit = (props) => {
   // ** Props
   const { open, toggle, setStudentCertificateRefetch } = props;
-  console.log('StudentCertificateEdit - open:', props.open);
-  console.log('StudentCertificateEdit - toggle:', props.toggle);
   const savedPdfUrls = require('assets/pdf.pdf');
   const [selectedFile, setSelectedFile] = useState(null);
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
@@ -65,7 +63,6 @@ const StudentCertificateEdit = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(defaultValues);
 
   useEffect(() => {
     if (open) {
@@ -75,14 +72,18 @@ const StudentCertificateEdit = (props) => {
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    bodyFormData.append('name', data.name);
+    bodyFormData.append('certificate_name', data.certificate_name);
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', props.initialValues.id);
     bodyFormData.append('certificate_file', setSelectedFile);
 
-    console.log(bodyFormData);
+     if (props.certificateid) {
+      bodyFormData.append('certificateid', props.certificateid);
+    }
 
-    const result = await updateStudentCertificate(bodyFormData);
+
+   const result = await updateStudentCertificate(props.certificateid, bodyFormData);
+
 
     if (result.success) {
       toast.success(result.message);
@@ -152,7 +153,7 @@ const StudentCertificateEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          {/* <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
             {!selectedFile && <PDFViewer url={savedPdfUrl} />}
             {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
             <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
@@ -167,12 +168,11 @@ const StudentCertificateEdit = (props) => {
                 onChange={handleFileUpload}
               />
             </ButtonStyled>
-          </Grid>
+          </Grid> */}
 
           <Controller
-            name="name"
+            name="certificate_name"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -181,16 +181,15 @@ const StudentCertificateEdit = (props) => {
                 label="Title"
                 onChange={onChange}
                 placeholder="John Doe"
-                error={Boolean(errors.name)}
-                {...(errors.name && { helperText: errors.name.message })}
+                error={Boolean(errors.certificate_name)}
+                {...(errors.certificate_name && { helperText: errors.certificate_name.message })}
               />
             )}
           />
 
-          <Controller
+          {/* <Controller
             name="description"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -203,7 +202,7 @@ const StudentCertificateEdit = (props) => {
                 {...(errors.description && { helperText: errors.description.message })}
               />
             )}
-          />
+          /> */}
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>

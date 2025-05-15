@@ -5,29 +5,43 @@ import Grid from '@mui/material/Grid';
 // import CardActions from '@mui/material/CardActions';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import CustomSkeleton from '..';
 
 const IdCardSkeleton = () => {
   return (
     <>
-      <Grid container spacing={2} sx={{ mt: 1 }}>
-        {[...Array(6)].map((_, index) => (
-          <Grid key={index} item xs={12} sm={6} md={3}>
-            <Card className="front" sx={{ width: '100%' }}>
-              <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                <Box sx={{ width: 100, height: 100, mb: 3 }}>
-                  <Skeleton variant="circular" width={100} height={100} />
+      <Grid container spacing={3} sx={{ paddingRight: "20px", paddingLeft: "10px"}}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Grid key={i} item xs={12} sm={6} md={3} p={1} mt={2}>
+            <Card
+            sx={{
+              width: "287px",
+              height: "435px",
+              borderRadius: 3,
+              boxShadow: 5,
+              position: 'relative',
+              overflow: 'visible',
+              background: '#fff',
+            }}
+          >
+           
+              <CardContent sx={{ pt: 2.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column',  marginTop:"16px"}}>
+                <CustomSkeleton variant="circular" width={100} />
                 </Box>
-                <Typography variant="h4" sx={{ mb: 2 }}>
-                  <Skeleton width={180} height={22} />
-                </Typography>
-                <Box sx={{ mb: 2 }}>
-                  <Skeleton variant="rectangular" width={150} height={26} />
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' ,marginTop:'16px'}}>
+                <CustomSkeleton variant="text" width={100} height={30} />
                 </Box>
-                <Box mt={2}>
-                  <Skeleton variant="rectangular" width={100} height={100} style={{ borderRadius: '10px' }} />
+
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' ,marginTop:'18px'}}>
+                <CustomSkeleton variant="text" width={180} height={30} />
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' ,marginTop:'36px'}}>
+                <CustomSkeleton variant="text" width={100} height={100} />
                 </Box>
               </CardContent>
-            </Card>
+              </Card>
+              
           </Grid>
         ))}
       </Grid>

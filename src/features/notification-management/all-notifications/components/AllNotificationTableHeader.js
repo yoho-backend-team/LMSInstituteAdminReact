@@ -1,4 +1,4 @@
-import { Grid, TextField } from '@mui/material';
+import { Grid, IconButton, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
@@ -6,14 +6,14 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllNotifications } from '../redux/allNotificationThunks';
+import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
 
 const AllNotificationTableHeader = (props) => {
   const { toggle } = props;
 
   const [searchValue, setSearchValue] = useState('');
-
+  const [showSearch, setShowSearch] = useState(false); 
   const dispatch = useDispatch();
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const handleSearch = useCallback(
@@ -22,30 +22,49 @@ const AllNotificationTableHeader = (props) => {
       dispatch(getAllNotifications({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
     },
-    [dispatch]
+    [dispatch, selectedBranchId]
   );
 
   return (
     <Box
       sx={{
         py: 2,
-        px: 3,
+        px: 2,
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
       }}
     >
-      <Grid></Grid>
-      <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-        <Grid item sm={5} xs={12}></Grid>
-        <Grid item sm={4} xs={12}>
-          <TextField value={searchValue} fullWidth placeholder="Search" onChange={(e) => handleSearch(e)} />
+      <Grid container spacing={2} sx={{display: 'flex', justifyContent:'space-between',alignItems: 'center' }}>
+        <Grid item sm={5} xs={12} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton
+            onClick={() => setShowSearch(!showSearch)}
+            sx={{ backgroundColor: 'action.selected' , color: 'primary.main', borderRadius: '10%', p: 1 , border: '1px solid' ,  transition: 'all 0.3s ease-in-out',
+               }}
+          >
+            <Icon icon="tabler:search" fontSize="1.5rem" />
+          </IconButton>
+          {showSearch && (
+            <TextField
+              value={searchValue}
+              fullWidth
+              autoFocus
+              placeholder="Search..."
+              variant="outlined"
+              onChange={handleSearch}
+              sx={{ flex: 1 }}
+            />
+          )}
         </Grid>
         <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-          <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
-            <Icon fontSize="1.125rem" icon="tabler:plus" />
-            All Notification
+          <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 },
+         backgroundColor: '#1976D2' ,  
+         '&:hover': {
+          backgroundColor: (theme) => theme.palette.primary.dark,  }, }}>
+
+            {/* <Icon fontSize="1.125rem" icon="tabler:plus" /> */}
+            <NotificationAddIcon/> All Notification
           </Button>
         </Grid>
       </Grid>

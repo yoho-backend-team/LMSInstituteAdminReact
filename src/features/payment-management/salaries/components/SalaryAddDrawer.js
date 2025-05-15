@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -18,6 +18,9 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import zIndex from '@mui/material/styles/zIndex';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -65,16 +68,19 @@ const FeesAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const getActiveStaffsByBranch = async (selectedBranchId, type) => {
-    const data = {
-      type: type,
-      branch_id: selectedBranchId
-    };
-    const result = await getAllActiveTeachingStaffs(data);
-    setActiveStaffs(result.data.data);
+    let result;
+    if (type === 'Teaching') {
+      result = await getAllActiveTeachingStaffs({ branch_id: selectedBranchId });
+    } else {
+      result = await getAllActiveNonTeachingStaffs({ branch_id: selectedBranchId });
+    }
+
+    setActiveStaffs(result.data);
+    console.log(result.data);
   };
 
   const getActiveCoursesByBranch = async (data) => {
@@ -84,8 +90,6 @@ const FeesAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
-
-  console.log(activeCourse);
 
   const {
     handleSubmit,
@@ -117,15 +121,20 @@ const FeesAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('payment_proof', selectedImage);
-    bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('institute_staff_id', data.staff.staff_id);
-    bodyFormData.append('transaction_id', data.transaction_id);
-    bodyFormData.append('salary_amount', data.salary_amount);
-    bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
+    const branch = activeBranches.filter((i) => i.branch_identity === data.branch);
 
-    const result = await addTeachingStaffSalary(bodyFormData);
+    const InputData = {
+      staff: data.staff._id,
+      branch_name: data.branch_id,
+      branch_id: branch[0].uuid,
+      institute_id: useInstitute().getInstituteId(),
+      salary_amount: data.salary_amount,
+      staff_type: data.staff_type,
+      balance: data.balance,
+      transaction_id: data.transaction_id,
+      payment_date: new Date()
+    };
+    const result = await addTeachingStaffSalary(InputData);
     if (result.success) {
       toast.success(result.message);
       handleClose();
@@ -148,32 +157,9 @@ const FeesAddDrawer = (props) => {
     return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
   });
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
-
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
-
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
-  };
+  const [isBranchSelected, setIsBranchSelected] = useState(false);
+  const [isStaffTypeSelected, setIsStaffTypeSelected] = useState(false);
+  const [isStaffSelected, setIsStaffSelected] = useState(false);
 
   return (
     <DatePickerWrapper>
@@ -183,10 +169,12 @@ const FeesAddDrawer = (props) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', xs: 300, sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Salaries</Typography>
+          <Typography variant="h4" sx={{ outline: 1.5, outlineColor: '#0cce7f', px: 2, py: 1, borderRadius: '50px' }}>
+            Add Salaries
+          </Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -205,7 +193,7 @@ const FeesAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -220,23 +208,25 @@ const FeesAddDrawer = (props) => {
                   />
                 </ButtonStyled>
               </div>
-            </Box>
+            </Box> */}
 
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="branch"
                 control={control}
-                rules={{ required: 'Branch field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
-                    options={activeBranches}
-                    getOptionLabel={(branch) => branch.branch_name}
+                    options={activeBranches ? activeBranches : []}
+                    getOptionLabel={(branch) => branch.branch_identity}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.branch_id);
-                      getActiveCoursesByBranch({ branch_id: newValue?.branch_id });
+                      onChange(newValue?.branch_identity);
+                      getActiveCoursesByBranch({ branch_id: newValue?.uuid });
+                      if (!isBranchSelected) {
+                        setIsBranchSelected(true);
+                      }
                     }}
-                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                    value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
                     )}
@@ -249,7 +239,6 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="staff_type"
                 control={control}
-                rules={{ required: 'Staff Type field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
@@ -257,15 +246,29 @@ const FeesAddDrawer = (props) => {
                     onChange={(e, newValue) => {
                       onChange(newValue);
                       getActiveStaffsByBranch(selectedBranchId, newValue);
+                      if (!isStaffTypeSelected) {
+                        setIsStaffTypeSelected(true);
+                      }
                     }}
                     options={['Teaching', 'Non Teaching']}
+                    disabled={!isBranchSelected}
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Select Staff Type"
-                        error={Boolean(errors.staff_type)}
-                        helperText={errors.staff_type?.message}
-                      />
+                      <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                        <span>
+                          <TextField
+                            {...params}
+                            label="Select Staff Type"
+                            error={Boolean(errors.staff_type)}
+                            helperText={errors.staff_type?.message}
+                            disabled={!isBranchSelected}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: isBranchSelected ? 'inherit' : '#EBEBE4'
+                              }
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
                     )}
                   />
                 )}
@@ -276,16 +279,36 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="staff"
                 control={control}
-                rules={{ required: 'Staff field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
-                    value={value}
-                    onChange={(event, newValue) => onChange(newValue)}
-                    options={activeStaffs}
-                    getOptionLabel={(staff) => staff.staff_name}
+                    value={value || null} // Ensure value is not undefined
+                    onChange={(event, newValue) => {
+                      onChange(newValue || null);
+                      if (!isStaffSelected) {
+                        setIsStaffSelected(true);
+                      }
+                    }} // Handle null values
+                    options={activeStaffs || []} // Ensure options is always an array
+                    getOptionLabel={(staff) => staff?.full_name || ''} // Handle undefined staff
+                    disabled={!isStaffTypeSelected}
                     renderInput={(params) => (
-                      <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
+                      <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                        <span>
+                          <TextField
+                            {...params}
+                            label="Select Staff"
+                            error={Boolean(errors.staff)}
+                            helperText={errors.staff?.message}
+                            disabled={!isStaffTypeSelected}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: isStaffTypeSelected ? 'inherit' : '#EBEBE4'
+                              }
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
                     )}
                   />
                 )}
@@ -296,16 +319,30 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="payment_date"
                 control={control}
-                rules={{ required: 'Payment Date field is required' }}
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: isStaffSelected ? 'inherit' : '#EBEBE4'
+                  }
+                }}
                 render={({ field: { value, onChange } }) => (
-                  <DatePicker
-                    selected={value}
-                    id="basic-input"
-                    className="full-width-datepicker"
-                    onChange={onChange}
-                    placeholderText="Click to select a date"
-                    customInput={<CustomInput label="Payment Date" />}
-                  />
+                  <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                    <span>
+                      <DatePicker
+                        selected={value}
+                        id="basic-input"
+                        className="full-width-datepicker"
+                        onChange={onChange}
+                        disabled={!isStaffSelected}
+                        placeholderText="Click to select a date"
+                        customInput={<CustomInput label="Payment Date" sx />}
+                        sx={{
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: isStaffSelected ? 'inherit' : '#EBEBE4'
+                          }
+                        }}
+                      />
+                    </span>
+                  </Tooltip>
                 )}
               />
               {errors.payment_date && (
@@ -318,15 +355,25 @@ const FeesAddDrawer = (props) => {
                 name="transaction_id"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Transaction Id"
-                    type="number"
-                    error={Boolean(errors.transaction_id)}
-                    helperText={errors.transaction_id?.message}
-                  />
+                  <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                    <span>
+                      <TextField
+                        {...field}
+                        sx={{
+                          mb: 2,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: isStaffSelected ? 'inherit' : '#EBEBE4'
+                          }
+                        }}
+                        fullWidth
+                        label="Transaction Id"
+                        type="number"
+                        error={Boolean(errors.transaction_id)}
+                        helperText={errors.transaction_id?.message}
+                        disabled={!isStaffSelected}
+                      />
+                    </span>
+                  </Tooltip>
                 )}
               />
             </Grid>
@@ -336,15 +383,25 @@ const FeesAddDrawer = (props) => {
                 name="salary_amount"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="salary amount"
-                    type="number"
-                    error={Boolean(errors.salary_amount)}
-                    helperText={errors.salary_amount?.message}
-                  />
+                  <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                    <span>
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label="salary amount"
+                        type="number"
+                        error={Boolean(errors.salary_amount)}
+                        helperText={errors.salary_amount?.message}
+                        disabled={!isStaffSelected}
+                        sx={{
+                          mb: 2,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: isStaffSelected ? 'inherit' : '#EBEBE4'
+                          }
+                        }}
+                      />
+                    </span>
+                  </Tooltip>
                 )}
               />
             </Grid>
@@ -354,15 +411,25 @@ const FeesAddDrawer = (props) => {
                 name="balance"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Balance"
-                    type="number"
-                    error={Boolean(errors.balance)}
-                    helperText={errors.balance?.message}
-                  />
+                  <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                    <span>
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label="Balance"
+                        type="number"
+                        error={Boolean(errors.balance)}
+                        helperText={errors.balance?.message}
+                        disabled={!isStaffSelected}
+                        sx={{
+                          mb: 2,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: isStaffSelected ? 'inherit' : '#EBEBE4'
+                          }
+                        }}
+                      />
+                    </span>
+                  </Tooltip>
                 )}
               />
             </Grid>

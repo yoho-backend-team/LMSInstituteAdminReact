@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import CoursePdfInput from './CoursePdfInput';
+import { useState } from 'react';
 
 export default function CourseValidate({ setCourseSyllabus }) {
   const NewProductSchema = Yup.object().shape({
@@ -27,10 +28,9 @@ export default function CourseValidate({ setCourseSyllabus }) {
   });
 
   const { reset, handleSubmit, watch } = methods;
+  const [files, setFiles] = useState([]);
 
   const values = watch();
-
-  console.log(values);
 
   const onSubmit = async () => {
     try {
@@ -49,7 +49,7 @@ export default function CourseValidate({ setCourseSyllabus }) {
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Syllabus" />
-                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
+                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} files={files} setFiles={setFiles} />
               </div>
             </Stack>
           </Card>

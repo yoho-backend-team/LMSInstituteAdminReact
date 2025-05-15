@@ -7,6 +7,11 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
 import { getAllLiveClasses } from '../redux/liveClassThunks';
+ 
+
+import { styled } from "@mui/material/styles";
+
+ 
 
 const LiveClassCardHeader = (props) => {
   const { selectedBranchId, setRefetch } = props;
@@ -14,6 +19,7 @@ const LiveClassCardHeader = (props) => {
   const [searchValue, setSearchValue] = useState('');
 
   const dispatch = useDispatch();
+
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
@@ -35,8 +41,7 @@ const LiveClassCardHeader = (props) => {
     <>
       <Box
         sx={{
-          pb: 1,
-          pt: 3,
+          
           width: '100%',
           display: 'flex',
           flexWrap: 'wrap',
@@ -44,14 +49,24 @@ const LiveClassCardHeader = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <TextField
+        {/* <TextField
           value={searchValue}
           sx={{
-            width: 400
+            width: "80%"
           }}
           placeholder="Search Class"
           onChange={(e) => handleSearch(e)}
-        />
+          label={
+            <>
+              {[..."Search Class"].map((char, index) => (
+                <span key={index} style={{ "--index": index }}>{char}</span>
+              ))}
+            </>
+          }
+        /> */}
+
+         
+        
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
@@ -59,7 +74,7 @@ const LiveClassCardHeader = (props) => {
           </Button>
         </Box>
       </Box>
-      <LiveClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
+      <LiveClassAddModal setRefetch={setRefetch}  open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
 };

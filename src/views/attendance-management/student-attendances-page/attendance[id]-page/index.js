@@ -4,6 +4,7 @@ import StudentAttendanceTable from 'features/attandence-management/student-attan
 import StudentViewHeaderCard from 'features/attandence-management/student-attandences/components/StudentViewHeaderCard';
 import { getClassDetails } from 'features/attandence-management/student-attandences/services/studentAttendanceServices';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 
@@ -29,7 +30,7 @@ const ViewAttendance = () => {
 
   useEffect(() => {
     const data = {
-      class_id: ClassId
+      id: ClassId
     };
     getClassData(data);
   }, [dispatch, ClassId, refetch]);
@@ -38,16 +39,15 @@ const ViewAttendance = () => {
     try {
       const result = await getClassDetails(data);
       if (result.success) {
-        console.log('Class:', result.data);
         setClassData(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(ClassData,"classData")
   return (
     <>
       {loading ? (

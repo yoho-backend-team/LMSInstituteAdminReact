@@ -5,8 +5,10 @@ import { getBatchDetails } from 'features/batch-management/batches/services/batc
 import HeaderCard from 'features/batch-management/view-batch/components/ViewBatchHeaderCard';
 import ViewBatchTable from 'features/batch-management/view-batch/components/ViewBatchTable';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import { useDispatch ,useSelector} from 'react-redux';
 import { useLocation } from 'react-router';
+import { useInstitute } from 'utils/get-institute-details';
 
 
 
@@ -26,6 +28,7 @@ const ViewBatch = () => {
   const location = useLocation();
   const batchId = location.state.id;
   const [batchData, setBatchData] = useState([]);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useTimeout(() => {
     setLoading(false);
@@ -33,7 +36,9 @@ const ViewBatch = () => {
 
   useEffect(() => {
     const data = {
-      batch_id: batchId
+      batch_id: batchId,
+      branchId: selectedBranchId,
+      instituteId: useInstitute().getInstituteId()    
     };
     getBatchData(data);
   }, [dispatch, batchId]);
@@ -43,30 +48,29 @@ const ViewBatch = () => {
       setLoading(true);
       const result = await getBatchDetails(data);
       if (result.success) {
-        console.log('Batches:', result.data);
         setBatchData(result.data);
         setLoading(false);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
         setLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   return (
     <>
       {loading ? (
         <BatchViewSkeleton />
       ) : (
-        <Grid container spacing={3} sx={{ p: 1 }}>
+        <Grid container spacing={3} sx={{ p: 1,background: 'linear-gradient(to bottom right, #EBF4FF, #FFFFFF, #FAF5FF)', minHeight: '100vh' }}>
           <Grid item xs={12} sm={12}>
             <HeaderCard batchData={batchData} theme={theme} />
           </Grid>
 
           <Grid item xs={12}>
-            <ViewBatchTable students={batchData?.institute_batch_student} />
+            <ViewBatchTable students={batchData?.student} />
           </Grid>
         </Grid>
       )}

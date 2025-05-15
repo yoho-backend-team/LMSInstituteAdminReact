@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -19,6 +19,8 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addStudentFee } from '../services/studentFeeServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -27,14 +29,28 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }));
 
+// Validation Schema for Payment History
+const paymentHistoryValidationSchema = yup.object().shape({
+  paid_amount: yup.number().required('Paid amount is required').typeError('Paid Amount is required'),
+  balance: yup.number().required('Balance is required').typeError('Balance is required'),
+  payment_date: yup.string().required('Payment date is required'),
+  transaction_id: yup.number().required('Transaction ID is required').typeError('Transaction ID must be greater than 0'),
+  payment_method: yup.string().oneOf(['offline', 'online'], 'Invalid payment method').default('offline'),
+  duepaymentdate: yup.string().nullable().typeError('Due Payment Date must be a valid date')
+});
+
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
-  branch: yup.string().required('Branch is required'),
   batch: yup.object().required('Batch is required'),
-  student: yup.string().required('Students is required'),
-  payment_date: yup.string().required('Payment Date is required'),
-  transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  branch: yup.string().required('Branch is required'),
+  student: yup.string().required('Student is required'),
+  paid_amount: yup.number().required('Paid amount is required').typeError('Paid Amount is required'),
+  balance: yup.number().required('Balance is required').typeError('Balance is required'),
+  payment_date: yup.string().required('Payment date is required'),
+  transaction_id: yup.number().required('Transaction ID is required').typeError('Transaction ID must be greater than 0'),
+  payment_method: yup.string().oneOf(['offline', 'online'], 'Invalid payment method').default('offline'),
+  duepaymentdate: yup.string().nullable().typeError('Due Payment Date must be a valid date'),
+  payment_history: yup.array().of(paymentHistoryValidationSchema).min(1, 'At least one payment history entry is required')
 });
 
 const defaultValues = {
@@ -42,7 +58,22 @@ const defaultValues = {
   course: '',
   batch: null,
   student: '',
-  payment_date: new Date()
+  paid_amount: 0,
+  balance: 0,
+  payment_date: new Date(),
+  transaction_id: 1,
+  payment_method: 'offline',
+  duepaymentdate: '',
+  payment_history: [
+    {
+      paid_amount: 0,
+      balance: 0,
+      payment_date: new Date(),
+      transaction_id: 1,
+      payment_method: 'offline',
+      duepaymentdate: ''
+    }
+  ]
 };
 
 const FeesAddDrawer = (props) => {
@@ -50,6 +81,7 @@ const FeesAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
 
   const [inputValue, setInputValue] = useState('');
+  const { show, hide } = useSpinner();
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [imgSrc, setImgSrc] = useState(image);
@@ -60,6 +92,7 @@ const FeesAddDrawer = (props) => {
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
   const [students, setStudents] = useState([]);
+console.log(activeBatches,'activeBatches');
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -74,29 +107,42 @@ const FeesAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const getActiveCoursesByBranch = async (data) => {
+    show();
     const result = await getAllCourses(data);
     if (result?.data) {
+      hide();
       setActiveCourse(result?.data);
+    } else {
+      hide();
     }
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
+    show();
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
+
     if (result?.success) {
+      hide();
       setActiveBatches(result?.data);
+    } else {
+      hide();
     }
   };
 
   const getStudentsByBatch = async (batchId) => {
+    show();
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudentsByBatch(data);
     if (result?.success) {
+      hide();
       setStudents(result?.data);
+    } else {
+      hide();
     }
   };
 
@@ -117,7 +163,7 @@ const FeesAddDrawer = (props) => {
     var year = originalDate.getFullYear();
     var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-    var formattedDateString = year + '-' + month + '-' + day;
+    var formattedDateString = month + '-' + day + '-' + year;
     return formattedDateString;
   }
 
@@ -126,23 +172,50 @@ const FeesAddDrawer = (props) => {
     toggle();
     reset();
   };
-
+  // console.log(errors, 'errors');
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('payment_proof', selectedImage);
-    bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('student_id', data.student);
-    bodyFormData.append('transaction_id', data.transaction_id);
-    bodyFormData.append('paid_amount', data.paidAmount);
-    bodyFormData.append('payment_date', convertDateFormat(data.payment_date));
+    show();
+    const branch = activeBranches.filter((i) => i.branch_identity === data.branch);
 
-    const result = await addStudentFee(bodyFormData);
+    const InputData = {
+      student: data.student,
+      branch_name: data.branch_id,
+      branch_id: branch[0].uuid,
+      institute_id: useInstitute().getInstituteId(),
+      batch_name: data.batch._id,
+      // paid_amount: data.paidAmount,
+      // balance: data.balance,
+      course_name: data.batch.course.uuid,
+      paid_amount: data.paid_amount,
+      balance: data.balance,
+      payment_date: new Date(),
+      transaction_id: data.transaction_id,
+      payment_method: data.payment_method,
+      duepaymentdate: data.duepaymentdate,
+      // amount: data.amount,
+      // transaction_id : data.transaction_id,
+      // payment_date: new Date(),
+      payment_history: [
+        {
+          paid_amount: data.paid_amount,
+          balance: data.balance,
+          payment_date: new Date(),
+          transaction_id: data.transaction_id,
+          payment_method: data.payment_method,
+          duepaymentdate: data.duepaymentdate
+        }
+      ]
+    };
+
+    const result = await addStudentFee(InputData);
 
     if (result.success) {
+      hide();
       toast.success(result.message);
       handleClose();
       setRefetch((state) => !state);
     } else {
+      hide();
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
@@ -160,32 +233,37 @@ const FeesAddDrawer = (props) => {
     return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
   });
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  // const ImgStyled = styled('img')(({ theme }) => ({
+  //   width: 100,
+  //   height: 100,
+  //   marginRight: theme.spacing(2),
+  //   borderRadius: theme.shape.borderRadius
+  // }));
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
+  // const ButtonStyled = styled(Button)(({ theme }) => ({
+  //   [theme.breakpoints.down('sm')]: {
+  //     width: '100%',
+  //     textAlign: 'center'
+  //   }
+  // }));
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
-  };
+  // const handleInputImageChange = (file) => {
+  //   const reader = new FileReader();
+  //   const { files } = file.target;
+  //   if (files && files.length !== 0) {
+  //     reader.onload = () => setImgSrc(reader.result);
+  //     setSelectedImage(files[0]);
+  //     reader.readAsDataURL(files[0]);
+  //     if (reader.result !== null) {
+  //       setInputValue(reader.result);
+  //     }
+  //   }
+  // };
+
+  const [isBranchSelected, setIsBranchSelected] = useState(false);
+  const [isCourseSelected, setIsCourseSelected] = useState(false);
+  const [isBatchSelected, setIsBatchSelected] = useState(false);
+  const [isStudentSelected, setIsStudentSelected] = useState(false);
 
   return (
     <DatePickerWrapper>
@@ -198,7 +276,9 @@ const FeesAddDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h4" sx={{ outline: 1.5, outlineColor: '#0cce7f', px: 2, py: 1, borderRadius: '50px' }}>
+            Add Fees
+          </Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -217,7 +297,7 @@ const FeesAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -232,23 +312,25 @@ const FeesAddDrawer = (props) => {
                   />
                 </ButtonStyled>
               </div>
-            </Box>
+            </Box> */}
             <Grid container>
               <Grid item xs={12} sx={{ mb: 2 }}>
                 <Controller
                   name="branch"
                   control={control}
-                  rules={{ required: 'Branch field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
                       options={activeBranches}
-                      getOptionLabel={(branch) => branch.branch_name}
+                      getOptionLabel={(branch) => branch.branch_identity}
                       onChange={(event, newValue) => {
-                        onChange(newValue?.branch_id);
-                        getActiveCoursesByBranch(newValue?.branch_id);
+                        onChange(newValue?.branch_identity);
+                        getActiveCoursesByBranch({ branch_id: newValue?.uuid });
+                        if (!isBranchSelected) {
+                          setIsBranchSelected(true);
+                        }
                       }}
-                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
                       )}
@@ -261,20 +343,38 @@ const FeesAddDrawer = (props) => {
                 <Controller
                   name="course"
                   control={control}
-                  rules={{ required: 'Course field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
                       options={activeCourse}
                       getOptionLabel={(course) => course.course_name}
                       onChange={(event, newValue) => {
-                        onChange(newValue?.course_id);
-                        getActiveBatchesByCourse(newValue?.course_id);
+                        onChange(newValue?.course_name);
+                        getActiveBatchesByCourse(newValue?.course_name);
+                        if (!isCourseSelected) {
+                          setIsCourseSelected(true);
+                        }
                       }}
-                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      value={activeCourse.find((course) => course.course_name === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                        <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                          <span>
+                            <TextField
+                              {...params}
+                              label="Select Course"
+                              error={Boolean(errors.course)}
+                              helperText={errors.course?.message}
+                              sx={{
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: isBranchSelected ? 'inherit' : '#EBEBE4'
+                                }
+                              }}
+                              disabled={!isBranchSelected}
+                            />
+                          </span>
+                        </Tooltip>
                       )}
+                      disabled={!isBranchSelected}
                     />
                   )}
                 />
@@ -284,28 +384,41 @@ const FeesAddDrawer = (props) => {
                 <Controller
                   name="batch"
                   control={control}
-                  rules={{ required: 'Batch field is required' }}
                   render={({ field }) => (
                     <Autocomplete
                       {...field}
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option?.batch_name}
+                      getOptionLabel={(batch) => batch?.batch_name}
                       onChange={(event, newValue) => {
                         field.onChange(newValue);
                         setValue('batch', newValue);
-                        getStudentsByBatch(newValue?.batch_id);
+                        getStudentsByBatch(newValue?.uuid);
+                        if (!isBatchSelected) {
+                          setIsBatchSelected(true);
+                        }
                       }}
                       value={field.value}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          sx={{ mb: 2 }}
-                          label="Batch"
-                          error={Boolean(errors.batch)}
-                          helperText={errors.batch?.message}
-                        />
+                        <Tooltip title={isCourseSelected ? '' : 'Please select a Course'} arrow>
+                          <span>
+                            <TextField
+                              {...params}
+                              label="Batch"
+                              error={Boolean(errors.batch)}
+                              helperText={errors.batch?.message}
+                              sx={{
+                                mb: 2,
+
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: isCourseSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                                }
+                              }}
+                            />
+                          </span>
+                        </Tooltip>
                       )}
+                      disabled={!isCourseSelected}
                     />
                   )}
                 />
@@ -315,23 +428,34 @@ const FeesAddDrawer = (props) => {
                 <Controller
                   name="student"
                   control={control}
-                  rules={{ required: 'Student field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      select
-                      fullWidth
-                      label="Student"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.student)}
-                      helperText={errors.student?.message}
-                    >
-                      {students.map((student) => (
-                        <MenuItem key={student?.student_id} value={student?.student_id}>
-                          {`${student?.first_name} ${student?.last_name}`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a Batch'} arrow>
+                      <span>
+                        <TextField
+                          select
+                          fullWidth
+                          label="Student"
+                          value={value}
+                          onChange={onChange}
+                          error={Boolean(errors.student)}
+                          helperText={errors.student?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected || isStudentSelected}
+                        >
+                          {students.map((student) => (
+                            <MenuItem key={student?.student} value={student?._id}>
+                              {`${student.full_name}`}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -340,17 +464,28 @@ const FeesAddDrawer = (props) => {
                 <Controller
                   name="payment_date"
                   control={control}
-                  rules={{ required: 'Payment Date field is required' }}
+                  defaultValue={new Date()}
                   render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      selected={value}
-                      id="date-time-picker"
-                      timeFormat="HH:mm"
-                      className="full-width-datepicker"
-                      onChange={onChange}
-                      placeholderText="Click to select a date"
-                      customInput={<CustomInput label="Payment Date" />}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a student'} arrow>
+                      <span>
+                        <DatePicker
+                          selected={value}
+                          id="date-time-picker"
+                          timeFormat="HH:mm"
+                          className="full-width-datepicker"
+                          onChange={onChange}
+                          placeholderText="Click to select a date"
+                          customInput={<CustomInput label="Payment Date" />}
+                          sx={{
+                            mb: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
                 {errors.payment_date && (
@@ -363,33 +498,55 @@ const FeesAddDrawer = (props) => {
                   name="transaction_id"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Transaction Id"
-                      type="number"
-                      error={Boolean(errors.transaction_id)}
-                      helperText={errors.transaction_id?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a payment_date'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Transaction Id"
+                          type="number"
+                          error={Boolean(errors.transaction_id)}
+                          helperText={errors.transaction_id?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
 
               <Grid item xs={12} sm={12}>
                 <Controller
-                  name="paidAmount"
+                  name="paid_amount"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Paid Amount"
-                      type="number"
-                      error={Boolean(errors.paidAmount)}
-                      helperText={errors.paidAmount?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a transaction_id'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Paid Amount"
+                          type="number"
+                          error={Boolean(errors.paid_amount)}
+                          helperText={errors.paid_amount?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -399,17 +556,59 @@ const FeesAddDrawer = (props) => {
                   name="balance"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Balance"
-                      type="number"
-                      error={Boolean(errors.balance)}
-                      helperText={errors.balance?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a paid_amount'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Balance"
+                          type="number"
+                          error={Boolean(errors.balance)}
+                          helperText={errors.balance?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <Controller
+                  name="duepaymentdate"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a balance'} arrow>
+                      <span>
+                        <DatePicker
+                          selected={value}
+                          id="date-time-picker"
+                          timeFormat="HH:mm"
+                          className="full-width-datepicker"
+                          onChange={onChange}
+                          placeholderText="Click to select a date"
+                          customInput={<CustomInput label="Due Payment Date" />}
+                          sx={{
+                            mb: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
+                  )}
+                />
+                {errors.payment_date && (
+                  <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date?.message}</p>
+                )}
               </Grid>
             </Grid>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>

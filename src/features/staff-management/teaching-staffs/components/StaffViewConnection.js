@@ -12,9 +12,11 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import OptionsMenu from 'components/option-menu';
-import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
+import  Pagination  from '@mui/material/Pagination';
+import { getUserActivityLog , getStaffActivityLogs} from 'features/user-management/users-page/services/userServices';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -22,30 +24,24 @@ const Timeline = styled(MuiTimeline)({
   }
 });
 
-const UserViewConnection = ({ id }) => {
-  const [activityLog, setActivityLog] = useState([]);
+const UserViewConnection = ({ activity }) => {
+  const [activityLog, setActivityLog] = useState(null);
+  const [page,setPage] = useState(1)
+
+  const getLogs = async (data) => {
+    try {
+      const response = await getStaffActivityLogs(data) 
+      console.log(response,"response")
+      setActivityLog(response) 
+    } catch (error) {
+      toast.error(error?.message)
+    }
+  }
 
   useEffect(() => {
-    getUserLog(id);
-  }, [id]);
-
-  const getUserLog = async (userId) => {
-    try {
-      const data = {
-        user_id: userId
-      };
-      const result = await getUserActivityLog(data);
-      if (result.success) {
-        console.log('ActivityLog:', result.data);
-        setActivityLog(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+    const params = { staff : activity}
+    getLogs(params)
+  },[])
 
   return (
     <Grid container spacing={6}>
@@ -53,19 +49,19 @@ const UserViewConnection = ({ id }) => {
         <Card>
           <CardHeader
             title="User Activity Timeline"
-            action={
-              <OptionsMenu
-                options={['Share timeline', 'Suggest edits', 'Report bug']}
-                iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-              />
-            }
+            // action={
+            //   <OptionsMenu
+            //     options={['Share timeline', 'Suggest edits', 'Report bug']}
+            //     iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
+            //   />
+            // }
           />
           <CardContent>
             <Timeline>
-              {activityLog?.map((item, index) => (
+              {activityLog?.logs?.map((item, index) => (
                 <TimelineItem key={index}>
                   <TimelineSeparator>
-                    <TimelineDot color="warning" />
+                    <TimelineDot color="success" />
                     <TimelineConnector />
                   </TimelineSeparator>
                   <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important` }}>
@@ -81,17 +77,31 @@ const UserViewConnection = ({ id }) => {
                         {item.title}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        Today
+                        {new Date(item?.timestamp).toLocaleDateString()+" - " + new Date(item.timestamp).toLocaleTimeString()}
                       </Typography>
                     </Box>
                     <Typography variant="body2" sx={{ mb: 3 }}>
-                      {item.description}
+                      {item.details}
                     </Typography>
                   </TimelineContent>
                 </TimelineItem>
               ))}
             </Timeline>
           </CardContent>
+          {
+         activityLog?.last_page !== 1 && <Box 
+          sx={{ display : "flex", justifyContent : "end", py: "10px"}}
+          >
+            <Pagination 
+            count={activityLog?.last_page}
+            onChange={async (e,page) => {
+              setPage(page)
+              const params = { staff : activity,page : page }
+              await getLogs(params)
+            }}
+            />
+          </Box>
+          }
         </Card>
       </Grid>
     </Grid>

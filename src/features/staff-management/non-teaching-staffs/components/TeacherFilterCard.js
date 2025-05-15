@@ -10,6 +10,7 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getAllNonTeachingStaffs } from '../redux/nontTeachingStaffThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const TeacherFilter = (props) => {
   const { selectedBranchId } = props;
@@ -21,7 +22,7 @@ const TeacherFilter = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId, type: 'non_teaching' };
+    const data = { is_active: e.target.value, branchid: selectedBranchId, instituteId: useInstitute().getInstituteId() };
     dispatch(getAllNonTeachingStaffs(data));
   };
 
@@ -29,7 +30,7 @@ const TeacherFilter = (props) => {
     (e) => {
       const searchInput = e.target.value;
       setSearchValue(searchInput);
-      dispatch(getAllNonTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'non_teaching' }));
+      dispatch(getAllNonTeachingStaffs({ search: searchInput, branchid: selectedBranchId, instituteId: useInstitute().getInstituteId()}));
     },
     [dispatch]
   );
@@ -37,7 +38,7 @@ const TeacherFilter = (props) => {
   return (
     <Grid container spacing={2} px={1}>
       <Grid item xs={12}>
-        <Card>
+        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title=" Non Teaching Staff" />
 
           <CardContent>
@@ -50,8 +51,8 @@ const TeacherFilter = (props) => {
                   SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                 >
                   <MenuItem value="">Select Status</MenuItem>
-                  <MenuItem value="1">Active</MenuItem>
-                  <MenuItem value="0">Inactive</MenuItem>
+                  <MenuItem value={true}>Active</MenuItem>
+                  <MenuItem value={false}>Inactive</MenuItem>
                 </TextField>
               </Grid>
               <Grid item sm={3} xs={12}>
@@ -67,7 +68,7 @@ const TeacherFilter = (props) => {
 
               <Grid item xs={12} sm={3}>
                 <Box component={Link} to={'non-teaching-staffs/add'} alignItems="center">
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem' }}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem', backgroundColor: "#0CCE7F" , ":hover" : { backgroundColor: "#0AA865"} }}>
                     Add New Staff
                   </Button>
                 </Box>

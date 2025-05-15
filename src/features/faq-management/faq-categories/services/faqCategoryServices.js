@@ -1,73 +1,62 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
-const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/help-faq-modules`;
+const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/general/faq/category`;
 
 export const getActiveFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/get-active-faq-modules`, {
+    const response = await axios.get(`${FaqS_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-
-    // console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch FaqCategories. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Faqs. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllFaqCategories:', error);
+    console.error('Error in getAllFaqs:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
 
-
 export const getAllFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/read-all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
-
-    // Check if the response status is successful
-    if (response.data.status) {
+    console.log("API sending data: ",data);
+    
+    const response = await client.faq_category.getAll(data);
+    console.log('All categories data:', response);
+    if (response) {
       return response;
     } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Faq categories. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Faqcategory. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in get all Faq categories:', error);
+    console.error('Error in get all Faqcategory:', error);
 
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
 
 export const searchFaqCategories = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
-      params: { search: searchQuery }
+      params: { keyword: searchQuery }
     });
 
     if (response.data) {
@@ -81,38 +70,32 @@ export const searchFaqCategories = async (searchQuery) => {
   }
 };
 
-export const addFaqCategory = async (data) => {
+export const addFaqCategory = async (faq_CategoryData) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/create`, data, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
+    console.log("inputData", faq_CategoryData);
 
-    if (response.data.status) {
-      return { success: true, message: 'FaqCategory created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create FaqCategory' };
+    const response = await client.faq_category.create(faq_CategoryData); 
+    console.log('API Response:', response);
+
+    if (!response?.status) {
+      throw new Error(`Failed to create FAQ_CATEGORY : ${response.status} ${response.statusText}`);
     }
+    return  response;
   } catch (error) {
-    console.error('Error in addFaqCategory:', error);
-    throw error;
+    console.error('Error in addFaqCategory:', error.message);
+    return { success: false, message: error.message };
   }
 };
 
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await axios.delete(`${FAQ_CATEGORY_API_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    console.log("deleting send data:", data.uuid);
+    
+    const response = await client.faq_category.delete({ uuid: data.uuid });
+    console.log("API delete response:",response);
+    
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
     } else {
       return { success: false, message: 'Failed to delete FaqCategory' };
@@ -122,12 +105,13 @@ export const deleteFaqCategory = async (data) => {
     throw error;
   }
 };
+
 export const updateStatusFaqCategory = async (data) => {
   try {
     const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -145,15 +129,11 @@ export const updateStatusFaqCategory = async (data) => {
 
 export const updateFaqCategory = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const { uuid } = data;
 
-    if (response.data.status) {
-      console.log(response);
+    const response = await client.faq_category.update(uuid, data);
+
+    if (response.status) {
       return { success: true, message: 'FaqCategory updated successfully' };
     } else {
       return { success: false, message: 'Failed to update FaqCategory' };

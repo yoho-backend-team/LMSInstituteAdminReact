@@ -32,7 +32,7 @@ const pages = {
           url: '/class-management/offline-classes',
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_offline_classes_view')
+          visible: hasPermission('can_view_offline_classes','Offline Classes')
         },
         {
           id: 'live-classes',
@@ -42,7 +42,7 @@ const pages = {
           url: '/class-management/live-classes',
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_live_classes_view')
+          visible: hasPermission('can_view_live_classes','Live Classes')
         }
       ]
     }

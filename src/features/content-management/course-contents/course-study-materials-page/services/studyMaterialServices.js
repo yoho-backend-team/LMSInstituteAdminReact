@@ -1,31 +1,20 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-study-materials`;
 
 export const getAllStudyMaterials = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_STUDY_MATERIALS_END_POINT}/read?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Courses Study Materials. Status: ${response.status}`);
-    }
+    const response = await client.study_material.getAll(data)
+  
+    return response;
+   
   } catch (error) {
+    throw new Error(`Failed to fetch Courses Study Materials. Status: ${error}`);
     // Log the error for debugging purposes
-    console.error('Error in getAllCourseStudyMaterials:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+   
   }
 };
 
@@ -34,7 +23,7 @@ export const searchCourseStudyMaterials = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -52,83 +41,45 @@ export const searchCourseStudyMaterials = async (searchQuery) => {
 
 export const addCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'CourseStudyMaterial created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create CourseStudyMaterial' };
-    }
+    const response = await client.study_material.create(data)
+   
+    return { success: true, message: 'CourseStudyMaterial created successfully' };
+   
   } catch (error) {
     console.error('Error in addCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to create CourseStudyMaterial' };
+   
   }
 };
 
 export const deleteCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.delete(`${COURSE_STUDY_MATERIALS_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.study_material.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'CourseStudyMaterial deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete CourseStudyMaterial' };
-    }
+    return { success: true, message: 'CourseStudyMaterial deleted successfully' };
   } catch (error) {
     console.error('Error in deleteCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete CourseStudyMaterial' }; 
   }
 };
 
 export const updateCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/update`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'CourseStudyMaterial updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseStudyMaterial' };
-    }
+    const response = await client.study_material.update(data)
+   
+    return { success: true, message: 'CourseStudyMaterial updated successfully' }; 
   } catch (error) {
     console.error('Error in updateCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to update CourseStudyMaterial' };
   }
 };
+
 export const updateCourseStudyMaterialStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/status`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('studymaterialresponse:', response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'CourseStudyMaterial status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseStudyMaterial status' };
-    }
+    const response = await client.study_material.update_status(data)   
+    return { success: true, message: 'CourseStudyMaterial status updated successfully' };
   } catch (error) {
     console.error('Error in updateCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to update CourseStudyMaterial status' };
   }
 };

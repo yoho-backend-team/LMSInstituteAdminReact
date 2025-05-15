@@ -32,18 +32,18 @@ const pages = {
           icon: icons.IconHeartHandshake,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_teaching_staff_view')
+          visible: hasPermission('can_read_institute_teaching_staffs','TeachingStaffs')
         },
-        {
-          id: 'non-teaching-staffs',
-          title: 'Non Teaching Staffs',
-          icon: IconHeartHandshake,
-          type: 'item',
-          url: '/staff-management/non-teaching-staffs',
-          target: false,
-          breadcrumbs: false,
-          visible: hasPermission('inst_perm_non_teaching_staff_view')
-        }
+        // {
+        //   id: 'non-teaching-staffs',
+        //   title: 'Non Teaching Staffs',
+        //   icon: IconHeartHandshake,
+        //   type: 'item',
+        //   url: '/staff-management/non-teaching-staffs',
+        //   target: false,
+        //   breadcrumbs: false,
+        //   visible: hasPermission('can_view_non_teaching_staffs','Non TeachingStaffs')
+        // }
       ]
     }
   ]

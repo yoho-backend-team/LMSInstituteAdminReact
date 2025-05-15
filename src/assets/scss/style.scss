@@ -137,12 +137,12 @@
 // }
 .css-ysibbi-MuiButtonBase-root-MuiListItemButton-root.Mui-selected,
 .css-ysibbi-MuiButtonBase-root-MuiListItemButton-root.Mui-selected:hover {
-  background-color: #e3e1fc !important;
-  color: #7367f0;
+  background-color: #0AA865  !important;
+  color: #0AA865  ;
   font-weight: 800;
 }
 .css-ysibbi-MuiButtonBase-root-MuiListItemButton-root.Mui-selected .MuiListItemIcon-root {
-  color: #7367f0 !important;
+  color: #0AA865  !important;
 }
 
 // .Mui-selected,.Mui-selected:hover {
@@ -319,3 +319,14 @@
   background: $warningDark;
   position: relative;
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+

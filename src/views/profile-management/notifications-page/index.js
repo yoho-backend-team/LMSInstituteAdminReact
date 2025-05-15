@@ -1,182 +1,195 @@
 import { useState, useEffect } from 'react';
-import Tab from '@mui/material/Tab';
+import { Box, Grid, Tab, Typography, Card, CardContent, CardHeader, Modal, IconButton } from '@mui/material';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Avatar from 'components/mui/avatar';
-import { Box, Grid } from '@mui/material';
 import { getAllNotificationsByAuth } from 'features/notification-management/all-notifications/services/allNotificationServices';
 import { useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
+import CloseIcon from '@mui/icons-material/Close';
+import toast from 'react-hot-toast';
+import client from 'api/client';
+import { formatDateToTextAsPastValue } from 'utils/formatDate';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const AllNotifications = () => {
-  // const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  // ** State
-  const [value, setValue] = useState('1');
-  const [allreadNotifications, setAllreadNotifications] = useState('');
-  // const [readNotifications,setreadnotifications]=useState('')
-  const [unreadNotifications, setUnreadNotifications] = useState('');
-  const [allNotifcations, setAllNotifcations] = useState('');
-  // const [loading,setLoading] = useState(false)
+  const institute = useInstitute();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Fetch course categories on component mount or when dependencies change
+  const [value, setValue] = useState(searchParams.get('status') || 'all'); // Tabs: 'all', 'read', 'unread'
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { show, hide } = useSpinner();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
+  // Handle tab change and update query params
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setSearchParams({ status: newValue });
+    fetchNotifications(newValue);
   };
-  useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId,
-      status: 'read'
-    };
-    getAllReadNotificationDataByAuth(data);
-  }, [selectedBranchId]);
 
-  const getAllReadNotificationDataByAuth = async (data) => {
-    // setLoading(true)
+   let readNotification = []; let unreadNotification =[];
 
-    const result = await getAllNotificationsByAuth(data);
-    if (result.success) {
-      // setLoading(false)
-      setAllreadNotifications(result?.data);
+  // Fetch notifications based on the selected status
+  const fetchNotifications = async (status) => {
+    setLoading(true);
+    const data = { institute_id: institute.getInstituteId() };
+    const query = { branch_id: selectedBranchId, status: status === 'all' ? undefined : status };
+
+    try {
+      const result = await getAllNotificationsByAuth(data, query);
+      setNotifications(result?.data || []);
+    } catch (error) {
+      console.error('Failed to fetch notifications', error);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
     }
-    // setLoading(false)
   };
 
-  //unreadNotifications
-  useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId,
-      status: 'un-read'
-    };
-    getAllUnreadNotificationDataByAuth(data);
-  }, [selectedBranchId]);
-
-  const getAllUnreadNotificationDataByAuth = async (data) => {
-    // setLoading(true)
-
-    const result = await getAllNotificationsByAuth(data);
-    if (result.success) {
-      setUnreadNotifications(result?.data);
-      // setLoading(false)
+   notifications.map(item=>{
+    if (item.status == 'unread') {
+          unreadNotification.push(item)
+    }else{
+          readNotification.push(item)
     }
-    // setLoading(false)
-  };
+  })
 
-  //allNotifications
+  // Fetch notifications initially based on query params
   useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId,
-      status: 'un-read'
-    };
-    getAllNotificationDataByAuth(data);
-  }, [selectedBranchId]);
+    fetchNotifications(value);
+  }, [value]);
 
-  const getAllNotificationDataByAuth = async (data) => {
-    // setLoading(true)
-
-    const result = await getAllNotificationsByAuth(data);
-    if (result.success) {
-      setAllNotifcations(result?.data);
-      // setLoading(false)
+  // Handle notification click and update query params
+  const handleNotificationClick = async (notification) => {
+    const notificationId = notification?.uuid;
+    setSearchParams({ status: value, id: notificationId });
+    if (notification?.status === 'unread') {
+      try {
+        show();
+        const data = { id: notificationId };
+        const body = { status: 'read' };
+        await client.institute_notification.update_institute_notification(data, body);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        hide();
+      }
     }
-    // setLoading(false)
+    setSelectedNotification(notification);
+    setModalOpen(true);
   };
+
+  // Handle modal close and update query params
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedNotification(null);
+    setSearchParams({ status: value });
+  };
+
+  // Render notifications list
+  const renderNotifications = (notification) => (
+    <Grid container spacing={2}>
+      {notification.length > 0 ? (
+        notification.map((item, index) => (
+          <Grid item xs={12} key={index}>
+            <Box
+              onClick={() => handleNotificationClick(item)}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: 2,
+                borderRadius: 2,
+                boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+                backgroundColor: item.status === 'unread' ? '#f5f5f5' : '#ffffff',
+                cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+                },
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt={item.title} />
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{item.title || 'No Title'}</Typography>
+                  <Typography variant="body2" sx={{ color: 'grey.600', mt: 0.5 }}>
+                    {item.body || 'No description available'}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ textAlign: 'right' }}>
+                <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500' }}>
+                  {formatDateToTextAsPastValue(item.createdAt) || 'Just now'}
+                </Typography>
+                <Typography fontSize={12} sx={{ color: item.status === 'unread' ? '#0CCE7F' : '#7367F0', fontWeight: 'bold' }}>
+                  {item.status === 'unread' ? 'Unread' : 'Read'}
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+        ))
+      ) : (
+        <Typography variant="body2" sx={{ color: 'grey.500', mt: 2 }}>No notifications to display</Typography>
+      )}
+    </Grid>
+  );
+
+  // Modal for detailed notification view
+  const renderModal = () => (
+    <Modal open={modalOpen} onClose={handleCloseModal}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <IconButton onClick={handleCloseModal} sx={{ position: 'absolute', top: 8, right: 8 }}>
+          <CloseIcon />
+        </IconButton>
+        {selectedNotification && (
+          <>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>{selectedNotification.title}</Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>{selectedNotification.body}</Typography>
+            <Typography variant="caption" sx={{ color: 'grey.600' }}>Status: {selectedNotification.status}</Typography>
+          </>
+        )}
+      </Box>
+    </Modal>
+  );
+
   return (
-    <>
-      <Card>
-        <CardHeader title="Notifications" />
-        <CardContent sx={{ mt: 0, pt: 0 }}>
-          <TabContext value={value}>
-            <TabList onChange={handleChange} aria-label="nav tabs example">
-              <Tab value="1" label="Read" />
-              <Tab value="2" label="Unread" />
-              <Tab
-                value="3"
-                label="All"
-                // allNotifications={allNotifications}
-                // setLoading={setLoading}
-
-                // selectedBranchId={selectedBranchId}
-              />
-            </TabList>
-
-            <TabPanel value="1">
-              <Grid container spacing={3}>
-                {[...allreadNotifications]?.map((item, index) => (
-                  <Grid item xs={12} key={index}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
-                        <Box>
-                          <Typography variant="h4">{item?.title}</Typography>
-                          <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            {item?.body}
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Typography fontSize={12} variant="body2">
-                        {item?.ago}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </TabPanel>
-
-            <TabPanel value="2">
-              <Grid container spacing={3}>
-                {[...unreadNotifications]?.map((item, index) => (
-                  <Grid item xs={12} key={index}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
-                        <Box>
-                          <Typography variant="h4">{item?.title}</Typography>
-                          <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            {item?.body}
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Typography fontSize={12} variant="body2">
-                       {item?.ago}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </TabPanel>
-
-            <TabPanel value="3">
-              <Grid container spacing={3}>
-                {[...allNotifcations].map((item, index) => (
-                  <Grid item xs={12} key={index}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
-                        <Box>
-                          <Typography variant="h4">{item.title}</Typography>
-                          <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            {item.body}
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Typography fontSize={12} variant="body2">
-                        {item?.ago}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </TabPanel>
-          </TabContext>
-        </CardContent>
-      </Card>
-    </>
+    <Card>
+      <CardHeader title="Notifications" />
+      <CardContent sx={{ mt: 0, pt: 0 }}>
+        <TabContext value={value}>
+          <TabList onChange={handleChange} aria-label="notification tabs">
+            <Tab value="all" label="All Notifications" />
+            <Tab value="read" label="Read" />
+            <Tab value="unread" label="Unread" />
+          </TabList>
+          <TabPanel value="all">{loading ? 'Loading...' : renderNotifications(notifications)}</TabPanel>
+          <TabPanel value="read">{loading ? 'Loading...' : renderNotifications(readNotification)}</TabPanel>
+          <TabPanel value="unread">{loading ? 'Loading...' : renderNotifications(unreadNotification)}</TabPanel>
+        </TabContext>
+        {renderModal()}
+      </CardContent>
+    </Card>
   );
 };
 

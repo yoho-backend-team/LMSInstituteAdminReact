@@ -1,30 +1,15 @@
 // Notificationservice.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management`;
-// const NOTIFICATION_AUTHBYUSER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/get-notification-by-auth`;
+
 export const getAllNotifications = async (data) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read-all-notifications?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('getAllNotifications:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch AllNotifications. Status: ${response.status}`);
-    }
+    const response = await client.notification.institute.get_institute_notification(data)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllNotifications:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
@@ -34,7 +19,7 @@ export const searchNotifications = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -52,21 +37,12 @@ export const searchNotifications = async (searchQuery) => {
 
 export const addNotification = async (data) => {
   try {
-    const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.notification.institute.add_institute_notification(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Notification created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Notification' };
-    }
+    return { success: true, message: 'Notification created successfully' };
   } catch (error) {
     console.error('Error in addNotification:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
@@ -75,7 +51,7 @@ export const deleteNotification = async (NotificationId) => {
     const response = await axios.delete(`${NOTIFICATION_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: NotificationId }
     });
@@ -96,12 +72,11 @@ export const updateNotification = async (data) => {
     const response = await axios.put(`${NOTIFICATION_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Notification updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Notification' };
@@ -117,11 +92,9 @@ export const resendNotification = async (data) => {
     const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
-
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Notification Resend successfully' };
@@ -134,23 +107,10 @@ export const resendNotification = async (data) => {
   }
 };
 
-export const getAllNotificationsByAuth = async (data) => {
+export const getAllNotificationsByAuth = async (data, query) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/get-notification-by-auth`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('getAllNotificationsByAuth:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response?.data?.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch AllNotifications. Status: ${response.status}`);
-    }
+    const response = await client.institute_notification.get_institute_notification(data, query)
+    return response?.data
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllNotifications:', error);
@@ -160,23 +120,11 @@ export const getAllNotificationsByAuth = async (data) => {
   }
 };
 
-export const getLastNotifications = async (data) => {
+export const getLastNotifications = async (data, query) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/get-last-notifications`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('getLastNotifications:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response?.data?.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Notifications. Status: ${response.status}`);
-    }
+    const response = await client.institute_notification.get_institute_notification(data, query)
+
+    return response?.data
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getNotifications:', error);

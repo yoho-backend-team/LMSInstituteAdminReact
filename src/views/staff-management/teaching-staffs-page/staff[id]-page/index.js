@@ -16,9 +16,9 @@ const UserView = () => {
     getStaffData(staffID);
   }, [staffID]);
 
-  const getStaffData = async (staffID) => {
+  const getStaffData = async (id) => {
     setLoading(true);
-    const data = { id: staffID };
+    const data = { staff_id: id };
     const result = await TeachingStaffById(data);
     if (result.success) {
       setStaff(result.data);
@@ -42,7 +42,7 @@ const UserView = () => {
 
     return `${formattedDay}/${formattedMonth}/${formattedYear}`;
   }
-
+  
   return (
     <>
       {loading ? (
@@ -50,7 +50,7 @@ const UserView = () => {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
-            <UserViewLeft staff={staff} formattedDate={formattedDate} />
+            <UserViewLeft staff={staff?.staff} formattedDate={formattedDate} />
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <UserViewRight staff={staff} staffID={staffID} formattedDate={formattedDate} />

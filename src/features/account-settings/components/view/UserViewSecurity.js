@@ -1,10 +1,6 @@
+import { Box } from '@mui/material';
 import { Typography } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -13,30 +9,25 @@ import Icon from 'components/icon';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { userChangePassword } from 'features/user-management/users-page/services/userServices';
-
+import { useSpinner } from 'context/spinnerContext';
 const UserViewSecurity = ({ id }) => {
   const [values, setValues] = useState({
+    current_password: '',
+    showCurrent_password: false,
     newPassword: '',
     showNewPassword: false,
     confirmNewPassword: '',
     showConfirmNewPassword: false
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const { show, hide } = useSpinner();
 
-  const handleNewPasswordChange = (prop) => (event) => {
+  const handleInputChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
-  const handleClickShowNewPassword = () => {
-    setValues({ ...values, showNewPassword: !values.showNewPassword });
-  };
-
-  const handleConfirmNewPasswordChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowConfirmNewPassword = () => {
-    setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword });
+  const togglePasswordVisibility = (prop) => () => {
+    setValues({ ...values, [prop]: !values[prop] });
   };
 
   const handleSubmit = async (event) => {
@@ -44,26 +35,27 @@ const UserViewSecurity = ({ id }) => {
 
     if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !== '') {
       try {
-        let data = {
-          user_id: id,
-          c_password: values.confirmNewPassword,
-          password: values.newPassword
+        show();
+        const data = {
+          current_password: values.current_password,
+          confirm_password: values.confirmNewPassword,
+          new_password: values.newPassword
         };
         const result = await userChangePassword(data);
-        if (result.success) {
-          toast.success(result.message);
-          setValues({
-            newPassword: '',
-            confirmNewPassword: '',
-            showNewPassword: false,
-            showConfirmNewPassword: false
-          });
-          setPasswordsMatch(true);
-        } else {
-          toast.error(result.message);
-        }
+        toast.success(result.message);
+        setValues({
+          current_password: '',
+          newPassword: '',
+          confirmNewPassword: '',
+          showNewPassword: false,
+          showCurrent_password: false,
+          showConfirmNewPassword: false
+        });
+        setPasswordsMatch(true);
       } catch (error) {
-        console.error('Error:', error);
+        toast.error(error.message);
+      } finally {
+        hide();
       }
     } else {
       setPasswordsMatch(false);
@@ -71,88 +63,117 @@ const UserViewSecurity = ({ id }) => {
   };
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title="Change Password" />
-          <CardContent>
-            <Alert icon={false} severity="warning" sx={{ mb: 4 }}>
-              <AlertTitle sx={{ fontWeight: 500, fontSize: '1.125rem', mb: (theme) => `${theme.spacing(2.5)} !important` }}>
-                Ensure that these requirements are met
-              </AlertTitle>
-              Minimum 8 characters long, uppercase & symbol
-            </Alert>
+      <Box sx={{ display: 'flex' , gap:4, p:4,backgroundColor:'white', boxShadow:2, borderRadius:2 }}>
+        <Grid xs={7}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Typography sx={{ fontFamily: 'Poppins',whiteSpace: 'nowrap' }} variant="h1">
+              Change Password
+            </Typography>
+            <Typography sx={{ fontFamily: 'Poppins' }} variant="h3">
+              Passwords must contain:
+            </Typography>
+            <Typography sx={{ fontFamily: 'Poppins' }}>✔️ At least 6 characters</Typography>
+            <Typography sx={{ fontFamily: 'Poppins' }}> ✔️ At least 1 uppercase letter (A-Z)</Typography>
+            <Typography sx={{ fontFamily: 'Poppins' }}>✔️ At least 1 lowercase letter (a-z)</Typography>
+            <Typography sx={{ fontFamily: 'Poppins' }}> ✔️ At least 1 number (0-9)</Typography>
+          </Box>
+        </Grid>
+        <Grid xs={8} >
+          <form onSubmit={handleSubmit} >
+            <Box sx={{ display:"flex",flexDirection:'column', gap:3}}>
 
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={4}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="New Password"
-                    placeholder="············"
-                    value={values.newPassword}
-                    id="user-view-security-new-password"
-                    onChange={handleNewPasswordChange('newPassword')}
-                    type={values.showNewPassword ? 'text' : 'password'}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onClick={handleClickShowNewPassword}
-                            onMouseDown={(e) => e.preventDefault()}
-                            aria-label="toggle password visibility"
-                          >
-                            <Icon fontSize="1.25rem" icon={values.showNewPassword ? 'tabler:eye' : 'tabler:eye-off'} />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Grid>
+            <TextField
+              fullWidth
+              label="Current Password"
+              placeholder="Enter current password"
+              sx={{fontFamily: 'Poppins'}}
+              value={values.current_password}
+              onChange={handleInputChange('current_password')}
+              type={values.showCurrent_password ? 'text' : 'password'}
+              InputLabelProps={{
+                style: { fontFamily: 'Poppins' } 
+              }}
+              InputProps={{
+                style: { fontFamily: 'Poppins' },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={togglePasswordVisibility('showCurrent_password')}
+                      aria-label="toggle current password visibility"
+                    >
+                      <Icon fontSize="1.25rem" icon={values.showCurrent_password ? 'tabler:eye' : 'tabler:eye-off'} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              
+            />
+            <TextField
+              fullWidth
+              label="New Password"
+              placeholder="Enter new password"
+              sx={{fontFamily: 'Poppins'}}
+              value={values.newPassword}
+              onChange={handleInputChange('newPassword')}
+              type={values.showNewPassword ? 'text' : 'password'}
+              InputLabelProps={{
+                style: { fontFamily: 'Poppins' } 
+              }}
+              InputProps={{
+                style: { fontFamily: 'Poppins' },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={togglePasswordVisibility('showNewPassword')}
+                      aria-label="toggle new password visibility"
+                    >
+                      <Icon fontSize="1.25rem" icon={values.showNewPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Confirm New Password"
+              sx={{fontFamily: 'Poppins'}}
+              placeholder="Confirm new password"
+              value={values.confirmNewPassword}
+              onChange={handleInputChange('confirmNewPassword')}
+              type={values.showConfirmNewPassword ? 'text' : 'password'}
+              InputLabelProps={{
+                style: { fontFamily: 'Poppins' } 
+              }}
+              InputProps={{
+                style: { fontFamily: 'Poppins' },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={togglePasswordVisibility('showConfirmNewPassword')}
+                      aria-label="toggle confirm password visibility"
+                    >
+                      <Icon fontSize="1.25rem" icon={values.showConfirmNewPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            {!passwordsMatch && (
+              <Typography variant="caption" color="error" display="block" mt={1} sx={{ fontFamily: 'Poppins' }}>
+                Passwords do not match
+              </Typography>
+            )}
 
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    placeholder="············"
-                    label="Confirm New Password"
-                    value={values.confirmNewPassword}
-                    id="user-view-security-confirm-new-password"
-                    type={values.showConfirmNewPassword ? 'text' : 'password'}
-                    onChange={handleConfirmNewPasswordChange('confirmNewPassword')}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onMouseDown={(e) => e.preventDefault()}
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowConfirmNewPassword}
-                          >
-                            <Icon fontSize="1.25rem" icon={values.showConfirmNewPassword ? 'tabler:eye' : 'tabler:eye-off'} />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                  {!passwordsMatch && (
-                    <Typography variant="caption" color="error">
-                      Passwords do not match
-                    </Typography>
-                  )}
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Button type="submit" variant="contained">
-                    Change Password
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
+            <Button type="submit" variant="contained" color="primary" sx={{ fontFamily: 'Poppins' }} >
+              Change Password
+            </Button>
+            </Box>
+          </form>
+        </Grid>
+      </Box>
   );
 };
 

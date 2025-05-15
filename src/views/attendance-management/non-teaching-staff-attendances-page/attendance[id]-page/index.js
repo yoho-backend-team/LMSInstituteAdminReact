@@ -35,7 +35,7 @@ const ViewAttendance = () => {
 
   useEffect(() => {
     const data = {
-      staff_id: staff?.staff_id,
+      id: staff?.staff,
       title: ''
     };
     getStaffAttendance(data);
@@ -44,13 +44,13 @@ const ViewAttendance = () => {
   const getStaffAttendance = async (data) => {
     const result = await getNonTeachingStaffAttendanceById(data);
     if (result) {
-      setAttendances(result.data.data);
+      setAttendances(result.data);
     }
   };
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
-
+  
   return (
     <CalendarWrapper
       className="app-calendar"
@@ -68,7 +68,7 @@ const ViewAttendance = () => {
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
         setAttendances={setAttendances}
-        staffId={staff?.staff_id}
+        staffId={staff?.staff}
         staff={staff}
       />
       <Box
@@ -99,7 +99,7 @@ const ViewAttendance = () => {
         handleSelectEvent={handleSelectEvent}
         addEventSidebarOpen={addEventSidebarOpen}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        staffId={staff?.staff_id}
+        staffId={staff?.staff}
         selected={selected}
         setRefetch={setRefetch}
         staff={staff}

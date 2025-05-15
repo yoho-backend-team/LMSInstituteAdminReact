@@ -18,9 +18,9 @@ const CustomerSupport = () => {
     getFaqCategories();
   }, []);
 
-  console.log(faqCategories);
   return (
-    <MainCard title="Customer Suppport">
+    <MainCard title="Customer">
+  
       <Fragment>
         <HelpHeader />
         <SupportFaq faqCategories={faqCategories} />

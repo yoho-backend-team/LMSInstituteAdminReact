@@ -17,7 +17,10 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { hexToRGBA } from 'utils/hex-to-rgba';
-import { getAllBatchChats } from '../services/communityServices';
+import { getAllBatchChats, getAllMessages } from '../services/communityServices';
+import { useSpinner } from 'context/spinnerContext';
+import { getUserDetails } from 'utils/check-auth-state';
+import { getImageUrl } from 'utils/imageUtils';
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -26,6 +29,8 @@ const ScrollWrapper = ({ children, hidden }) => {
     return <PerfectScrollbar options={{ wheelPropagation: false }}>{children}</PerfectScrollbar>;
   }
 };
+
+
 
 const SidebarLeft = (props) => {
   const {
@@ -43,27 +48,58 @@ const SidebarLeft = (props) => {
     handleUserProfileLeftSidebarToggle,
     communities,
     setChats,
-    setSelectedBatch
+    setSelectedBatch,
+    chats,
+    socket,
+    setCommunityDetails,
+    setMessages,
+    messages
   } = props;
 
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(null);
-  console.log(communities);
-
+  const [getchatsState,setChatsState] = useState(false)
+  const { show, hide } = useSpinner()
+  const user = getUserDetails()
+  console.log(user,"user")
   const handleChatClick = async (type, community) => {
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
-    const response = await getAllBatchChats({ inst_batch_community_id: community?.id });
-    if (response) {
-      setChats(response?.data?.data);
-    }
+    const communityId = community?._id
+    setCommunityDetails(community)
+    const user = getUserDetails()
+    
 
+    socket.emit("joinGroup",{groupId:communityId,userId:user?._id},(error)=>{
+
+    })
+    const response = await getAllMessages({ community : community?._id})
+    setMessages(response)
+    if (community && community._id) {
+      try {
+        show()
+        const response = await getAllBatchChats({ chatId: community._id });
+        
+        if (response) {
+          setChatsState(true)
+          setChats(response.data);
+        }
+      } catch (error) {
+        hide()
+        console.error('Error in handleChatClick:', error);
+      }finally{
+        hide()
+      }
+    } else {
+      console.error('Error: Missing community ID');
+    }
+  
     if (!mdAbove) {
       handleLeftSidebarToggle();
     }
   };
-
+  
   useEffect(() => {
     dispatch(removeSelectedChat());
     return () => {
@@ -73,7 +109,7 @@ const SidebarLeft = (props) => {
 
   const hasActiveId = (id) => {
     if (communities !== null) {
-      const arr = communities.filter((i) => i.id === id);
+      const arr = communities.filter((i) => i.uuid === id);
 
       return !!arr.length;
     }
@@ -91,25 +127,24 @@ const SidebarLeft = (props) => {
 
       return arrToMap !== null
         ? arrToMap?.map((contact, index) => {
-            const activeCondition = active !== null && active.id === contact.id;
+            const activeCondition = active !== null && active._id === contact._id;
 
             return (
-              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': {  } }}>
                 <ListItemButton
                   disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
+                  onClick={() => handleChatClick(hasActiveId(contact._id) ? 'chat' : 'contact', contact)}
                   sx={{
                     py: 2,
                     px: 3,
                     width: '100%',
                     borderRadius: 1,
-                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                    borderBottom: "1px solid #8696a026",
+                    '&.MuiListItemButton-root:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' },
+                    transition: 'background-color 0.3s ease',
+                    '&:hover': { backgroundColor: 'rgba(64, 37, 218, 0.05)' },
                     ...(activeCondition && {
-                      background: (theme) =>
-                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                          theme.palette.primary.main,
-                          0.7
-                        )} 76.47%) !important`
+                      background:"#3A4042"
                     })
                   }}
                 >
@@ -135,7 +170,7 @@ const SidebarLeft = (props) => {
                           outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                         }}
                       >
-                        {getInitials(contact?.batch_community?.batch?.batch_name)}
+                        {getInitials(contact?.group)}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -143,12 +178,12 @@ const SidebarLeft = (props) => {
                     sx={{
                       my: 0,
                       ml: 3,
-                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                      ...(activeCondition && { '& .MuiTypography-root': { color: "white" } })
                     }}
-                    primary={<Typography variant="h5">{contact?.batch_community?.batch?.batch_name}</Typography>}
+                    primary={<Typography sx={{ fontSize: "1.1em", fontWeight: 600,color: "white"}} variant="h4">{contact?.group}</Typography>}
                     secondary={
-                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
-                        {contact?.batch_community?.batch?.institute_course_branch?.course_name}
+                      <Typography noWrap sx={{ ...(!activeCondition && { color: "white" }), fontSize: "0.9em", mt: 0.5, color: "#aaa" }}>
+                        {contact?.batch?.course?.course_name}
                       </Typography>
                     }
                   />
@@ -180,8 +215,9 @@ const SidebarLeft = (props) => {
           display: 'block',
           position: mdAbove ? 'static' : 'absolute',
           '& .MuiDrawer-paper': {
-            boxShadow: 'none',
+            // boxShadow: '0 2px 12px rgba(0, 0, 0, 0.15)',
             width: sidebarWidth,
+            borderRight: "1px solid rgba(0, 0, 0, 0.2)",
             position: mdAbove ? 'static' : 'absolute',
             borderTopLeftRadius: (theme) => theme.shape.borderRadius,
             borderBottomLeftRadius: (theme) => theme.shape.borderRadius
@@ -195,21 +231,24 @@ const SidebarLeft = (props) => {
       >
         <Box
           sx={{
-            py: 2.5,
+            pt: "12px",
+            pb:"20px",
+            minHeight: "70px",
             px: 3,
             display: 'flex',
             alignItems: 'center',
+            backgroundColor: "#2A2F32",                                                                                                
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`
           }}
         >
-          {store && store.userProfile ? (
+          {user && user?.image  ? (
             <Badge
               overlap="circular"
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right'
               }}
-              sx={{ mr: 3 }}
+              sx={{ mr: 3, display: "none" }}
               onClick={handleUserProfileLeftSidebarToggle}
               badgeContent={
                 <Box
@@ -226,8 +265,8 @@ const SidebarLeft = (props) => {
               }
             >
               <MuiAvatar
-                src={store.userProfile.avatar}
-                alt={store.userProfile.fullName}
+                src={getImageUrl(user?.image)}
+                alt={user?.full_name}
                 sx={{ width: '2.375rem', height: '2.375rem', cursor: 'pointer' }}
               />
             </Badge>
@@ -237,7 +276,7 @@ const SidebarLeft = (props) => {
             value={query}
             onChange={handleFilter}
             placeholder="Search for contact..."
-            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' } }}
+            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' }, display: "none" }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ color: 'text.secondary' }}>
@@ -246,6 +285,9 @@ const SidebarLeft = (props) => {
               )
             }}
           />
+          <Typography variant="h4" sx={{  color: 'white',textAlign: "start" }}>
+                Batches
+          </Typography>
           {!mdAbove ? (
             <IconButton sx={{ p: 1, ml: 1 }} onClick={handleLeftSidebarToggle}>
               <Icon icon="tabler:x" />
@@ -253,12 +295,9 @@ const SidebarLeft = (props) => {
           ) : null}
         </Box>
 
-        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden' }}>
+        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden', backgroundColor: "#2A2F32" }}>
           <ScrollWrapper hidden={hidden}>
             <Box>
-              <Typography variant="h5" sx={{ ml: 3, mb: 2, mt: 2, color: 'primary.main' }}>
-                Batches
-              </Typography>
               <List sx={{ p: 0 }}>{renderContacts()}</List>
             </Box>
           </ScrollWrapper>

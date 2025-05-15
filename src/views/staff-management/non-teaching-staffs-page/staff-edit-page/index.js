@@ -23,7 +23,6 @@ const StepperLinearWithValidation = () => {
   const location = useLocation();
   const staffData = location.state.staff;
   const staffId = location.state.id;
-  console.log('staffData:', staffData);
 
   const steps = [
     {
@@ -33,19 +32,19 @@ const StepperLinearWithValidation = () => {
   ];
 
   const defaultPersonalValues = {
-    name: '',
+    full_name: '',
     email: '',
     phone_number: '',
     alternate_number: '',
     state: '',
     city: '',
-    pin_code: '',
-    address_line_one: '',
-    address_line_two: '',
+    pincode: '',
+    address1: '',
+    address2: '',
     dob: '',
     gender: '',
     designation: '',
-    education_qualification: '',
+    qualification: '',
     username: '',
     logo: ''
   };
@@ -55,7 +54,7 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    staff_name: yup
+    full_name: yup
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets')
       .required('Name is required'),
@@ -72,7 +71,7 @@ const StepperLinearWithValidation = () => {
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets')
       .required('Designation is required'),
-    education_qualification: yup
+    qualification: yup
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Qualification should only contain alphabets')
       .required('Qualification is required'),
@@ -84,18 +83,18 @@ const StepperLinearWithValidation = () => {
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets')
       .required('City is required'),
-    pin_code: yup
+    pincode: yup
       .string()
       .required('Pin code is required')
       .matches(/^\d{6}$/, 'Pin code must be 6 digits'),
-    address_line_one: yup.string().required('Address line one is required'),
-    address_line_two: yup.string().required('Address line two is required'),
+    address1: yup.string().required('Address line one is required'),
+    address2: yup.string().required('Address line two is required'),
     dob: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
     username: yup
       .string()
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
-      .required('Username is required')
+      // .required('Username is required')
   });
 
   const {
@@ -164,61 +163,89 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-  console.log(logo);
+  
 
   useEffect(() => {
     if (staffData) {
       setValue('id', staffId);
-      setValue('staff_name', staffData.staff_name);
-      setValue('email', staffData?.email);
-      setValue('phone_number', staffData?.phone_number);
-      setValue('alternate_number', staffData?.alternate_number);
-      setValue('designation', staffData?.designation);
+      setValue('full_name', staffData.full_name);
+      setValue('email', staffData.email);
+      setValue('phone_number', staffData.contact_info?.phone_number);
+      setValue('alternate_number', staffData.contact_info?.alternate_phone_number);
+      setValue('designation', staffData.userDetail?.designation);
       setValue('image', logo);
-      setValue('gender', staffData?.gender);
-      setValue('address_line_one', staffData?.address_line_1);
-      setValue('address_line_two', staffData?.address_line_2);
-      setValue('city', staffData?.city);
-      setValue('state', staffData?.state);
-      setValue('pin_code', staffData?.pin_code);
-      setValue('dob', new Date(staffData?.dob) || new Date());
-      setValue('username', staffData?.users?.username);
-      setValue('education_qualification', staffData?.education_qualification);
+      setValue('gender', staffData.gender);
+      setValue('address1', staffData.contact_info?.address1);
+      setValue('address2', staffData.contact_info?.address2);
+      setValue('city', staffData.contact_info?.city);
+      setValue('state', staffData.contact_info?.state);
+      setValue('pincode', staffData.contact_info?.pincode);
+      setValue('dob', new Date(staffData.dob) || new Date());
+      setValue('username', staffData.userDetail?.username);
+      setValue('qualification', staffData.qualification);
     }
   }, [staffData]);
 
+
   const onSubmit = async () => {
+    try {
     const personalData = personalControl?._formValues;
-    console.log('personalData:', personalData);
+    
+    const non_teaching = {
+      id : staffId,
+      email: personalData.email,
+      full_name: personalData.full_name,
+      username: personalData.username,
+      dob: (personalData.dob),
+      gender: personalData.gender,
+      userDetail:staffData.userDetail._id,
+      qualification: personalData.qualification,
+      contact_info: {
+        state: personalData.state,
+        city: personalData.city,
+        pincode: personalData.pincode,
+        address1: personalData.address1,
+        address2: personalData.address2,
+        phone_number: personalData.phone_number,
+        alternate_number: personalData.alternate_phone_number
 
-    let data = new FormData();
+      },
+      designation: personalData.designation,
+    };
+    
+    // let data = new FormData();
 
-    data.append('id', staffId);
-    data.append('staff_name', personalData?.staff_name);
-    data.append('email', personalData?.email);
-    data.append('phone_number', personalData?.phone_number);
-    data.append('alternate_number', personalData?.alternate_number);
-    data.append('designation', personalData?.designation);
-    data.append('image', logo);
-    data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_one);
-    data.append('address_line_2', personalData?.address_line_two);
-    data.append('city', personalData?.city);
-    data.append('state', personalData?.state);
-    data.append('pin_code', personalData?.pin_code);
-    data.append('dob', convertDateFormat(personalData?.dob));
-    data.append('username', personalData?.username);
-    data.append('education_qualification', personalData?.education_qualification);
+    // data.append('id', staffId);
+    // data.append('full_name', personalData?.full_name);
+    // data.append('email', personalData?.email);
+    // data.append('phone_number', personalData?.phone_number);
+    // data.append('alternate_number', personalData?.alternate_number);
+    // data.append('designation', personalData?.designation);
+    // data.append('image', logo);
+    // data.append('gender', personalData?.gender);
+    // data.append('address_line_1', personalData?.address1);
+    // data.append('address_line_2', personalData?.address2);
+    // data.append('city', personalData?.city);
+    // data.append('state', personalData?.state);
+    // data.append('pincode', personalData?.pincode);
+    // data.append('dob', convertDateFormat(personalData?.dob));
+    // data.append('username', personalData?.username);
+    // data.append('qualification', personalData?.qualification);
 
-    const result = await updateNonTeachingStaff(data);
-
+    const result = await updateNonTeachingStaff(non_teaching);
+   
     if (result.success) {
       toast.success(result.message);
       navigate(-1);
     } else {
       toast.error(result.message);
     }
+  } catch (error) {
+    console.error("Error while updating non-teaching staff:", error);
+    toast.error("An error occurred while updating non-teaching staff.");
+  }
   };
+
 
   const getStepContent = () => {
     return (
@@ -265,20 +292,20 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="staff_name"
+              name="full_name"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
                   // value={value}
-                  defaultValue={staffData?.staff_name}
+                  defaultValue={staffData.full_name}
                   label="StaffName"
                   onChange={onChange}
                   placeholder="Leonard"
-                  error={Boolean(personalErrors['staff_name'])}
+                  error={Boolean(personalErrors['full_name'])}
                   aria-describedby="stepper-linear-personal-institute_name"
-                  helperText={personalErrors?.staff_name?.message}
+                  helperText={personalErrors?.full_name?.message}
                 />
               )}
             />
@@ -292,7 +319,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.email}
+                  defaultValue={staffData.email}
                   label="Email"
                   onChange={onChange}
                   placeholder="Carter"
@@ -312,7 +339,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { value } }) => (
                 <DatePicker
                   id="issue-date"
-                  dateFormat={'dd/MM/yyyy'}
+                  dateFormat={'dd-MM-yyyy'}
                   value={value}
                   selected={value}
                   onChange={(date) => {
@@ -341,7 +368,7 @@ const StepperLinearWithValidation = () => {
                   fullWidth
                   // value={value}
                   onChange={onChange}
-                  defaultValue={staffData?.gender}
+                  defaultValue={staffData.gender}
                   label="Gender"
                   placeholder="Select Gender"
                   error={Boolean(personalErrors['gender'])}
@@ -364,7 +391,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.designation}
+                  defaultValue={staffData.userDetail?.designation}
                   label="designation"
                   onChange={onChange}
                   error={Boolean(personalErrors.designation)}
@@ -375,18 +402,18 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="education_qualification"
+              name="qualification"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.education_qualification}
+                  defaultValue={staffData.qualification}
                   label="Qualification"
                   onChange={onChange}
                   error={Boolean(personalErrors.state)}
                   aria-describedby="stepper-linear-personal-qualification-helper"
-                  helperText={personalErrors?.education_qualification?.message}
+                  helperText={personalErrors?.qualification?.message}
                 />
               )}
             />
@@ -399,7 +426,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.state}
+                  defaultValue={staffData.contact_info?.state}
                   label="State"
                   onChange={onChange}
                   error={Boolean(personalErrors.state)}
@@ -417,7 +444,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.city}
+                  defaultValue={staffData.contact_info?.city}
                   label="City"
                   onChange={onChange}
                   error={Boolean(personalErrors.city)}
@@ -429,58 +456,58 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="pin_code"
+              name="pincode"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.pin_code}
+                  defaultValue={staffData.contact_info?.pincode}
                   label="Pin Code"
                   type="number"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['pin_code'])}
-                  aria-describedby="stepper-linear-personal-pin_code"
-                  helperText={personalErrors?.pin_code?.message}
+                  error={Boolean(personalErrors['pincode'])}
+                  aria-describedby="stepper-linear-personal-pincode"
+                  helperText={personalErrors?.pincode?.message}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="address_line_one"
+              name="address1"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.address_line_1}
+                  defaultValue={staffData.contact_info?.address1}
                   label="Address Line One"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['address_line_one'])}
-                  aria-describedby="stepper-linear-personal-address_line_one"
-                  helperText={personalErrors?.address_line_one?.message}
+                  error={Boolean(personalErrors['address1'])}
+                  aria-describedby="stepper-linear-personal-address1"
+                  helperText={personalErrors?.address1?.message}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="address_line_two"
+              name="address2"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.address_line_2}
+                  defaultValue={staffData.contact_info?.address2}
                   label="Address Line Two"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['address_line_two'])}
-                  aria-describedby="stepper-linear-personal-address_line_two"
-                  helperText={personalErrors?.address_line_two?.message}
+                  error={Boolean(personalErrors['address2'])}
+                  aria-describedby="stepper-linear-personal-address2"
+                  helperText={personalErrors?.address2?.message}
                 />
               )}
             />
@@ -494,7 +521,7 @@ const StepperLinearWithValidation = () => {
                 <CustomTextField
                   fullWidth
                   type="number"
-                  defaultValue={staffData?.phone_number}
+                  defaultValue={staffData.contact_info?.phone_number}
                   label="Phone Number"
                   onChange={onChange}
                   placeholder="Carter"
@@ -516,7 +543,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.alternate_number}
+                  defaultValue={ staffData?.contact_info?.alternate_phone_number}
                   type="number"
                   label="Alt Phone Number"
                   onChange={onChange}
@@ -540,7 +567,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.users?.username}
+                  defaultValue={staffData?.full_name}
                   label="Username"
                   onChange={onChange}
                   placeholder="carterLeonard"
@@ -548,6 +575,7 @@ const StepperLinearWithValidation = () => {
                   aria-describedby="stepper-linear-account-username"
                   helperText={personalErrors?.username?.message}
                 />
+
               )}
             />
           </Grid>

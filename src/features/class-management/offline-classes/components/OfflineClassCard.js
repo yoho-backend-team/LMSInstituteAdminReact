@@ -17,11 +17,13 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
+import { useSpinner } from 'context/spinnerContext';
 
-const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
+const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch, setRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { show, hide } = useSpinner();
 
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
 
@@ -41,13 +43,17 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   }, []);
 
   const handleOfflineClassDelete = async () => {
-    const data = { class_id: selectedOfflineClassDeleteId };
+    show();
+    const data = { uuid: selectedOfflineClassDeleteId };
     const result = await deleteOfflineClass(data);
     if (result.success) {
+      hide();
       toast.success(result.message);
-      setofflineClassRefetch((state) => !state);
+      setRefetch((state) => !state);
     } else {
-      toast.error(result.message);
+      hide();
+      console.log('delete error', result.message);
+      // toast.error(result.message);
     }
   };
 
@@ -56,7 +62,20 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
       <Grid container spacing={2}>
         {offlineClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
+            <Card
+              sx={{
+                p: 3,
+                position: 'relative',
+                borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1',
+                boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+                borderRadius: 2,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05) translateY(-4px)',
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                }
+              }}
+            >
               <Grid container direction="column" spacing={1}>
                 <Grid item sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex', mt: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -81,12 +100,12 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
 
                 <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
                   <AvatarGroup className="pull-up" max={4}>
-                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                    {card?.batch?.student?.map((student, studentIndex) => {
                       return (
                         <Avatar
                           key={studentIndex}
                           src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
-                          alt={student?.student?.first_name}
+                          alt={student?.full_name}
                         />
                       );
                     })}
@@ -94,7 +113,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                 </Grid>
 
                 <Grid item justifyContent="center" display="flex">
-                  <Typography sx={{ fontWeight: '500' }}>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
+                  <Typography sx={{ fontWeight: '500' }}>{card?.batch?.student?.length ?? 0} Students on this class</Typography>
                 </Grid>
                 <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
                   <Box>
@@ -102,7 +121,35 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                   </Box>
                   <Box sx={{ ml: 1 }}>
                     <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                      {card?.class_date} / {card?.start_time} to {card?.end_time}{' '}
+                      {/* {card?.start_date} / {card?.start_time} to {card?.end_time}{' '} */}
+                      {card?.start_date
+                        ? new Date(card.start_date).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })
+                        : 'Invalid Date'}
+
+                      {' | '}
+
+                      {card?.start_time
+                        ? new Date(card.start_time).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })
+                        : 'Invalid Time'}
+
+                      {' - '}
+
+                      {card?.end_time
+                        ? new Date(card.end_time).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })
+                        : 'Invalid Time'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -113,8 +160,8 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                       variant="contained"
                       size="medium"
                       component={Link}
-                      state={{ id: card?.class_id }}
-                      to={`offline-classes/${card?.class_id}`}
+                      state={{ id: card?.uuid }}
+                      to={`offline-classes/${card?.uuid}`}
                     >
                       View More
                     </Button>
@@ -130,7 +177,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                           menuItemProps: {
                             component: Link,
                             to: `offline-classes/view`,
-                            state: { id: card?.class_id }
+                            state: { id: card?.uuid }
                           }
                         },
                         {
@@ -146,7 +193,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
-                            onClick: () => handleDelete(card?.class_id)
+                            onClick: () => handleDelete(card?.uuid)
                           }
                         }
                       ]}
@@ -158,7 +205,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
           </Grid>
         ))}
         <OfflineClassEditModal
-          setRefetch={setofflineClassRefetch}
+          setRefetch={setRefetch}
           selectedBranchId={selectedBranchId}
           offlineClasses={selectedClass}
           open={isEditModalOpen}
@@ -170,6 +217,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
           description="Are you sure you want to delete this item?"
           title="Delete"
           handleSubmit={handleOfflineClassDelete}
+          setRefetch={setRefetch}
         />
       </Grid>
     </>
@@ -177,8 +225,8 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
 };
 
 OfflineClassCard.propTypes = {
-  offlineClassRefetch: PropTypes.any,
-  setofflineClassRefetch: PropTypes.any
+  refetch: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default OfflineClassCard;

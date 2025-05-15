@@ -6,6 +6,9 @@ const Pagination = () => {
     MuiPaginationItem: {
       styleOverrides: {
         root: ({ theme }) => ({
+          '&:hover':  {
+             
+          },
           height: 38,
           minWidth: 38,
           '&:not(.MuiPaginationItem-rounded)': {
@@ -17,7 +20,11 @@ const Pagination = () => {
               easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
             }),
             '&.Mui-selected': {
-              boxShadow: theme.shadows[2]
+              boxShadow: theme.shadows[2],
+              backgroundColor : "#0CCE7F",
+              ":hover" : {
+                 backgroundColor : "#0AA865"
+              }
             }
           }
         }),

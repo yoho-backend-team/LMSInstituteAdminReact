@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Typography,Chip } from '@mui/material';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -12,6 +13,7 @@ import toast from 'react-hot-toast';
 import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
 import { updateCourseNote } from '../services/noteServices';
+import { getImageUrl } from 'utils/imageUtils';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -40,8 +42,6 @@ const defaultValues = {
 const NotesEdit = (props) => {
   // ** Props
   const { open, toggle, notes, setRefetch } = props;
-  console.log('NotesEdit - open:', props.open);
-  console.log('NotesEdit - toggle:', props.toggle);
   
   const {
     handleSubmit,
@@ -55,8 +55,6 @@ const NotesEdit = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log('notes :', notes);
-
   useEffect(() => {
     if (notes) {
       setValue('title', notes?.title || '');
@@ -66,23 +64,21 @@ const NotesEdit = (props) => {
   }, [notes, setValue]);
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('id', notes.id);
-    bodyFormData.append('document', selectedFile);
-    console.log(bodyFormData);
-
-    const result = await updateCourseNote(bodyFormData);
+    const note_data = {
+       title : data.title,
+       description : data.description,
+       uuid : notes.uuid,
+       file : selectedFile ? data.pdf_file : notes.file
+    }
+  
+    const result = await updateCourseNote(note_data);
 
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
       toggle();
     } else {
-      let errorMessage = '';
-
-      toast.error(errorMessage.trim());
+      toast.error(result?.message);
     }
   };
 
@@ -100,6 +96,10 @@ const NotesEdit = (props) => {
   const handleFileUpload = useCallback((file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    const data = files[0]
+    if (data.size > 1048576) {
+      return toast.success("pdf upload lesser than 1mb")
+    }
     if (files && files.length !== 0) {
       reader.onload = () => setSavedPdfUrl(reader.result);
       setSelectedFile(files[0]);
@@ -110,7 +110,6 @@ const NotesEdit = (props) => {
     }
   }, []);
 
-  console.log(setSelectedFile);
 
   const ButtonStyled = useMemo(
     () =>
@@ -135,7 +134,7 @@ const NotesEdit = (props) => {
       <Grid container spacing={1}>
         <Grid item md={12} sm={12}>
           <Header>
-            <Typography variant="h5">Edit Study Material</Typography>
+          <Chip   label="Edit Notes " sx={{fontSize:'1.4rem', fontWeight:"bold" ,border:2,borderColor:"#0cce7b" ,}}/>
             <IconButton
               size="small"
               onClick={handleClose}
@@ -155,11 +154,12 @@ const NotesEdit = (props) => {
           <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
-                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {!selectedFile && <PDFViewer url={getImageUrl(notes?.file)} setValue={setValue} />}
+                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} setValue={setValue} />}
 
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
-                  Upload New File
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 ,borderRadius: '50px'}}>
+                <CloudUploadOutlinedIcon sx={{mr:1.5}}/>
+                Upload New File
                   <input
                     accept="application/pdf"
                     style={{ display: 'none' }}
@@ -175,7 +175,6 @@ const NotesEdit = (props) => {
               <Controller
                 name="title"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -193,7 +192,6 @@ const NotesEdit = (props) => {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth

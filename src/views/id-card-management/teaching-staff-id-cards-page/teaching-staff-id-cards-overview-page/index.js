@@ -1,4 +1,4 @@
-import { Box, Avatar as CustomAvatar, Grid, TextField } from '@mui/material';
+import { Box, Button, CardMedia, Avatar as CustomAvatar, Grid, TextField } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,6 +15,10 @@ import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import { useInstitute } from 'utils/get-institute-details';
+import generateStaffIDCardPDF from 'utils/id-generator';
+import generateIDCardPDF from 'utils/pdfGenerator';
+import { getImageUrl } from 'utils/imageUtils';
 
 const roleColors = {
   admin: 'error',
@@ -37,8 +41,9 @@ const TeachingIdCard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [staffIdRefetch, setStaffIdRefetch] = useState(false);
 
+
   useEffect(() => {
-    dispatch(getAllStaffIdCards({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllStaffIdCards({ branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' }));
   }, [dispatch, selectedBranchId, staffIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -50,10 +55,11 @@ const TeachingIdCard = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      staff_id: statusValue?.staff?.staff_id
+      is_active: statusValue?.is_active === true ? false : true
     };
-    const response = await updateStaffIdCardStatus(data);
+
+    const response = await updateStaffIdCardStatus(statusValue.uuid, data);
+
     if (response.success) {
       toast.success(response.message);
       setStaffIdRefetch((state) => !state);
@@ -87,6 +93,7 @@ const TeachingIdCard = () => {
     dispatch(getAllStaffIdCards(data));
   };
 
+  console.log(StaffIdCards);
   return (
     <>
       <Grid>
@@ -112,7 +119,10 @@ const TeachingIdCard = () => {
                       key={index}
                       item
                       xs={12}
-                      sm={3}
+                      sm={4}
+                      lg={3}
+                      // xl={2}
+                      
                       sx={{
                         position: 'relative',
                         width: '100%',
@@ -147,96 +157,213 @@ const TeachingIdCard = () => {
                           }
                         }}
                       >
-                        <Card className="front" sx={{ width: '100%', minHeight: 435 }}>
-                          <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                            {item.staff.image ? (
+                        <Card className="front" sx={{ width: '100%', minHeight: 410,boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+                            <Card
+                          sx={{
+                            width: '100%',
+                            minHeight: 410,
+                            borderRadius: 3,
+                            boxShadow: 3,
+                            padding: 2,
+                            paddingRight: 0,
+                            backgroundColor: '#ffffff',
+                            border: '1px solid #ddd',
+                            display: 'flex',
+                            position: 'relative', // Required for absolute positioning of pseudo-element
+                            overflow: 'hidden' // Ensures pseudo-element stays within card boundaries
+                          }}
+                        >
+                          {/* Background Image with Opacity */}
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              backgroundImage: `url('https://clipart-library.com/new_gallery/750538_vector-bg-png.jpg')`, // Replace with your image URL
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat',
+                              opacity: 0.8 // Adjust opacity level (0.1 to 1)
+                              // Keeps it behind content
+                            }}
+                          />
+
+                          {/* Sidebar */}
+                          {/* <Box sx={{ backgroundColor: '#28a745', width: 20, borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }} /> */}
+
+                          {/* Main Content */}
+                          <Box sx={{ flex: 1, padding: 2, position: 'relative', zIndex: 1 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
                               <CustomAvatar
-                                src={item.staff.image}
-                                alt={item.staff.first_name}
-                                variant="light"
-                                sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
-                              />
-                            ) : (
-                              <CustomAvatar
-                                skin="light"
-                                color={statusColors.active}
-                                sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
-                              >
-                                {getInitials(item.staff.first_name)}
-                              </CustomAvatar>
-                            )}
-                            <Typography variant="h4" sx={{ mb: 2 }}>
-                              {item.staff.staff_name}
-                            </Typography>
-                            <CustomChip rounded skin="light" size="small" label={`${item.staff.email}`} color={statusColors.active} />
-                            <Box mt={3}>
-                              <img
-                                style={{ borderRadius: '10px' }}
-                                height={100}
-                                src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
-                                alt="qrCode"
+                                sx={{ width: 90, height: 90, bgcolor: '#ffffff', border: '4px solid #28a745' }}
+                                src={getImageUrl(item?.image)}
+                                alt="Profile Picture"
                               />
                             </Box>
-                          </CardContent>
+                            <Typography variant="h3" fontWeight="bold" sx={{ color: '#000', textAlign: 'center' }}>
+                              <span style={{ color: '#28a745',textTransform: "uppercase"  }}>{item.name} </span>
+                            </Typography>
+                            <Typography variant="subtitle2" color="textSecondary" textAlign="center">
+                              {item.role.identity}
+                            </Typography>
+                            <Box sx={{ alignContent:'center', paddingTop: 2, display: 'grid', gap: 0.5, gridTemplateColumns: 'auto 1fr' }}>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>ID No:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.staff_id}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Username:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                              {item.name}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Email:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.email}{' '}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Phone:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.contact}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ marginTop: 1,mb:0, textAlign: 'center' }}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                            </Box>
+                          </Box>
                         </Card>
-                        <Card className="back" sx={{ width: '100%', minHeight: 435 }}>
-                          <CardContent sx={{ pb: 2 }}>
-                            <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+                          </Card>
+                        <Card className="back" sx={{ width: '100%', minHeight: 410 ,position: 'relative'}}>
+                           {/* Background Image with Opacity */}
+                           <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              backgroundImage: `url('https://clipart-library.com/new_gallery/750538_vector-bg-png.jpg')`, // Replace with your image URL
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat',
+                              opacity: 0.4 // Adjust opacity level (0.1 to 1)
+                              // Keeps it behind content
+                            }}
+                          />
+                          <CardContent sx={{ pt: 2 , position: 'relative', zIndex: 1,mt:2}}>
+                            <Typography variant="h3" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                               Details
                             </Typography>
                             <Box sx={{ pt: 2 }}>
                               <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>
-                                  {item.staff.first_name} {item.staff.last_name}
+                                <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: '70px' }}>Username:</Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>{item.name}</Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2 }}>
+                                <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: '70px' }}>Email:</Typography>
+                                <Typography sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                  {item.email}
                                 </Typography>
                               </Box>
                               <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>{item.staff.email}</Typography>
+                                <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: '70px' }}>Role:</Typography>
+                                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{item.role.identity}</Typography>
                               </Box>
                               <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>staff</Typography>
+                                <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: '70px' }}> ID:</Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>{item.staff_id}</Typography>
                               </Box>
                               <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}> ID:</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>{item.staff.staff_id}</Typography>
-                              </Box>
-                              <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>{item.staff.phone_no}</Typography>
+                                <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: '70px' }}>Contact:</Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>{item.contact}</Typography>
                               </Box>
 
-                              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                                <Typography
-                                  sx={{
-                                    color: 'text.secondary',
-                                    overflow: 'hidden',
-                                    display: '-webkit-box',
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: 'vertical',
-                                    textOverflow: 'ellipsis'
-                                  }}
-                                >
-                                  {item.staff.address_line_1}, {item.staff.address_line_2}, {item.staff.city}, {item.staff.state},{' '}
-                                  {item.staff.pincode},
-                                </Typography>
+                              <Box sx={{ display: 'flex', textOverflow: 'ellipsis', overflow: 'hidden', textWrap: 'nowrap' }}>
+                                <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: '70px' }}>Address:</Typography>
+                                <Box>
+                                  <Typography
+                                    sx={{
+                                      color: 'text.secondary',
+                                      overflow: 'hidden',
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                  >
+                                    {item?.address?.address_line_one},
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      color: 'text.secondary',
+                                      overflow: 'hidden',
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                  >
+                                    {item?.address?.address_line_two},
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      color: 'text.secondary',
+                                      overflow: 'hidden',
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                  >
+                                    {item?.address?.city}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      color: 'text.secondary',
+                                      overflow: 'hidden',
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                  >
+                                    {item?.address?.state} - {item?.address?.pin_code}
+                                  </Typography>
+                                </Box>
                               </Box>
                             </Box>
 
-                            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-                              <TextField
-                                size="small"
-                                select
-                                width={100}
-                                label="Status"
-                                SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
-                              >
-                                <MenuItem value="1">Active</MenuItem>
-                                <MenuItem value="0">Inactive</MenuItem>
-                              </TextField>
+                            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                              <Button variant="contained" sx={{borderRadius:50}} onClick={() => generateIDCardPDF(item)}>
+                                Download
+                              </Button>
                             </Box>
                           </CardContent>
                         </Card>

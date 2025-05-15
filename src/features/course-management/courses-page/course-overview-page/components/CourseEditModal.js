@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField as CustomTextField, Grid, styled } from '@mui/material';
+import { TextField as CustomTextField, Grid, styled, Typography } from '@mui/material';
+import { CameraAlt as CameraAltIcon, AddPhotoAlternate as AddPhotoAlternateIcon } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -15,8 +16,11 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourse } from '../../services/courseServices';
+import client from 'api/client';
+import { imagePlaceholder } from 'utils/placeholders';
+import { getImageUrl } from 'utils/imageUtils';
 
-const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRefetch }) => {
+const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId, setRefetch }) => {
   const [activeCategories, setActiveCategories] = useState([]);
 
   const image =
@@ -68,36 +72,110 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (course) {
-      setValue('course_duration', course?.institute_course_branch?.course_duration || '');
-      setValue('course_name', course?.institute_course_branch?.course_name || '');
-      setValue('course_price', course?.institute_course_branch?.course_price || '');
-      setValue('description', course?.institute_course_branch?.description || '');
-      setValue('course_overview', course?.institute_course_branch?.course_overview || '');
-      setValue('learning_format', course?.institute_course_branch?.learning_format || '');
-      setValue('course_category', course?.institute_category_id || '');
+      setValue('course_duration', course?.duration || '');
+      setValue('course_name', course?.course_name || '');
+      setValue('course_price', course?.current_price || '');
+      setValue('description', course?.description || '');
+      setValue('course_overview', course?.overview || '');
+      setValue('learning_format', course?.class_type[0] || '');
+      setValue('course_category', course?.category?.uuid || '');
     }
   }, [course, setValue]);
 
   const [inputValue, setInputValue] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  // const [imgSrc, setImgSrc] = useState(image);
+  // const [selectedImage, setSelectedImage] = useState('');
+
+  const [imgSrc, setImgSrc] = useState(getImageUrl(course?.image));
   const [selectedImage, setSelectedImage] = useState('');
-  console.log(selectedImage);
 
   const [inputTemplateValue, setInputTemplateValue] = useState('');
-  const [template, setTemplate] = useState(image);
+  const [template, setTemplate] = useState(course?.template);
   const [selectedTemplate, setSelectedTemplate] = useState('');
-  console.log(selectedTemplate);
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
+  // const handleInputImageChange = async (e) => {
+  //   e.preventDefault()
+  //   console.log('called the file', e);
+  //   const { files } = e.target;
+
+  //   if (!files || files.length === 0) {
+  //     console.error('No file selected');
+  //     return;
+  //   }
+
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     setImgSrc(reader.result); // Preview the image (optional)
+  //   };
+  //   reader.readAsDataURL(files[0]);
+
+  //   const data = new FormData();
+  //   data.append('file', files[0]);
+
+  //   try {
+  //     const uploadFile = await client.file.upload(data);
+  //     setSelectedImage(uploadFile?.data?.file);
+  //     setImgSrc(uploadFile?.data?.file);
+  //   } catch (error) {
+  //     console.error('File upload failed:', error);
+  //   }
+  // };
+
+  // const handleInputImageChange = (e) => {
+  //   e.preventDefault();
+  //   const { files } = e.target;
+
+  //   if (!files || files.length === 0) {
+  //     console.error('No file selected');
+  //     return;
+  //   }
+
+  //   const file = files[0];
+  //   const reader = new FileReader();
+
+  //   // Set up the preview of the selected image
+  //   reader.onload = () => {
+  //     setImgSrc(reader.result); // Preview the newly selected image
+  //   };
+
+  //   reader.readAsDataURL(file);
+
+  //   const data = new FormData();
+  //   data.append('file', file);
+
+  //   try {
+  //     client.file.upload(data).then((uploadFile) => {
+  //       setSelectedImage(uploadFile?.data?.file); // Store the selected image for uploading
+  //     });
+  //   } catch (error) {
+  //     console.error('File upload failed:', error);
+  //   }
+  // };
+
+  const handleInputImageChange = (event) => {
+    const file = event.target.files[0];
+    if (!file || file.length === 0) {
+      console.error('No file selected');
+      return;
+    }
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImgSrc(reader.result); // Set the data URL as the new src
+        console.log(reader.result);
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+
+    const data = new FormData();
+    data.append('file', file);
+
+    try {
+      client.file.upload(data).then((uploadFile) => {
+        setSelectedImage(uploadFile?.data?.file); // Store the selected image for uploading
+      });
+    } catch (error) {
+      console.error('File upload failed:', error);
     }
   };
 
@@ -114,36 +192,52 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
     }
   };
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  const ImgStyled = styled('img')({
+    width: '100%',
+    height: '200px',
+    borderRadius: '8px',
+    border: '2px solid #ddd',
+    objectFit: 'cover'
+  });
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
+  const ButtonStyled = styled('button')({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '10px 20px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#0056b3'
+    },
+    '& svg': {
+      marginRight: '8px'
     }
-  }));
+  });
 
   // Handle form submission
   const onSubmit = useCallback(
     async (data) => {
-      const formData = new FormData();
-      formData.append('course_name', data.course_name);
-      formData.append('course_duration', data.course_duration);
-      formData.append('course_price', data.course_price);
-      formData.append('course_category', data.course_category);
-      formData.append('learning_format', data.learning_format);
-      formData.append('course_overview', data.course_overview);
-      formData.append('description', data.description);
-      formData.append('course_id', course.institute_course_branch.course_id);
-      formData.append('branch_id', selectedBranchId);
+      console.log('Form data submitted:', data); // Debug form data
+      const course_data = {
+        course_name: data.course_name,
+        duration: data.course_duration,
+        price: data.course_price,
+        category: data.course_category,
+        class_type: data.learning_format,
+        overview: data.overview,
+        description: data.description,
+        course: course.uuid,
+        image: selectedImage ? imgSrc : course?.image
+      };
 
       try {
-        const result = await updateCourse(formData);
+        const result = await updateCourse(course_data);
 
         if (result.success) {
           setRefetch((state) => !state);
@@ -152,7 +246,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
         } else {
           toast.error(result.message);
         }
-        console.log(formData);
       } catch (error) {
         console.error(error);
       }
@@ -173,98 +266,141 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
     const data = {
       branch_id: branchIds
     };
-    console.log(data);
     const result = await getAllCourseCategories(data);
+    // console.log(result);
 
     if (result.data) {
       setActiveCategories(result.data);
     }
   };
-
+  console.log(course, 'course', 'image');
   return (
     <div>
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="user-view-edit"
-        aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 1000 } }}
+        aria-labelledby="edit-course-dialog"
+        sx={{
+          '& .MuiPaper-root': {
+            width: '100%',
+            maxWidth: 900,
+            borderRadius: 3,
+            p: 3
+          }
+        }}
       >
         <DialogTitle
-          id="user-view-edit"
+          id="edit-course-dialog"
           sx={{
             textAlign: 'center',
-            fontSize: '1.5rem !important',
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
-            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
+            fontWeight: 600,
+            pt:1,
+            fontSize: '2rem',
+            color: 'white',
+            backgroundColor:"primary.main",
+            borderRadius:"20px",
           }}
         >
           Edit Course Information
         </DialogTitle>
-        <DialogContent
-          sx={{
-            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
-            pb: (theme) => `${theme.spacing(5)} !important`,
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-          }}
-        >
+        <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="course_name"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <CustomTextField
-                      fullWidth
-                      value={value}
-                      // defaultValue={course?.institute_course_branch?.course_name}
                       label="Course Name"
+                      placeholder="Enter course name"
+                      value={value}
                       onChange={onChange}
-                      placeholder="Leonard"
+                      size="small"
+                      fullWidth
                       error={Boolean(errors.course_name)}
-                      aria-describedby="stepper-linear-personal-course_name"
-                      // {...(errors.course_name && { helperText: 'This field is required' })}
                       helperText={errors.course_name?.message}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '16px'
+                        }
+                      }}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="course_duration"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
+                      label="Course Duration (in months)"
+                      placeholder="e.g., 6"
+                      type="number"
+                      size="small"
                       fullWidth
                       value={value}
-                      label="Course Duration"
-                      type="number"
                       onChange={onChange}
-                      placeholder="Carter"
                       error={Boolean(errors.course_duration)}
                       helperText={errors.course_duration?.message}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '16px'
+                        }
+                      }}
                     />
                   )}
                 />
               </Grid>
+              <Grid item xs={12} sm={4}>
+                <Controller
+                  name="learning_format"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      select
+                      label="Learning Format"
+                      size="small"
+                      value={value}
+                      fullWidth
+                      onChange={onChange}
+                      error={Boolean(errors.learning_format)}
+                      helperText={errors.learning_format?.message}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '16px'
+                        }
+                      }}
+                    >
+                      <MenuItem value="online">Online</MenuItem>
+                      <MenuItem value="offline">Offline</MenuItem>
+                      <MenuItem value="hybrid">Hybrid</MenuItem>
+                    </CustomTextField>
+                  )}
+                />
+              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="course_price"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
-                      fullWidth
-                      type="number"
-                      value={value}
                       label="Course Price"
+                      placeholder="Enter course price"
+                      type="number"
+                      size="small"
+                      fullWidth
+                      value={value}
                       onChange={onChange}
-                      placeholder="Carter"
                       error={Boolean(errors.course_price)}
                       helperText={errors.course_price?.message}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '16px'
+                        }
+                      }}
                     />
                   )}
                 />
@@ -273,20 +409,24 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="course_category"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       select
-                      fullWidth
                       label="Course Category"
-                      id="validation-billing-select"
+                      fullWidth
+                      size="small"
+                      value={value}
+                      onChange={onChange}
                       error={Boolean(errors.course_category)}
                       helperText={errors.course_category?.message}
-                      onChange={onChange}
-                      value={value}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '16px'
+                        }
+                      }}
                     >
-                      {activeCategories?.map((item, index) => (
-                        <MenuItem key={index} value={item.category_id}>
+                      {activeCategories?.map((item) => (
+                        <MenuItem key={item.uuid} value={item.uuid}>
                           {item.category_name}
                         </MenuItem>
                       ))}
@@ -294,40 +434,20 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
-                <Controller
-                  name="learning_format"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      multiline
-                      rows={3}
-                      label="learning_format"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(errors.learning_format)}
-                      helperText={errors.learning_format?.message}
-                    />
-                  )}
-                />
-              </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="course_overview"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
-                      fullWidth
-                      value={value}
+                      label="Course Overview"
+                      placeholder="Provide a brief overview of the course"
                       multiline
                       rows={3}
-                      label="Course Overview"
+                      fullWidth
+                      size="small"
+                      value={value}
                       onChange={onChange}
-                      placeholder="Carter"
                       error={Boolean(errors.course_overview)}
                       helperText={errors.course_overview?.message}
                     />
@@ -338,101 +458,63 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="description"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
-                      fullWidth
-                      value={value}
+                      label="Description"
+                      placeholder="Provide a detailed description"
                       multiline
                       rows={3}
-                      label="Description"
+                      fullWidth
+                      size="small"
+                      value={value}
                       onChange={onChange}
-                      placeholder="Carter"
                       error={Boolean(errors.description)}
                       helperText={errors.description?.message}
                     />
                   )}
                 />
               </Grid>
-
-              <Grid container xs={12} sx={{ mt: 5 }} spacing={2}>
+              <Grid container spacing={3} sx={{ mt: 1 }}>
                 <Grid item xs={12} md={6}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-                    {!selectedImage && (
-                      <ImgStyled
-                        src={
-                          course?.institute_course_branch?.logo
-                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.logo}`
-                            : imgSrc
-                        }
-                        alt="Profile Pic"
-                      />
-                    )}
-
-                    {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-                    <div>
-                      <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                        update New logo
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="subtitle1">Thumbnail Image</Typography>
+                    <ImgStyled src={template ? template : getImageUrl(course?.thumbnail) || imagePlaceholder} alt="Thumbnail" />
+                    <label htmlFor="thumbnail-upload">
+                      <Button variant="outlined" component="label" sx={{ mt: 2, borderRadius: '20px' }}>
+                        Update Thumbnail
                         <input
                           hidden
                           type="file"
-                          value={inputValue}
-                          accept="image/png, image/jpeg"
-                          onChange={handleInputImageChange}
-                          id="account-settings-upload-image"
-                        />
-                      </ButtonStyled>
-                    </div>
-                  </Box>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Box sx={{ mb: 2 }}>
-                    {!selectedTemplate && (
-                      <ImgStyled
-                        sx={{ width: '100%', height: 200 }}
-                        src={
-                          course?.institute_course_branch?.template
-                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.template}`
-                            : imgSrc
-                        }
-                        alt="Profile Pic"
-                      />
-                    )}
-
-                    {selectedTemplate && <ImgStyled src={template} alt="Profile Pic" />}
-                    <div>
-                      <ButtonStyled
-                        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        component="label"
-                        variant="contained"
-                        htmlFor="account-settings-upload-image"
-                      >
-                        update New Template
-                        <input
-                          hidden
-                          type="file"
-                          value={inputTemplateValue}
+                          id="thumbnail-upload"
                           accept="image/png, image/jpeg"
                           onChange={handleInputTemplateChange}
-                          id="account-settings-upload-image"
                         />
-                      </ButtonStyled>
-                    </div>
+                      </Button>
+                    </label>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="subtitle1">Main Image</Typography>
+                    <ImgStyled src={imgSrc ? imgSrc : getImageUrl(course?.image)} alt="Main" />
+                    <label htmlFor="main-image-upload">
+                      <Button variant="outlined" component="label" sx={{ mt: 2, borderRadius: '20px' }}>
+                        Update Main Image
+                        <input hidden type="file" id="main-image-upload" accept="image/png, image/jpeg" onChange={handleInputImageChange} />
+                      </Button>
+                    </label>
                   </Box>
                 </Grid>
               </Grid>
 
-              <CourseValidate />
-            </Grid>
-
-            <Grid style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="error" onClick={handleClose}>
-                Cancel
-              </Button>
+              <Grid item xs={12} sx={{ textAlign: 'center', mt: 4 }}>
+                <Button type="submit" variant="contained" sx={{ mr: 2 }}>
+                  Submit
+                </Button>
+                <Button variant="outlined" color="error" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Grid>
             </Grid>
           </form>
         </DialogContent>

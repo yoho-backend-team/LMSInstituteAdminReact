@@ -15,7 +15,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import {
+  getAllActiveNonTeachingStaffs,
+  getAllNonTeachingStaffs
+} from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
@@ -26,6 +29,7 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateLiveClass } from '../../services/liveClassServices';
+import { formatTime } from 'utils/formatDate';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -44,19 +48,21 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
       .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters'),
     classDate: yup.date().nullable().required('Class Date field is required'),
-    start_time: yup.string().required('Class StartTime field is required'),
-    end_time: yup.string().required('Class EndTime field is required'),
+    start_time: yup.date().required('Class StartTime field is required'),
+    end_time: yup.date().required('Class EndTime field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    coordinators: yup.array()
+    // .min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
 
   const defaultValues = {
-    class_name: '', 
+    class_name: '',
     classDate: new Date(),
     start_time: null,
     end_time: null,
     instructors: [],
-    coordinators: []
+    coordinators: [],
+    video_url: ''
   };
   const handleCopyLink = () => {
     const link = 'your Generated Link';
@@ -91,12 +97,13 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   useEffect(() => {
     if (liveClasses) {
       setValue('class_name', liveClasses.class_name || '');
-      setValue('class_id', liveClasses.class_id || '');
-      setValue('classDate', new Date(liveClasses.class_date) || new Date());
+      setValue('_id', liveClasses._id || '');
+      setValue('classDate', new Date(liveClasses.start_date) || new Date());
       setValue('start_time', dayjs(liveClasses?.start_time) || null);
       setValue('end_time', dayjs(liveClasses?.end_time) || null);
       setValue('instructors', liveClasses.instructors || []);
       setValue('coordinators', liveClasses.coordinators || []);
+      setValue('video_url', liveClasses?.video_url || '');
       setSelectedCoordinates(liveClasses?.coordinators);
       setSelectedInstructors(liveClasses?.instructors);
     }
@@ -118,7 +125,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
 
   const handleClose = () => {
     handleEditClose();
-    reset(defaultValues);
+    // reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
@@ -126,19 +133,19 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-    setActiveTeachingStaff(result.data.data);
+    setActiveTeachingStaff(result.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveNonTeachingStaffs(data);
-    setActiveNonTeachingStaff(result.data.data);
+    const result = await getAllNonTeachingStaffs(data);
+    setActiveNonTeachingStaff(result.data);
   };
 
   useEffect(() => {
     getActiveTeachingStaffs(selectedBranchId);
     getActiveNonTeachingStaffs(selectedBranchId);
   }, [selectedBranchId]);
-
+  //  console.log(liveClasses,"liveClasses",defaultValues,control._formValues,errors)
   function convertDateFormat(input) {
     var originalDate = new Date(input);
     var year = originalDate.getFullYear();
@@ -149,43 +156,54 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   }
 
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
-    var bodyFormData = new FormData();
-    filteredInstructorId?.forEach((id) => {
-      bodyFormData.append('instructor_staff_ids[]', id);
-    });
-    filteredCoordinatorId?.forEach((id) => {
-      bodyFormData.append('coordinator_staff_ids[]', id);
-    });
-    bodyFormData.append('class_name', data.class_name);
-    bodyFormData.append('class_id', liveClasses.class_id);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('course_id', data.course_id);
-    bodyFormData.append('batch_id', data.batch_id);
-    bodyFormData.append('class_date', convertDateFormat(data.classDate));
-    bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time);
-    bodyFormData.append('videoUrl', data.class_link);
+    const formattedStartTime = data.start_time
+      ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.start_time).format('HH:mm:ss')}`).toISOString()
+      : null;
 
-    const result = await updateLiveClass(bodyFormData);
+    const formattedEndTime = data.end_time
+      ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.end_time).format('HH:mm:ss')}`).toISOString()
+      : null;
+
+    const filteredInstructorId = data?.instructors?.map((staff) => staff._id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff._id);
+    const new_class_data = {
+      class_name: data.class_name,
+      start_date: data?.classDate,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
+      video_url: data?.video_url,
+      uuid: liveClasses?.uuid,
+      id: liveClasses?._id,
+      instructors: filteredInstructorId,
+      coordinators: filteredCoordinatorId
+    };
+
+    const result = await updateLiveClass(new_class_data);
 
     if (result.success) {
-      setRefetch((state) => !state);
       toast.success(result.message);
+      setRefetch((state) => !state);
       handleClose();
     } else {
-      let errorMessage = '';
-      toast.error(errorMessage.trim());
+      toast.error(result?.message);
     }
   };
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+      sx={{
+        '& .MuiPaper-root': {
+          width: '100%',
+          maxWidth: 800,
+          background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          borderRadius: 2
+        }
+      }}
     >
       <DialogTitle
         id="user-view-edit"
@@ -193,7 +211,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
           textAlign: 'center',
           fontSize: '1.5rem !important',
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
+          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`],
+          background: 'linear-gradient(to right, #6b46c1, #5a67d8)',
+          color: 'white',
+          fontWeight: 'bold',
+          padding: '1rem',
+          mb: 2
         }}
       >
         Edit Live Class
@@ -213,7 +236,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 <Controller
                   name="class_name"
                   control={control}
-                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
@@ -223,6 +245,37 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       placeholder="John Doe"
                       error={Boolean(errors.class_name)}
                       {...(errors.class_name && { helperText: errors.class_name.message })}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black'
+                          }
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px'
+                        }
+                      }}
                     />
                   )}
                 />
@@ -232,7 +285,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 <Controller
                   name="classDate"
                   control={control}
-                  rules={{ required: 'Class Date field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
                       selected={value}
@@ -240,7 +292,42 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       className="full-width-datepicker"
                       onChange={onChange}
                       placeholderText="Click to select a date"
-                      customInput={<CustomInput label="ClassDate" />}
+                      customInput={
+                        <CustomInput
+                          label="ClassDate"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
+                        />
+                      }
                     />
                   )}
                 />
@@ -252,7 +339,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   <Controller
                     name="start_time"
                     control={control}
-                    rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
@@ -265,6 +351,37 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                           value={value}
                           onChange={onChange}
                           label="Start Time"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -278,7 +395,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   <Controller
                     name="end_time"
                     control={control}
-                    rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
@@ -291,6 +407,37 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                           value={value}
                           onChange={onChange}
                           label="End Time"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -306,15 +453,15 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
-                  getOptionLabel={(option) => option.staff_name}
-                  value={selectedInstructors}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedInstructors || []}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'instructors',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
@@ -330,6 +477,37 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black'
+                          }
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px'
+                        }
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -340,15 +518,15 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option._id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -361,26 +539,26 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
-                  getOptionLabel={(option) => option.coordinate_name}
-                  value={selectedCoordinates}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeNonTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedCoordinates || []}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'coordinators',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
@@ -396,6 +574,38 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -406,7 +616,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
@@ -414,7 +624,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       {value.map((option, index) => (
                         <CustomChip
                           key={option.staff_id}
-                          label={option.staff_name}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -427,16 +637,18 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  defaultValue={liveClasses?.class_link}
+                  defaultValue={liveClasses?.video_url}
+                  name="video"
+                  onChange={(e) => setValue('video_url', e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -447,16 +659,69 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                     )
                   }}
                   style={{ border: '1px ', borderRadius: '7px' }}
+                  sx={{
+                    backgroundColor: 'transparent',
+                    borderRadius: '8px',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                      backgroundColor: 'white',
+                      '& fieldset': {
+                        borderColor: 'rgba(156, 163, 175, 1)'
+                      },
+                      '&:hover fieldset': {
+                        borderColor: 'rgba(156, 163, 175, 1)'
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: 'rgba(96, 165, 250, 1)',
+                        boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                      }
+                    },
+                    '& .MuiInputLabel-root': {
+                      color: 'black',
+                      '&.Mui-focused': {
+                        color: 'black'
+                      }
+                    },
+                    '& .MuiFormHelperText-root': {
+                      backgroundColor: 'transparent',
+                      color: 'red',
+
+                      borderRadius: '4px',
+                      marginTop: '4px'
+                    }
+                  }}
                 />
               </Grid>
 
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Box>
-                  <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                    Submit
-                  </Button>
-                  <Button onClick={handleClose} variant="tonal" color="error">
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent="space-between">
+                  <Button
+                    onClick={handleClose}
+                    variant="tonal"
+                    color="error"
+                    sx={{
+                      border: '2px solid #D8B4FE',
+                      color: '#9333EA',
+                      backgroundColor: 'transparent',
+                      '&:hover': {
+                        backgroundColor: '#FAF5FF'
+                      }
+                    }}
+                  >
                     Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      background: 'linear-gradient(to right, #9333EA, #4F46E5)',
+                      color: 'white',
+                      '&:hover': {
+                        background: 'linear-gradient(to right, #7E22CE, #4338CA)'
+                      }
+                    }}
+                  >
+                    Submit
                   </Button>
                 </Box>
               </Grid>

@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
@@ -12,6 +13,8 @@ import toast from 'react-hot-toast';
 import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
 import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
+import { getImageUrl } from 'utils/imageUtils';
+import client from 'api/client';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -71,22 +74,32 @@ const StudyMaterialEdit = (props) => {
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
   const [inputValue, setInputValue] = useState('');
 
-  const handleFileUpload = useCallback((file) => {
+  const handleFileUpload = useCallback(async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
+  
+    
     if (files && files.length !== 0) {
       const uploadedFile = files[0];
       const mimeType = uploadedFile.type;
 
       // Check if the file is a PDF
       if (mimeType === 'application/pdf') {
-        reader.onload = () => {
-          setSavedPdfUrl(reader.result);
-          setSelectedFile(uploadedFile);
-          setInputValue(uploadedFile);
-        };
+        const formData = new FormData()
+        formData.append("file",files[0])
+        const data = files[0]
+        if (data.size > 1048576) {
+          return toast.success("pdf upload lesser than 1mb")
+        }
+        const file = await client.file.upload(formData)
+        toast.success(file.message)
+        setSelectedFile(file.data.file)
+        // reader.onload = () => {
+        //   setSavedPdfUrl(reader.result);
+        //   setInputValue(uploadedFile);
+        // };
 
-        reader.readAsDataURL(uploadedFile);
+        // reader.readAsDataURL(uploadedFile);
       } else {
         toast.error('Only PDF files are allowed');
       }
@@ -94,14 +107,15 @@ const StudyMaterialEdit = (props) => {
   }, []);
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('id', props.initialValues.id);
-    bodyFormData.append('document', setSelectedFile);
-
-    const result = await updateCourseStudyMaterial(bodyFormData);
-
+    const Update_data = {
+      title : data.title,
+      description : data.description,
+      uuid : props.initialValues.uuid,
+      file : selectedFile ? selectedFile : props.initialValues.file
+    }
+     
+    const result = await updateCourseStudyMaterial(Update_data);
+   
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);
@@ -118,7 +132,8 @@ const StudyMaterialEdit = (props) => {
       styled(Button)(({ theme }) => ({
         [theme.breakpoints.down('sm')]: {
           width: '100%',
-          textAlign: 'center'
+          textAlign: 'center',
+          
         }
       })),
     []
@@ -135,7 +150,7 @@ const StudyMaterialEdit = (props) => {
       <Grid container spacing={1}>
         <Grid item md={12} sm={12}>
           <Header>
-            <Typography variant="h5">Edit Study Material</Typography>
+          <Chip   label="Edit Study Material " sx={{fontSize:'20px',border:2,borderColor:"#0cce7b" ,}}/>
             <IconButton
               size="small"
               onClick={handleClose}
@@ -146,7 +161,7 @@ const StudyMaterialEdit = (props) => {
                 backgroundColor: 'action.selected',
                 '&:hover': {
                   backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-                }
+                } 
               }}
             >
               <Icon icon="tabler:x" fontSize="1.125rem" />
@@ -155,14 +170,15 @@ const StudyMaterialEdit = (props) => {
           <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
-                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {!selectedFile && <PDFViewer url={StudyMaterials?.file?getImageUrl(StudyMaterials.file):savedPdfUrl} />}
+                {selectedFile && <PDFViewer url={getImageUrl(selectedFile)} />}
 
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 ,borderRadius: '50px' }}>
+                  <CloudUploadOutlinedIcon sx={{mr:1.5}}/>
                   Upload New File
                   <input
                     accept="application/pdf"
-                    style={{ display: 'none' }}
+                    style={{ display: 'none',  }}
                     id="account-settings-upload-file"
                     multiple={false}
                     type="file"
@@ -175,7 +191,6 @@ const StudyMaterialEdit = (props) => {
               <Controller
                 name="title"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -193,7 +208,6 @@ const StudyMaterialEdit = (props) => {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -219,6 +233,7 @@ const StudyMaterialEdit = (props) => {
             </form>
           </Box>
         </Grid>
+        
       </Grid>
     </Drawer>
   );

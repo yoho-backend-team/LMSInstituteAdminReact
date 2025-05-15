@@ -1,32 +1,19 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
-const TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/ticket`;
-const _TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/ticket`;
+const TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket`;
+const _TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/ticket`;
 
 export const getAllTickets = async (data) => {
   try {
-    const response = await axios.get(`${TICKET_END_POINT}/read?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('getAllTickets:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Tickets. Status: ${response.status}`);
-    }
+    const response = await client.ticket.admin.get_all(data);
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllTickets:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch Tickets. Status: ${error.response?.status}`);
   }
 };
 
@@ -35,12 +22,11 @@ export const updateTicket = async (data) => {
     const response = await axios.put(`${_TICKET_UPDATE_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Ticket updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Ticket' };
@@ -53,21 +39,30 @@ export const updateTicket = async (data) => {
 
 export const CreateTicket = async (data) => {
   try {
-    const response = await axios.post(`${_TICKET_UPDATE_API_END_POINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'Ticket created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Ticket' };
-    }
+    await client.ticket.admin.create_ticket(data);
+    return { success: true, message: 'Ticket created successfully' };
   } catch (error) {
-    console.error('Error in createTicket:', error);
-    throw error;
+    const error_message = getErrorMessage(error);
+    throw new Error(error_message);
+  }
+};
+
+export const getAdminTicketWithId = async (data) => {
+  try {
+    const response = await client.ticket.admin.get_with_id(data);
+    return response;
+  } catch (error) {
+    const error_message = getErrorMessage(error);
+    throw new Error(error_message);
+  }
+};
+
+export const updateAdminTicket = async (params, data) => {
+  try {
+    const response = await client.ticket.admin.update_ticket(params, data);
+    return response;
+  } catch (error) {
+    const error_message = await getErrorMessage(error);
+    throw new Error(error_message);
   }
 };

@@ -24,12 +24,17 @@ import {
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
 import {
   deleteStudentCertificate,
+  PrintCertificate,
   updateStudentCertificateStatus
 } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import { useInstitute } from 'utils/get-institute-details';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import html2pdf from "html2pdf.js"
 
 const userStatusObj = {
   1: 'success',
@@ -47,11 +52,15 @@ const StudenrCertificate = () => {
   const [studentCertificateDeleteModelOpen, setStudentCertificateDeleteModelOpen] = useState(false);
   const [selectedStudentCertificateDeleteId, setSelectedStudentCertificateDeleteId] = useState(null);
 
+  const handleRowClick = useCallback((params) => {
+    setSelectedRow(params);
+  }, []);
+
   const renderClient = (row) => {
     if (row?.students?.image) {
       return (
         <CustomAvatar
-          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.students?.image}`}
+          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.student?.image}`}
           sx={{ mr: 2.5, width: 38, height: 38 }}
         />
       );
@@ -61,32 +70,49 @@ const StudenrCertificate = () => {
           skin="light"
           sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
         >
-          {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+          {getInitials(row?.student?.fullname ||  '')}
         </CustomAvatar>
       );
     }
   };
-
-  const handleRowClick = (params) => {
-    setSelectedRow(params);
-  };
+  const downloadPDF = async(row) => {
+    const data = await PrintCertificate(row._id)
+    const options = {
+            filename: `${row.student[0].full_name}.pdf`,
+            jsPDF: {format: 'a4', orientation: 'landscape' },
+            html2canvas: { scale: 2, useCORS: true }
+        };
+    html2pdf()
+    .from(data)
+    .set(options)
+    .save();
+};
+ 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleStatusChangeApi = async () => {
+    if (!selectedRow?.uuid) {
+      console.error('UUID is undefined');
+      return;
+    }
+  
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: statusValue?.is_active === true ? false : true
     };
-    const response = await updateStudentCertificateStatus(data);
+    const response = await updateStudentCertificateStatus(selectedRow.uuid, data);
+
     if (response.success) {
       toast.success(response.message);
-      setStudentCertificateRefetch();
+      setStudentCertificateRefetch((state) => !state);
+ 
     } else {
       toast.error(response.message);
     }
   };
-
-  const handleStatusValue = (event, users) => {
+  
+  
+    const handleStatusValue = (event, users) => {
+    setSelectedRow(users)
     setStatusChangeDialogOpen(true);
     setStatusValue(users);
   };
@@ -101,7 +127,6 @@ const StudenrCertificate = () => {
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     setStudentCertificateRefetch();
-    console.log('Toggle drawer');
   };
 
   const dispatch = useDispatch();
@@ -112,17 +137,19 @@ const StudenrCertificate = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      branchid: selectedBranchId,
+      InstituteId: useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllStudentCertificates(data));
   }, [dispatch, selectedBranchId, studentCertificateRefetch]);
 
-  const handleDelete = useCallback((itemId) => {
-    setSelectedStudentCertificateDeleteId(itemId);
+  const handleDelete = useCallback((certificateid) => {
+    setSelectedStudentCertificateDeleteId(certificateid);
     setStudentCertificateDeleteModelOpen(true);
   }, []);
 
+  
   const handleStudentCertificateDelete = async () => {
     const result = await deleteStudentCertificate(selectedStudentCertificateDeleteId);
     if (result.success) {
@@ -132,6 +159,8 @@ const StudenrCertificate = () => {
       toast.error(result.message);
     }
   };
+  
+
 
   const RowOptions = ({ row }) => {
     return (
@@ -141,7 +170,10 @@ const StudenrCertificate = () => {
         options={[
           {
             text: 'Download',
-            icon: <Icon icon="tabler:download" fontSize={20} />
+            icon: <Icon icon="tabler:download" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => downloadPDF(row)
+            }
           },
           {
             text: 'Edit',
@@ -168,7 +200,7 @@ const StudenrCertificate = () => {
             icon: <Icon icon="mdi:delete-outline" />,
             menuItemProps: {
               onClick: () => {
-                handleDelete(row.id);
+                handleDelete(row.uuid);
                 handleRowClick(row);
               }
             }
@@ -192,7 +224,7 @@ const StudenrCertificate = () => {
       }
     },
     {
-      flex: 0.25,
+      flex: 1,
       minWidth: 280,
       field: 'fullName',
       headerName: 'User',
@@ -210,10 +242,10 @@ const StudenrCertificate = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.students?.first_name}
+                {row?.student[0]?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.students?.email}
+                {row?.student[0]?.email}
               </Typography>
             </Box>
           </Box>
@@ -237,7 +269,7 @@ const StudenrCertificate = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
+                {row?.certificate_name}
               </Typography>
               <Typography noWrap sx={{ color: 'text.secondary', mt: 0.8, fontSize: '14px' }}>
                 {row?.description}
@@ -247,36 +279,36 @@ const StudenrCertificate = () => {
         );
       }
     },
-    {
-      flex: 1,
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <TextField
-            size="small"
-            select
-            value={row?.is_active}
-            label="status"
-            id="custom-select"
-            sx={{
-              color: userStatusObj[row?.is_active]
-            }}
-            onChange={(e) => handleStatusValue(e, row)}
-            SelectProps={{
-              sx: {
-                borderColor: row.is_active === '1' ? 'success' : 'error',
-                color: userStatusObj[row?.is_active]
-              }
-            }}
-          >
-            <MenuItem value={1}>Active</MenuItem>
-            <MenuItem value={0}>Inactive</MenuItem>
-          </TextField>
-        );
-      }
-    },
+    // {
+    //   flex: 1,
+    //   minWidth: 180,
+    //   field: 'status',
+    //   headerName: 'Status',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <TextField
+    //         size="small"
+    //         select
+    //         value={row?.is_active}
+    //         label="status"
+    //         id="custom-select"
+    //         sx={{
+    //           color: userStatusObj[row?.is_active]
+    //         }}
+    //         onChange={(e) => handleStatusValue(e, row)}
+    //         SelectProps={{
+    //           sx: {
+    //             borderColor: row.is_active? 'success' : 'error',
+    //             color: userStatusObj[row?.is_active]
+    //           }
+    //         }}
+    //       >
+    //         <MenuItem value={true}>Active</MenuItem>
+    //         <MenuItem value={false}>Inactive</MenuItem>
+    //       </TextField>
+    //     );
+    //   }
+    // },
     {
       flex: 0.1,
       minWidth: 100,
@@ -286,6 +318,9 @@ const StudenrCertificate = () => {
       renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
+
+  console.log(selectedRow,"selectedRow")
+  
 
   return (
     <>
@@ -301,11 +336,12 @@ const StudenrCertificate = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificates?.data}
+                rows={studentCertificates?studentCertificates :[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter
+                onRowClick={(params) => handleRowClick(params.row)}
               />
             )}
             <CardContent>
@@ -337,6 +373,7 @@ const StudenrCertificate = () => {
           initialValues={selectedRow}
           toggle={toggleEditUserDrawer}
           setStudentCertificateRefetch={setStudentCertificateRefetch}
+          certificateid={selectedRow?.uuid}
         />
         {/* Delete */}
         <StudentCertificateDeleteModel

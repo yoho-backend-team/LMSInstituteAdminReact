@@ -29,33 +29,27 @@ const UserView = () => {
       const data = {
         id: id
       };
-      setLoading(false);
-      const result = await getUserProfileById(data);
-      if (result.success) {
-        console.log('User:', result.data);
+      try {
+        const result = await getUserProfileById();
         setUserData(result.data);
         setLoading(false);
-      } else {
-        console.log(result.message);
+      } catch (error) {
+        setLoading(false); 
+      }finally{
         setLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   return (
     <>
       {loading ? (
         <StaffManagementView />
       ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={5} lg={4}>
-            <UserViewLeft id={userData?.id} userData={userData} setRefetch={setRefetch} />
-          </Grid>
-          <Grid item xs={12} md={7} lg={8}>
+        <Grid container  spacing={2} justifyContent='center'>
             <UserViewRight id={userData?.id} userData={userData} setRefetch={setRefetch} />
-          </Grid>
         </Grid>
       )}
     </>

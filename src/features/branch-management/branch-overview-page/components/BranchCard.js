@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import BranchEditModal from './BranchEditModal';
+import CardBg from "../../../../assets/images/branch/card-bg4.jpg";
 
 const BranchCard = ({ branch, setRefetchBranch }) => {
   const [branchDeleteModelOpen, setBranchDeleteModelOpen] = useState(false);
@@ -36,9 +37,10 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
+
     const response = await updateBranchStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -52,65 +54,81 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(branch);
   };
-
+  
   return (
     <Grid item xs={12} sm={6} md={3}>
-      <Card sx={{ position: 'relative', minHeight: 300 }}>
-        <Grid
-          sx={{
-            position: 'absolute',
-            top: 5,
-            right: 3
-          }}
-        >
-          <OptionsMenu
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-            options={[
-              {
-                text: 'View',
-                icon: <Icon icon="tabler:eye" fontSize={20} />,
-                menuItemProps: {
-                  component: Link,
-                  to: `branches/${branch?.branch_id}`,
-                  state: { id: branch?.branch_id }
-                }
-              },
-              {
-                text: 'Edit',
-
-                icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
-                menuItemProps: {
-                  onClick: () => {
-                    if (branch) {
-                      setSelectedBranch(branch);
-                      setBranchEditModelOpen(true);
+      <Card sx={{ position: 'relative', minHeight: 300, boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)", transition: "transform 0.3s ease", ":hover": { transform: "scale(0.9)"} }}>
+        <Box sx={{ position: 'relative' }}>
+          <CardMedia
+            sx={{
+              height: 140,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundImage: `url('${CardBg}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              position: 'relative',
+              zIndex: 0
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1
+            }}
+          >
+            <img
+              src={require('assets/images/avatar/map-pin.png')}
+              alt="Branch"
+              style={{ maxWidth: '100%', maxHeight: '100%' }}
+            />
+          </Box>
+          <Box sx={{ position: 'absolute', top: 8, right: 8 , zIndex: 1000}}>
+            <OptionsMenu
+              menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+              iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+              options={[
+                {
+                  text: 'View',
+                  icon: <Icon icon="tabler:eye" fontSize={20} />,
+                  menuItemProps: {
+                    component: Link,
+                    to: `branches/${branch?.uuid}`,
+                    state: { id: branch?.uuid }
+                  }
+                },
+                {
+                  text: 'Edit',
+                  icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
+                  menuItemProps: {
+                    onClick: () => {
+                      if (branch) {
+                        setSelectedBranch(branch);
+                        setBranchEditModelOpen(true);
+                      }
                     }
                   }
+                },
+                {
+                  text: 'Delete',
+                  icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
+                  menuItemProps: {
+                    onClick: () => handleDelete(branch?.uuid)
+                  }
                 }
-              },
-              {
-                text: 'Delete',
-                icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
-                menuItemProps: {
-                  onClick: () => handleDelete(branch?.id)
-                }
-              }
-            ]}
-          />
-        </Grid>
-        <CardMedia
-          sx={{
-            height: 100,
-            width: 100,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            mt: 3,
-            mx: 'auto'
-          }}
-          image={require('assets/images/avatar/map-pin.png')}
-        />
+              ]}
+            />
+          </Box>
+        </Box>
+
         <CardContent>
           <Typography
             variant="h4"
@@ -123,7 +141,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {branch?.branch_name}
+            {branch?.branch_identity}
           </Typography>
           <Typography
             variant="h6"
@@ -136,7 +154,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
+            {branch?.contact_info?.address}, {branch?.contact_info?.city}, {branch?.contact_info?.state}, {branch?.contact_info?.pincode}
           </Typography>
           <Box sx={{ mt: 1.75 }}>
             <TextField
@@ -146,8 +164,8 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
               label="Status"
               SelectProps={{ value: branch?.is_active, onChange: (e) => handleStatusValue(e, branch) }}
             >
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
+              <MenuItem value="true">Active</MenuItem>
+              <MenuItem value="false">Inactive</MenuItem>
             </TextField>
           </Box>
         </CardContent>
@@ -170,6 +188,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
         setSelectedBranch={setSelectedBranch}
         setRefetchBranch={setRefetchBranch}
       />
+
       {/* Delete branch modal */}
       <BranchDeleteModel
         open={branchDeleteModelOpen}

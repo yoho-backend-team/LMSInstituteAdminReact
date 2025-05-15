@@ -9,11 +9,13 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { useSpinner } from 'context/spinnerContext';
+import { useEffect } from 'react';
 
 const AddBranchForms = () => {
   const navigate = useNavigate();
   const initialValues = {
-    branchName: '',
+    branch_identity: '',
     phone: Number(''),
     alternatePhone: Number(''),
     address: '',
@@ -24,7 +26,7 @@ const AddBranchForms = () => {
   };
 
   const branchSchema = yup.object().shape({
-    branchName: yup
+    branch_identity: yup
       .string()
       .required('Branch Name is required')
       .matches(/^[a-zA-Z0-9\s]+$/, 'Branch Name should not contain special characters'),
@@ -63,50 +65,68 @@ const AddBranchForms = () => {
     initialState: initialValues,
     resolver: yupResolver(branchSchema)
   });
+  const {show,hide} = useSpinner()
 
   const onSubmit = async (data) => {
     const inputData = {
-      branch_name: data.branchName,
-      address: data.address,
+      branch_identity: data.branch_identity,
+      contact_info:{ 
+        address: data.address,
       city: data.city,
       state: data.state,
-      pin_code: data.pinCode,
+      pincode: data.pinCode,
       landmark: data.landmark,
-      phone_number: data.phone,
-      alternate_number: data.alternatePhone
+      phone_no: data.phone,
+      alternate_no: data.alternatePhone
+      }
     };
 
     try {
+      show()
       const result = await addBranch(inputData);
 
       if (result.success) {
+        hide()
         toast.success(result.message);
         navigate(-1);
       } else {
+        hide()
         toast.error(result.message);
       }
     } catch (error) {
-      console.log(error);
+      hide()
     }
   };
+
+  useEffect(()=>{
+  const lister =(event) => {
+   if(event.code === "Enter"){
+    handleSubmit(onSubmit)()
+   }
+  }
+  document.addEventListener("keydown",lister)
+  return () => {
+    document.removeEventListener("keydown",lister)
+  }
+  },[])
 
   return (
     <Card>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent>
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
               <Controller
-                name="branchName"
+                name="branch_identity"
                 control={control}
                 render={({ field }) => (
                   <CustomTextField
                     {...field}
                     fullWidth
-                    label="Branch Name"
+                    label="Branch Name "
                     placeholder="carterLeonard"
-                    error={Boolean(errors.branchName)}
-                    helperText={errors.branchName?.message}
+                    error={Boolean(errors.branch_identity)}
+                    helperText={errors.branch_identity?.message}
                   />
                 )}
               />
@@ -120,6 +140,8 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
+                    slot='false'
+                    onKeyDown={(e)=>e.key==="e"&&e.preventDefault()}
                     type="number"
                     label="Phone No."
                     error={Boolean(errors.phone)}
@@ -139,6 +161,7 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
+                    onKeyDown={(e)=>e.key==="e"&&e.preventDefault()}
                     type="number"
                     label="Alternate Phone No."
                     error={Boolean(errors.alternatePhone)}
@@ -158,7 +181,7 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     multiline
-                    rows={3}
+                    rows={1}
                     fullWidth
                     label="Address"
                     placeholder="1456, Liberty Street"
@@ -234,11 +257,38 @@ const AddBranchForms = () => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Button onClick={() => navigate(-1)}>Cancel</Button>
-              <Button type="submit" variant="contained">
-                Create Branch
-              </Button>
+            <Grid item xs={12} sm={12} >
+            <Button
+                  onClick={() => navigate(-1)}
+                  sx={{
+                    color: '#1976d2',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    padding: '6px 20px',
+                    mr:2,
+                    '&:hover': {
+                      backgroundColor: '#e3f2fd',
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                    color: 'white',
+                    fontWeight: 600,
+                    borderRadius: 20,
+                    padding: '6px 20px',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #21CBF3 30%, #2196F3 90%)',
+                    },
+                  }}
+                >
+                  Create Branch
+                </Button>
             </Grid>
           </Grid>
         </CardContent>

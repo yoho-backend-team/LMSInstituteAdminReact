@@ -11,28 +11,49 @@ import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
+import { useState } from 'react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
+import { getStaffClassesWithStaffId } from '../services/teachingStaffServices';
 
-const LiveClassCard = () => {
+const LiveClassCard = ({staff}) => {
+  const [page,setPage] = useState(1)
+  const [classes,setClasses] = useState(null)
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { getInstituteId } = useInstitute();
+  const institute = getInstituteId();
 
   const dispatch = useDispatch();
 
+  const getClassesDetails = async (data) => {
+    try {
+      const response = await getStaffClassesWithStaffId(data)
+      console.log(response)  
+      setClasses(response)
+    } catch (error) {
+      toast.message(error?.message)
+    }
+  }
+
+  useEffect(() => {
+  const params = { staff : staff}
+  getClassesDetails(params)
+  },[])
 
   useEffect(() => {
     const data = {
       type: 'live',
-      branch_id: selectedBranchId
+      branch: selectedBranchId,
+      institute
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId]);
 
   const handleCopyLink = (index) => {
-    console.log(`Link copied for card at index ${index}`);
     toast.success('Link copied to clipboard');
   };
 
@@ -50,11 +71,13 @@ const LiveClassCard = () => {
     return hours + ':' + minutes + ' ' + meridiem;
   }
 
+  console.log(liveClasses,"liveClasses")
+
   return (
     <>
       <Grid container spacing={2}>
-        {Array.isArray(liveClasses) &&
-          liveClasses.map((card, index) => (
+        {Array.isArray(classes?.classes) &&
+          classes?.classes?.map((card, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
                 <Grid container direction="column" spacing={1}>
@@ -93,7 +116,7 @@ const LiveClassCard = () => {
                   </Grid>
                   <Grid item justifyContent="center" display="flex">
                     <Typography sx={{ fontWeight: '500' }}>
-                      {card?.batch_class?.batch_student?.length ?? 0} Students on this class
+                      {card?.batch?.student?.length ?? 0} Students on this class
                     </Typography>
                   </Grid>
 
@@ -125,7 +148,7 @@ const LiveClassCard = () => {
                         size="medium"
                         component={Link}
                         state={{ id: card?.class_id }}
-                        to={`/class-management/live-classes/${card?.class_id}`}
+                        to={`/class-management/live-classes/${card?.uuid}`}
                       >
                         View More
                       </Button>
@@ -136,11 +159,27 @@ const LiveClassCard = () => {
             </Grid>
           ))}
       </Grid>
+      {
+      classes?.last_page !== 1 &&
       <Grid container justifyContent="flex-end" mt={2}>
         <div className="demo-space-y">
-          <Pagination count={10} color="primary" />
+          <Pagination 
+          count={classes?.last_page} 
+          page={page}
+          onChange={(e,page) => {
+          setPage(page)
+          const data = {
+           page : page,
+           staff
+          };
+          getClassesDetails(data)
+          }}
+          color="primary"
+
+          />
         </div>
       </Grid>
+      }
     </>
   );
 };

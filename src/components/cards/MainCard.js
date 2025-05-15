@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
-import { Card, CardContent, CardHeader, Divider, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Typography, Box, Divider } from '@mui/material';
 
-// constant
+// Custom Header Styles with New Background Color
 const headerSX = {
-  '& .MuiCardHeader-action': { mr: 0 }
+  padding: '24px 24px',
+  backgroundColor: (theme) => '#0CCE7F', // Custom background color
+  '& .MuiCardHeader-action': { marginRight: 0 },
 };
 
-// ==============================|| CUSTOM MAIN CARD ||============================== //
+// ==============================|| MODERN MAIN CARD ||============================== //
 
 const MainCard = forwardRef(
   (
@@ -37,23 +37,60 @@ const MainCard = forwardRef(
         ref={ref}
         {...others}
         sx={{
-          border: border ? '1px solid' : 'none',
-          borderColor: theme.palette.primary[200] + 25,
-          ':hover': {
-            boxShadow: boxShadow ? shadow || '0 2px 14px 0 rgb(32 40 45 / 8%)' : 'inherit'
-          },
-          ...sx
+          border: border ? `1px solid ${theme.palette.divider}` : 'none',
+          borderRadius: '10px', // Rounded corners for a modern look
+          boxShadow: boxShadow ? shadow || '0px 4px 12px rgba(0, 0, 0, 0.1)' : 'none',
+          // transition: 'box-shadow 0.3s ease-in-out',
+          // ':hover': {
+          //   boxShadow: '0px 6px 18px rgba(0, 0, 0, 0.15)',
+          // },
+          ...sx,
         }}
       >
-        {/* card header and action */}
-        {title && <CardHeader sx={headerSX} title={darkTitle ? <Typography variant="h3">{title}</Typography> : title} action={secondary} />}
+        {/* Card Header */}
+        {title && (
+          <CardHeader
+            sx={headerSX}
+            title={
+              <Typography
+                variant="h5" // Increase the size for a bolder, more prominent font
+                component="div"
+                sx={{
+                  fontWeight: 700, // Make the font bold
+                  color: theme.palette.common.white, // Make the title text white
+                  letterSpacing: '0.8px', // Add slight letter spacing for a clean look
+                  textTransform: 'uppercase', // Uppercase for emphasis
+                }}
+              >
+                {darkTitle ? (
+                  <Typography variant="h4" component="div">
+                    {title}
+                  </Typography>
+                ) : (
+                  title
+                )}
+              </Typography>
+            }
+            action={secondary && <Box>{secondary}</Box>}
+          />
+        )}
 
-        {/* content & header divider */}
-        {title && <Divider />}
+        {/* Subtle Divider */}
+        {title && (
+          <Divider
+            sx={{
+              backgroundColor: theme.palette.primary.light,
+              height: 2, // Slim divider
+              width: '90%',
+              margin: '8px auto', 
+              display: "none",// Creates space after title
+            }}
+          />
+        )}
 
-        {/* card content */}
+        {/* Card Content */}
         {content && (
-          <CardContent sx={contentSX} className={contentClass}>
+          <CardContent sx={{ padding: '16px 24px', ...contentSX }} className={contentClass}>
             {children}
           </CardContent>
         )}
@@ -74,7 +111,7 @@ MainCard.propTypes = {
   secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
   shadow: PropTypes.string,
   sx: PropTypes.object,
-  title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object])
+  title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
 };
 
 export default MainCard;

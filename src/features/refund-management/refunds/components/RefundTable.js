@@ -26,6 +26,8 @@ import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
 import RefundAddDrawer from './RefundAddDrawer';
 import RefundCardHeader from './RefundCardHeader';
 import RefundViewDrawer from './RefundViewDrawer';
+import { formatDate } from 'utils/format';
+import { formatTime } from 'utils/formatDate';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -34,14 +36,19 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
+const formatDateToISO = (dateStr) => {
+  const [day, month, year] = dateStr.split('-');
+  return `${day}-${month}-${year}`;
+};
+
 const defaultColumns = [
   {
     minWidth: 180,
     field: 'refundId',
     headerName: 'Refund ID',
     renderCell: ({ row }) => (
-      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-        {`#${row.refund_id}`}
+      <Typography component={LinkStyled} to={`#` }>
+        {`#${row?.studentfees?.transaction_id}`}
       </Typography>
     )
   },
@@ -50,8 +57,8 @@ const defaultColumns = [
     field: 'studentId',
     headerName: 'Student ID',
     renderCell: ({ row }) => (
-      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-        {`#${row.institute_student_fee_id}`}
+      <Typography component={LinkStyled} to={`#`}>
+        {`#${row?.student?.id}`}
       </Typography>
     )
   },
@@ -60,9 +67,9 @@ const defaultColumns = [
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
-      const { students } = row.student_fees[0];
-      const studentName = `${students.first_name} ${students.last_name}`;
-      const studentEmail = students.email;
+      // const { students } = row?.studentfees;
+      const studentName = `${row?.student.first_name} ${row?.student.last_name}`;
+      const studentEmail = row?.student?.email;
 
       return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -80,13 +87,13 @@ const defaultColumns = [
     minWidth: 120,
     field: 'paidAmount',
     headerName: 'Paid Amount',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.paid_amount}</Typography>
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.studentfees?.paid_amount}</Typography>
   },
   {
     minWidth: 150,
     field: 'paymentDate',
     headerName: 'Payment Date',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.payment_date}</Typography>
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{formatDate(row?.studentfees?.payment_date)} {formatTime(row?.studentfees?.payment_date)}</Typography>
   },
   {
     minWidth: 150,
@@ -99,7 +106,7 @@ const defaultColumns = [
           size="medium"
           skin="light"
           color={row.status === 'success' ? 'success' : 'error'} // Dynamically set chip color based on status
-          label={row.status}
+          label={row?.studentfees?.is_active?'Active' : 'Inactive'}
         />
       </>
     )
@@ -151,7 +158,7 @@ const RefundTable = () => {
   }, []);
 
   const handleRefundDelete = async () => {
-    const data = { refund_id: selectedRefundDeleteId };
+    const data = { transaction_id: selectedRefundDeleteId };
     const result = await deleteStudentFeeRefund(data);
     if (result.success) {
       toast.success(result.message);
@@ -184,7 +191,7 @@ const RefundTable = () => {
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row.refund_id);
+                    handleDelete(row._id);
                   }
                 }
               }
@@ -209,19 +216,20 @@ const RefundTable = () => {
       setBatches(result?.data);
     }
   };
-
+  
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ display: "none"}} >
             <CardHeader title="Filters" />
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
+                    sx={{ display: "none"}}
                     fullWidth
-                    options={batches}
+                    options={batches?.data}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       let data = { branch_id: selectedBranchId };
@@ -251,19 +259,46 @@ const RefundTable = () => {
           ) : (
             <Card>
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{ 
+                  '& .MuiDataGrid-row' : {
+                    border: "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                  },
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  },
+                  "& .MuiDataGrid-footerContainer" : {
+                    border : "1px solid #e6e5e7"
+                }
+                 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={studentFeeRefunds?.data}
+                rows={studentFeeRefunds?studentFeeRefunds:[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
                 onRowClick={(params) => handleRowClick(params.row)}
                 hideFooterPagination
+                disableColumnMenu={true}
+                disableColumnFilter={true}
               />
             </Card>
           )}
-          {studentFeeRefunds?.last_page !== 1 && (
+          {/* {studentFeeRefunds?.last_page !== 1 && (
             <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
               <Pagination
                 count={studentFeeRefunds?.last_page}
@@ -273,7 +308,7 @@ const RefundTable = () => {
                 }}
               />
             </Grid>
-          )}
+          )} */}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
 
           <RefundViewDrawer open={refundViewOpen} toggle={toggleRefundViewDrawer} selectedRowDetails={selectedRowDetails} />

@@ -1,4 +1,5 @@
 // ** React Imports
+import { useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
@@ -9,20 +10,14 @@ import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 
 // ** Custom Components
-import CustomAvatar from 'components/mui/avatar';
-import CustomChip from 'components/mui/chip';
-
-// ** Utils Import
-import { getInitials } from 'utils/get-initials';
-
-// import { getUserById } from '../services/viewUserServices';
-
 import UserEditDialog from '../UserEditDialog';
-
-// import { MenuItem, TextField } from '@mui/material';
+import { getImageUrl } from 'utils/imageUtils';
+import { profilePlaceholder } from 'utils/placeholders';
 
 const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
@@ -38,85 +33,113 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
   const handleEditClickOpen = () => setOpenEdit(true);
   const handleEditClose = () => setOpenEdit(false);
 
+  const DetailRow = ({ label, value, tooltip = false }) => (
+    <Box sx={{ display: 'flex', justifyContent: 'space-between',gap: 2 ,pl:3 ,pr: 3 }}>
+      <Typography color="text.primary" fontWeight={500}>
+        {label}:
+      </Typography>
+      {tooltip ? (
+        <Tooltip title={value} arrow>
+          <Typography>{value}</Typography>
+        </Tooltip>
+      ) : (
+        <Typography>{value}</Typography>
+      )}
+    </Box>
+  );
+
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {userData?.institution_users?.image ? (
-              <CustomAvatar
-                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`}
-                variant="rounded"
-                alt={userData?.name}
-                sx={{ width: 100, height: 100, mb: 4 }}
-              />
-            ) : (
-              <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
-                {userData?.name ? getInitials(userData?.name) : 'U'}
-              </CustomAvatar>
-            )}
-            <Typography variant="h4" sx={{ mb: 2 }}>
-              {userData?.name}
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        // alignItems: 'center',
+        minHeight: '70vh',
+        backgroundColor: '#f0f2f5',
+      }}
+    >
+      <Card
+        sx={{
+          width: {sm: 'full',md:'50vw'},
+          // maxWidth: '100vw',
+          borderRadius: 4,
+          boxShadow: 4,
+          backgroundColor: '#ffffff',
+          p:2
+        }}
+      >
+        {/* Header with avatar and basic info */}
+        <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 3, borderBottom: '1px solid #e0e0e0' }}>
+          <Avatar
+            src={userData?.image ? getImageUrl(userData.image) : profilePlaceholder}
+            alt={userData?.name}
+            sx={{ width: 80, height: 80 }}
+          />
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              {`${userData?.first_name || ''} ${userData?.last_name || ''}`}
             </Typography>
-            <CustomChip
-              rounded
-              skin="light"
-              size="small"
-              label={userData?.role_groups?.role?.name}
-              color={'warning'}
-              sx={{ textTransform: 'capitalize' }}
-            />
-          </CardContent>
-
-          <Divider sx={{ my: '0 !important', mx: 6 }} />
-
-          <CardContent sx={{ pb: 1 }}>
-            <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
-              Details
+            <Typography variant="body2" color="text.secondary">
+              {userData?.email || 'N/A'}
             </Typography>
-            <Box sx={{ pt: 4 }}>
-              <Box sx={{ display: 'flex', mb: 3 }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.name}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', mb: 3 }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.email}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', mb: 3 }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Designation:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.designation}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
-                <CustomChip
-                  rounded
-                  skin="light"
+            <Chip label={userData?.role?.identity || 'User'} sx={{ mt: 1, backgroundColor: '#ff7407', color: '#fff' }} />
+          </Box>
+          <Chip
+            label={userData?.is_active ? 'Active' : 'Inactive'}
+            sx={{
+              ml: 'auto',
+              backgroundColor: userData?.is_active ? '#4caf50' : '#f44336',
+              color: '#fff',
+              fontWeight: 'bold'
+            }}
+          />
+        </Box>
+
+        {/* User Details */}
+        <CardContent>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#333', mb: 2, textTransform: 'uppercase' }}>
+            User Details
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <Box sx={{ display: 'grid', rowGap: 2 }}>
+            <DetailRow label="Name" value={`${userData.first_name || ''} ${userData.last_name || ''}`} />
+            <DetailRow label="Email" value={userData.email || 'N/A'} tooltip />
+            <DetailRow
+              label="Status"
+              value={
+                <Chip
                   size="small"
-                  label={userData.is_active == '1' ? 'Active' : 'InActive'}
-                  color={statusColors[userData.is_active]}
-                  sx={{
-                    textTransform: 'capitalize'
-                  }}
+                  label={userData.is_active ? 'Active' : 'Inactive'}
+                  sx={{ backgroundColor: userData.is_active ? '#c8e6c9' : '#ffcdd2', color: '#000' }}
                 />
-              </Box>
+              }
+            />
+            <DetailRow label="Contact" value={userData.phone_number || 'N/A'} />
+          </Box>
+        </CardContent>
 
-              <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{9898765645}</Typography>
-              </Box>
-            </Box>
-          </CardContent>
+        {/* Action Buttons */}
+        <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            onClick={handleEditClickOpen}
+            sx={{
+              backgroundColor: '#00adb5',
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 3,
+              py: 1,
+              ':hover': { backgroundColor: '#007b7f' }
+            }}
+          >
+            Edit Profile
+          </Button>
+        </Box>
+      </Card>
 
-          <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-              Edit Details
-            </Button>
-          </CardActions>
-        </Card>
-        <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
-      </Grid>
-    </Grid>
+      {/* Edit Dialog */}
+      <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
+    </Box>
   );
 };
 

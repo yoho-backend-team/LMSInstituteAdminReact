@@ -16,7 +16,12 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { addStaffNotification } from '../services/staffNotificationServices';
+import { addStaffNotification, getAllStaffDetailsWithRoleName, getTeachingStaffsWithBranch } from '../services/staffNotificationServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useSpinner } from 'context/spinnerContext';
+
+import { Modal } from "@mui/material";
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -26,7 +31,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  staff_type: yup.string().required('Type is required'),
+  branch: yup.string().required('Select Branch'),
   staff: yup.array().required('staff is required').min(1, 'Select at least one staff'),
   title: yup
     .string()
@@ -35,18 +40,23 @@ const schema = yup.object().shape({
   body: yup
     .string()
     .required('Body is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+  link : yup.string().optional(),
+  notification_type : yup.string().required("type is required")
 });
 
 const defaultValues = {
-  staff_type: '',
+  branch: '',
   staff: [],
   title: '',
-  body: ''
+  body: '',
+  link : '',
+  notification_type : ''
 };
 
 const StaffNotificationAddDrawer = (props) => {
   const { open, toggle, setStaffNotificationRefetch } = props;
+  const { show, hide } = useSpinner()
 
   const [inputValue, setInputValue] = useState('');
 
@@ -58,18 +68,25 @@ const StaffNotificationAddDrawer = (props) => {
   const [activeStaffs, setActiveStaffs] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedStaff, setSelectedStaff] = useState([]);
+  const [activeBranches,setActiveBranches] = useState([])
 
+  const getAllBranches = async () => {
+    const response = await getActiveBranches()
+    setActiveBranches(response?.data)
+  }
+  
   useEffect(() => {
-    getActiveStaffsByBranch(selectedBranchId);
+    getActiveStaffsByBranch(selectedBranchId,"Teaching");
+    getAllBranches()
   }, [selectedBranchId]);
 
   const getActiveStaffsByBranch = async (selectedBranchId, type) => {
     const data = {
       type: type,
-      branch_id: selectedBranchId
     };
-    const result = await getAllActiveTeachingStaffs(data);
-    setActiveStaffs(result.data.data);
+    // const result = await getAllStaffDetailsWithRoleName(data);
+    const result = await getTeachingStaffsWithBranch({branch:selectedBranchId})
+    setActiveStaffs(result.data);
   };
 
   const {
@@ -93,25 +110,31 @@ const StaffNotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    data?.staff?.forEach((staff) => {
-      bodyFormData.append('staff_ids[]', staff?.staff_id);
-    });
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('type', data.type);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
-
-    const result = await addStaffNotification(bodyFormData);
-
-    if (result.success) {
+    try {
+      show()
+      const staffIds = data?.staff?.filter((user)=>user?._id)
+      
+      const staff_notification = {
+        staff : staffIds,
+        title : data?.title,
+        body : data?.body,
+        branch : selectedBranchId,
+        type : data?.notification_type,
+        link : data?.link,
+        institute : useInstitute().getInstituteId()
+      }
+     
+      const result = await addStaffNotification(staff_notification);
+  
       toast.success(result.message);
       handleClose();
       setStaffNotificationRefetch();
-    } else {
-      toast.error(result.message);
+    } catch (error) {
+      toast.error(error?.message)
+    }finally{
+      hide()
     }
+
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({
@@ -142,20 +165,39 @@ const StaffNotificationAddDrawer = (props) => {
   };
 
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+    <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    ModalProps={{ keepMounted: true }}
+    BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.5)" } }} 
+     
+  >
+
+<Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "90%", sm: 500, md: 600 },
+        height: "auto",  
+        maxHeight: "80vh", 
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+        overflowY: "auto",
+        transition: "all 0.3s ease-in-out",
+      }}
     >
-      <Header>
-        <Typography variant="h5">Add Staff Notification</Typography>
+      <Header sx={{mt:-7}}>
+        <Typography variant="h2"  sx={{ml:-4}}>Add Staff Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
           sx={{
+            mr:-7,
             p: '0.438rem',
             borderRadius: 1,
             color: 'text.primary',
@@ -164,16 +206,16 @@ const StaffNotificationAddDrawer = (props) => {
               backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
             }
           }}
-        >
+          >
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
-              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+            <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                 Upload
                 <input
                   hidden
@@ -183,35 +225,35 @@ const StaffNotificationAddDrawer = (props) => {
                   onChange={handleInputImageChange}
                   id="account-settings-upload-image"
                 />
-              </ButtonStyled>
-            </div>
-          </Box>
+                </ButtonStyled>
+                </div>
+                </Box> */}
 
           <Grid item xs={12} sx={{ mb: 2 }}>
             <Controller
-              name="staff_type"
+              name="branch"
               control={control}
-              rules={{ required: 'Staff Type field is required' }}
-              render={({ field: { value, onChange } }) => (
+              render={({ value }) => (
                 <Autocomplete
-                  fullWidth
+                fullWidth
                   value={value}
                   onChange={(e, newValue) => {
-                    onChange(newValue);
-                    getActiveStaffsByBranch(selectedBranchId, newValue);
+                    setValue("branch",newValue.branch_identity)
+                    getActiveStaffsByBranch(newValue?.uuid, newValue);
                   }}
-                  options={['Teaching', 'Non Teaching']}
+                  options={activeBranches}
+                  getOptionLabel={(option) => option?.branch_identity || ''}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select Staff Type"
-                      error={Boolean(errors.staff_type)}
-                      helperText={errors.staff_type?.message}
+                      label="Select Branch"
+                      error={Boolean(errors.branch)}
+                      helperText={errors.branch?.message}
                     />
                   )}
+                  />
+                )}
                 />
-              )}
-            />
           </Grid>
 
           <Grid item xs={12} sm={12}>
@@ -219,8 +261,8 @@ const StaffNotificationAddDrawer = (props) => {
               multiple
               disableCloseOnSelect
               id="select-multiple-chip"
-              options={activeStaffs}
-              getOptionLabel={(option) => option?.staff_name || ''}
+              options={activeStaffs?.data||[]}
+              getOptionLabel={(option) => option?.full_name || ''}
               value={selectedStaff}
               onChange={(e, newValue) => {
                 setSelectedStaff(newValue);
@@ -230,7 +272,6 @@ const StaffNotificationAddDrawer = (props) => {
                 <Controller
                   name="staff"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       {...params}
@@ -246,8 +287,8 @@ const StaffNotificationAddDrawer = (props) => {
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
-                    />
-                  )}
+                      />
+                    )}
                 />
               )}
               renderOption={(props, option, { selected }) => (
@@ -257,16 +298,16 @@ const StaffNotificationAddDrawer = (props) => {
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     style={{ marginRight: 8 }}
                     checked={selected}
-                  />
-                  {option?.staff_name}
+                    />
+                  {option?.full_name}
                 </li>
               )}
               renderTags={(value) => (
                 <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                   {value?.map((option, index) => (
                     <CustomChip
-                      key={option?.staff_id}
-                      label={option?.staff_name}
+                    key={option?._id}
+                      label={option?.full_name}
                       onDelete={() => {
                         const updatedValue = [...value];
                         updatedValue?.splice(index, 1);
@@ -279,18 +320,63 @@ const StaffNotificationAddDrawer = (props) => {
                   ))}
                 </div>
               )}
-              isOptionEqualToValue={(option, value) => option?.staff_id === value?.staff_id}
+              isOptionEqualToValue={(option, value) => option?._id === value?._id}
             />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+           <Controller
+             name="notification_type"
+             control={control}
+             render={({ field: { onChange, onBlur, value } }) => (
+               <Autocomplete
+               multiple={false}
+               freeSolo 
+               disableCloseOnSelect={false}
+               id="select-multiple-chip"
+                 options={['Notification','Placement','Alerts','Reminders','Warning','Payment','Attendance','Classes','Events','Holiday']} 
+                 getOptionLabel={(option) => option}
+                 value={value || ''} 
+                 onChange={(event, newValue) => {
+                   onChange(newValue);
+                 }}
+                 renderInput={(params) => (
+                   <TextField
+                     {...params}
+                     sx={{ mb: 2 }}
+                     fullWidth
+                     label={"Notification type"}
+                     error={Boolean(errors.notification_type)}
+                     helperText={errors?.notification_type ? errors.notification_type.message : null}
+                     InputProps={{
+                       ...params.InputProps,
+                       style: { overflowY: "hidden", overflowX: "auto", maxHeight: 55 }
+                     }}
+                   />
+                 )}
+                 renderOption={(props, option, { selected }) => (
+                   <li {...props}>
+                     <Checkbox
+                       // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                       // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                       style={{ marginRight: 8 }}
+                       checked={selected}
+                     />
+                     {option}
+                   </li>
+                 )}
+               />
+             )}
+           />
           </Grid>
 
           <Grid item xs={12} sm={12}>
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
-                  fullWidth
+                fullWidth
                   sx={{ mb: 2 }}
                   label="Title"
                   value={value}
@@ -298,8 +384,8 @@ const StaffNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.title)}
                   helperText={errors.title ? errors.title.message : null}
-                />
-              )}
+                  />
+                )}
             />
           </Grid>
 
@@ -307,13 +393,16 @@ const StaffNotificationAddDrawer = (props) => {
             <Controller
               name="body"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: false,
+              }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
                   sx={{ mb: 2 }}
                   label="Body"
                   value={value}
+                  
                   onChange={onChange}
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
@@ -322,20 +411,66 @@ const StaffNotificationAddDrawer = (props) => {
                   rows={4}
                 />
               )}
+              />
+          </Grid>
+
+          <Grid item xs={12} sm={12} >
+            <Controller 
+             name='link'
+             control={control}
+             render={({field:{value,onChange}}) => (
+              <TextField 
+              fullWidth
+              sx={{ mb: 2}}
+              label="Link"
+              value={value}
+              onChange={onChange}
+              error={Boolean(errors?.link)}
+              helperText={errors?.link ? errors?.link.message : null}
+              />
+             )}
             />
           </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'flex-end', mt: 4 }}>
+
+<Button 
+variant="tonal"
+onClick={handleClose}
+sx={{ 
+mr: 3,
+backgroundColor: 'white', 
+color: 'black', 
+border: '1px solid #D3D3D3',  
+'&:hover': {
+  backgroundColor: '#f0f0f0',  
+  color: 'text.secondary',  
+},
+transition: 'all 0.3s ease',
+    }}>
+  Cancel
+</Button>
+
+<Button type="submit" variant="contained" 
+sx={{
+  backgroundColor: '#1976d2', 
+  color: 'white',  
+  '&:hover': {
+    backgroundColor: '#1565c0',  
+  },
+  '&:active': {
+    backgroundColor: '#0d47a1',  
+  },
+  transition: 'all 0.3s ease',  
+}}>
+  Add Notification
+</Button>
+
+</Box>
         </form>
       </Box>
-    </Drawer>
+    </Box>
+    </Modal>
   );
 };
 

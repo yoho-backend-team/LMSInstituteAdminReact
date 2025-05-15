@@ -1,26 +1,16 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
-const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/student-management/students`;
+const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/student`;
 
 export const getAllStudentsByBatch = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/get-by-batch-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response?.data?.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Students. Status: ${response.status}`);
-    }
+    const response = await client.users.getStudentsWithBatch(data)
+  
+      return { success: true, data: response?.data };
+      
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudents:', error);
@@ -29,19 +19,19 @@ export const getAllStudentsByBatch = async (data) => {
     throw error;
   }
 };
+
 export const getAllStudents = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
+    // const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
+    //   },
+    //   params: data
+    // });
+   const response = await client.users.studentsAll(data)
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -58,84 +48,46 @@ export const getAllStudents = async (data) => {
 
 export const addStudent = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_API_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.users.studentRegister(data) 
+    console.log('student response',response); 
+    if(response.status){
 
-    console.log(response);
-
-    if (response.data.status) {
       return { success: true, message: 'Student created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Student' };
     }
   } catch (error) {
     console.error('Error in addStudent:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };  
   }
 };
 
 export const deleteStudent = async (data) => {
   try {
-    const response = await axios.delete(`${STUDENT_API_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.student.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Student deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Student' };
-    }
+    return { success: true, message: 'Student deleted successfully' };
   } catch (error) {
     console.error('Error in deleteStudent:', error);
-    throw error;
+    return { success: false, message:error?.response?.data?.message };
   }
 };
 
 export const updateStudent = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.student.update(data)
 
-    console.log('studentupdate', response);
-
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'Student updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Student' };
-    }
+    return { success: true, message: 'Student updated successfully' };
   } catch (error) {
     console.error('Error in updateStudent:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const studentById = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+       const response = await client.users.getStudentWithId(data)
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
+    if (response.status) {
+      return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch a student. Status: ${response.status}`);

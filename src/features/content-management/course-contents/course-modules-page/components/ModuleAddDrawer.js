@@ -14,10 +14,12 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addCourseModule } from '../services/moduleServices';
+import { useSpinner } from 'context/spinnerContext';
 
 const CourseModuleAddDrawer = (props) => {
   const { open, toggle, branches,setRefetch } = props;
   const [activeCourse, setActiveCourse] = useState([]);
+  const { show, hide } = useSpinner()
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
@@ -79,32 +81,25 @@ const CourseModuleAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+
     const inputData = {
-      branch_id: data.branch.branch_id,
-      course_id: data.course.course_id,
+      branch: data.branch.uuid,
+      course: data.course.uuid,
       title: data.title,
       description: data.description,
-      video_url: data.video_url
+      video: data.video_url
     };
-
-    console.log(inputData);
-
-    const result = await addCourseModule(inputData);
-
-    if (result.success) {
-      setRefetch((state) => !state);
-      toast.success(result.message);
-      reset();
-      toggle();
-    } else {
-      let errorMessage = '';
-      Object?.values(result.message)?.forEach((errors) => {
-        errors?.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      });
-      toast.error(errorMessage.trim());
-      toast.error(result.message);
+    try {
+      show()
+      const result = await addCourseModule(inputData);
+        setRefetch((state) => !state);
+        toast.success(result.message);
+        reset();
+        toggle();
+    } catch (error) {
+      toast.error(error?.message)
+    }finally{
+      hide()
     }
   };
 
@@ -125,6 +120,8 @@ const CourseModuleAddDrawer = (props) => {
     >
       <Header>
         <Typography variant="h5">Add Module</Typography>
+        {/* <Chip color='success'  label="Add Module " sx={{fontSize:'16px'}}/> */}
+
         <IconButton
           size="small"
           onClick={handleClose}
@@ -147,7 +144,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
               render={() => (
                 <Autocomplete
                   fullWidth
@@ -156,7 +152,7 @@ const CourseModuleAddDrawer = (props) => {
                     getActiveCoursesByBranch(newValue);
                   }}
                   options={branches ?? []}
-                  getOptionLabel={(option) => option.branch_name}
+                  getOptionLabel={(option) => option.branch_identity}
                   renderInput={(params) => (
                     <TextField
                       sx={{ mb: 2 }}
@@ -174,7 +170,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="course"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
                   value={value}
@@ -201,7 +196,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -209,7 +203,7 @@ const CourseModuleAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Title"
                   onChange={onChange}
-                  placeholder="John Doe"
+                  placeholder="Hooks, animation, etc"
                   error={Boolean(errors.title)}
                   helperText={errors.title?.message}
                 />
@@ -220,15 +214,16 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
+                  multiline
                   value={value}
                   sx={{ mb: 2 }}
-                  label="description"
+                  rows={3}
+                  label="Description"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="Description about Modules"
                   error={Boolean(errors.description)}
                   {...(errors.description && { helperText: errors.description.message })}
                 />
@@ -239,7 +234,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="video_url"
               control={control}
-              rules={{ required: 'Video URL is required' }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth

@@ -64,7 +64,7 @@ const CardProjectStatus = () => {
   };
 
   return (
-    <Card>
+    <Card sx={{ display : "none"}} >
       <CardHeader
         title="Project Status"
         action={

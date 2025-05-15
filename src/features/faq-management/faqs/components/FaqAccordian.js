@@ -56,40 +56,44 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const FaqAccordian = ({ faqCategories }) => {
+const FaqAccordian = ({ faqCategories ,faqs}) => {
   const [activeTab, setActiveTab] = useState(faqCategories?.id);
 
   useEffect(() => {
-    setActiveTab(faqCategories[0]?.id);
+    setActiveTab(faqCategories?.[0]?.id);
   }, [faqCategories]);
 
   const handleChange = (event, newValue) => {
-    console.log(newValue);
     setActiveTab(newValue);
   };
 
   const renderTabContent = () => {
     return faqCategories?.map((tab) => {
       return (
-        <TabPanel key={tab?.id} value={tab?.id} sx={{ p: 6.5, pt: 0, width: '100%' }}>
-          <Box key={tab?.id}>
+        <TabPanel key={tab?._id} value={tab?._id} sx={{ p: 6.5, pt: 0, width: '100%' }}>
+          <Box key={tab?._id}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box sx={{ ml: 4 }}>
-                <Typography variant="h4">{tab?.title}</Typography>
+                <Typography variant="h4">{tab?.category_name}</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{tab?.description}</Typography>
               </Box>
             </Box>
             <Box sx={{ mt: 6 }}>
-              {tab?.platform_faqs?.map((item) => {
+              {faqs?.map((item) => {
                 return (
-                  <Accordion key={item.id}>
+                  <>
+                  
+                  {item?.category_id===activeTab?<Accordion key={item.id}>
                     <AccordionSummary expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}>
                       <Typography sx={{ fontWeight: '500' }}>{item?.title}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography sx={{ color: 'text.secondary' }}>{item?.description}</Typography>
                     </AccordionDetails>
-                  </Accordion>
+                  </Accordion>:null
+                }
+                </>
+
                 );
               })}
             </Box>
@@ -103,7 +107,7 @@ const FaqAccordian = ({ faqCategories }) => {
     if (faqCategories !== null) {
       return faqCategories?.map((tab) => {
         if (tab) {
-          return <Tab key={tab?.id} value={tab?.id} label={tab?.title} icon={<Icon icon={tab?.icon} />} />;
+          return <Tab key={tab?._id} value={tab?._id} label={tab?.category_name} icon={<Icon icon={tab?.icon} />} />;
         } else {
           return null;
         }

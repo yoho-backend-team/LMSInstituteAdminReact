@@ -32,7 +32,7 @@ const pages = {
           icon: icons.IconCash,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_fees_payment_management_view')
+          visible: hasPermission('inst_perm_student_fees_payment_management_view',"Fees")
         },
         {
           id: 'salaries',
@@ -42,7 +42,7 @@ const pages = {
           icon: icons.IconCash,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_staff_salaries_view')
+          visible: hasPermission('inst_perm_staff_salaries_view','staff_salaries')
         },
         {
           id: 'subscriptions',
@@ -52,7 +52,7 @@ const pages = {
           icon: icons.IconCash,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_subscriptions_view')
+          visible: hasPermission('inst_perm_subscriptions_view','Subscriptions')
         }
       ]
     }

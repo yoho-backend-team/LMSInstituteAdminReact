@@ -154,6 +154,9 @@ const Button = () => {
       ],
       styleOverrides: {
         root: ({ ownerState, theme }) => ({
+          '&:hover': {
+              backgroundColor : "#0AA865"
+          },
           minWidth: 50,
           textTransform: 'none',
           '&:not(.Mui-disabled):active': {
@@ -205,6 +208,7 @@ const Button = () => {
           boxShadow: theme.shadows[2],
           // padding: theme.spacing(2.5, 5),
           '&:hover': {
+            backgroundColor : "#0AA865",
             boxShadow: theme.shadows[2]
           }
         }),

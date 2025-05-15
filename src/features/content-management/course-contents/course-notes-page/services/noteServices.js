@@ -1,31 +1,17 @@
 // NotesService.js
+import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const COURSE_NOTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-notes`;
 
 export const getAllCourseNotes = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_NOTE_API_END_POINT}/read?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch CourseNotes. Status: ${response.status}`);
-    }
+    const response = await client.notes.get(data)
+   
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllCourseNotes:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch CourseNotes. Status: ${error}`);
   }
 };
 
@@ -34,7 +20,7 @@ export const searchCourseNotes = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -52,83 +38,43 @@ export const searchCourseNotes = async (searchQuery) => {
 
 export const addCourseNote = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_NOTE_API_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'CourseNote created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create CourseNote' };
-    }
+    const response = await client.notes.create(data)
+   
+    return { success: true, message: 'CourseNote created successfully' };
   } catch (error) {
     console.error('Error in addCourseNote:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create CourseNote' };
   }
 };
 
 export const deleteCourseNote = async (data) => {
   try {
-    const response = await axios.delete(`${COURSE_NOTE_API_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.notes.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'CourseNote deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete CourseNote' };
-    }
+    return { success: true, message: 'CourseNote deleted successfully' };
   } catch (error) {
     console.error('Error in deleteCourseNote:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete CourseNote' };
   }
 };
 
 export const updateCourseNote = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_NOTE_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('updatenotes:', response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'CourseNote updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseNote' };
-    }
+    const response = await client.notes.update(data)
+   
+    return { success: true, message: response?.message };
   } catch (error) {
-    console.error('Error in updateCourseNote:', error);
-    throw error;
+    return { success: false, message: error?.response?.data.message ? error?.response?.data?.message : 'Failed to update CourseNote' };
   }
 };
 
 export const updateCourseNotesStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_NOTE_API_END_POINT}/status`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('Notesresponse:', response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'CourseNotes status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseNotes status' };
-    }
+    const response = await client.notes.update_status(data)
+   
+    return { success: true, message: 'CourseNotes status updated successfully' };
   } catch (error) {
     console.error('Error in updateCourseNotes:', error);
-    throw error;
+    return { success: false, message: 'Failed to update CourseNotes status' };
   }
 };

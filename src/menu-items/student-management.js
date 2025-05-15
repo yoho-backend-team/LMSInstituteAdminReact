@@ -33,7 +33,7 @@ const pages = {
           icon: icons.IconSchool,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_view')
+          visible: hasPermission('can_view_students','Students')
         }
       ]
     }

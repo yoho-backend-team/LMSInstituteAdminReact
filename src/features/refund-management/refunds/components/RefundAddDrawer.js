@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
 import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import { useInstitute } from 'utils/get-institute-details';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -73,7 +74,6 @@ const RefundAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
-
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
@@ -122,15 +122,21 @@ const RefundAddDrawer = (props) => {
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
       try {
+        
         const InputData = {
-          student_id: data.student,
-          course_id: data.course,
-          batch_id: data.batch,
+          student: data.student,
+          institute_id: useInstitute().getInstituteId(),
+          // course_id: data.course,
+          batch_name: data.batch._id,
+          course_name: data.batch.course.uuid,
           amount: data.amount,
-          institute_student_fee_id: selectedStudentFee.fee_id,
-          branch_id: selectedBranchId
+          institute_id : useInstitute().getInstituteId(),
+          branch_name : data.batch.branch_id.uuid,
+          studentfees: selectedStudentFee._id,
+          // branch_id: selectedBranchId,
+          payment_date: new Date()
         };
-
+        
         const result = await addStudentFeeRefund(InputData);
 
         if (result.success) {
@@ -183,17 +189,16 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="course"
                 control={control}
-                rules={{ required: 'Course field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
                     options={activeCourse}
                     getOptionLabel={(course) => course.course_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.course_id);
-                      getActiveBatchesByCourse(newValue?.course_id);
+                      onChange(newValue?._id);
+                      getActiveBatchesByCourse(newValue?._id);
                     }}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    value={activeCourse.find((course) => course._id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                     )}
@@ -206,19 +211,18 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="batch"
                 control={control}
-                rules={{ required: 'Batch field is required' }}
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(option) => option?.batch_name}
+                    getOptionLabel={(batch) => batch?.batch_name}
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
-                      getStudentsByBatch(newValue?.batch_id);
+                      getStudentsByBatch(newValue?.uuid);
                     }}
-                    value={field.value}
+                    // value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -237,7 +241,6 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="student"
                 control={control}
-                rules={{ required: 'Student field is required' }}
                 render={({ field: { value } }) => (
                   <TextField
                     select
@@ -252,8 +255,8 @@ const RefundAddDrawer = (props) => {
                     helperText={errors.student?.message}
                   >
                     {students.map((student) => (
-                      <MenuItem key={student?.student_id} value={student?.student_id}>
-                        {`${student?.first_name} ${student?.last_name}`}
+                      <MenuItem key={student?.student} value={student?._id}>
+                        {`${student?.first_name&&student?.last_name?student?.first_name+student?.last_name:student.full_name}`}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -265,18 +268,17 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="studentfee"
                 control={control}
-                rules={{ required: 'Student Fee field is required' }}
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
                     fullWidth
-                    options={activeStudentsFee}
-                    getOptionLabel={(studentFee) => `${studentFee.fee_id}`}
+                    options={activeStudentsFee?.fees}
+                    getOptionLabel={(studentFee) => `${studentFee.transaction_id}`}
                     onChange={(event, newValue) => {
                       setSelectedStudentFee(newValue);
-                      field.onChange(newValue?.fee_id);
+                      field.onChange(newValue.transaction_id);
                     }}
-                    value={selectedStudentFee}
+                    value={selectedStudentFee?.transaction_id}
                     renderInput={(params) => (
                       <TextField
                         {...params}

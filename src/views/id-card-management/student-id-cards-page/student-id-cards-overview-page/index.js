@@ -1,4 +1,4 @@
-import { Avatar as CustomAvatar } from '@mui/material';
+import { Button, CardMedia, Avatar as CustomAvatar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,6 +18,9 @@ import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
+import generateIDCardPDF from 'utils/pdfGenerator';
 
 const roleColors = {
   admin: 'error',
@@ -41,7 +44,7 @@ const StudentIdCard = () => {
   const [studentIdRefetch, setStudentIdRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllStudentIdCards({ branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' }));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -51,18 +54,13 @@ const StudentIdCard = () => {
   const [searchValue, setSearchValue] = useState('');
   const [filterstatusValue, setFilterStatusValue] = useState('');
 
+
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      student_id: statusValue?.student?.student_id
+      is_active: statusValue?.is_active === true ? false : true,
     };
-
-    if (!data.student_id) {
-      toast.error('Student ID is missing.');
-      return;
-    }
-
-    const response = await updateStudentIdCardStatus(data);
+    const response = await updateStudentIdCardStatus(statusValue.uuid, data); 
+  
     if (response.success) {
       toast.success(response.message);
       setStudentIdRefetch((state) => !state);
@@ -96,6 +94,7 @@ const StudentIdCard = () => {
     dispatch(getAllStudentIdCards(data));
   };
 
+
   return (
     <>
       <Grid container>
@@ -109,7 +108,7 @@ const StudentIdCard = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          {StudentIdCardsLoading ? (
+          {StudentIdCardsLoading  ? (
             <IdCardSkeleton />
           ) : (
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
@@ -118,7 +117,8 @@ const StudentIdCard = () => {
                   key={index}
                   item
                   xs={12}
-                  sm={3}
+                  sm={6}
+                  lg={4}
                   sx={{
                     position: 'relative',
                     width: '100%',
@@ -153,65 +153,113 @@ const StudentIdCard = () => {
                       }
                     }}
                   >
-                    <Card className="front" sx={{ width: '100%', minHeight: 435 }}>
-                      <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        {item.student.image ? (
-                          <CustomAvatar
-                            src={item.student.image}
-                            alt={item.student.first_name}
-                            variant="light"
-                            sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
-                          />
-                        ) : (
-                          <CustomAvatar skin="light" color={statusColors.active} sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}>
-                            {getInitials(item.student.first_name)}
-                          </CustomAvatar>
-                        )}
-                        <Typography variant="h4" sx={{ mb: 2 }}>
-                          {item.student.first_name} {item.student.last_name}
-                        </Typography>
-                        <CustomChip rounded skin="light" size="small" label={`${item.student.email}`} color={statusColors.active} />
-                        <Box mt={3}>
-                          <img
-                            style={{ borderRadius: '10px' }}
-                            height={100}
-                            src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
-                            alt="qrCode"
-                          />
-                        </Box>
+                    <Card className="front" sx={{ width: 300, height: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+                      <CardContent sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                      <Box sx={{ flex: 1, padding: 2, position: 'relative', zIndex: 1 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                              <CustomAvatar
+                                sx={{ width: 90, height: 90, bgcolor: '#ffffff', border: '4px solid #28a745' }}
+                                src={getImageUrl(item?.image)}
+                                alt="Profile Picture"
+                              />
+                            </Box>
+                            <Typography variant="h3" fontWeight="bold" sx={{ color: '#000', textAlign: 'center' }}>
+                              <span style={{ color: '#28a745',textTransform: "uppercase"  }}>{item.name} </span>
+                            </Typography>
+                            <Typography variant="subtitle2" color="textSecondary" textAlign="center">
+                              {item.role.identity}
+                            </Typography>
+                            <Box sx={{ alignContent:'center', paddingTop: 2, display: 'grid', gap: 0.5, gridTemplateColumns: 'auto 1fr' }}>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>ID No:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.student_id}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Username:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                              {item.name}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Email:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.email}{' '}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Phone:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.contact}
+                              </Typography>
+                            </Box>
+                            <Box sx={{  textAlign: 'center' }}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                            </Box>
+                          </Box>
+
                       </CardContent>
                     </Card>
-                    <Card className="back" sx={{ width: '100%', minHeight: 435 }}>
+                    <Card className="back" sx={{ width: 300, height: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat', }}>
                       <CardContent sx={{ pb: 2 }}>
-                        <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+                        <Typography variant="h3" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                           Details
                         </Typography>
                         <Box sx={{ pt: 2 }}>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Username:</Typography>
                             <Typography sx={{ color: 'text.secondary' }}>
-                              {item.student.first_name} {item.student.last_name}
+                              {item.name} 
                             </Typography>
                           </Box>
-                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>{item.student.email}</Typography>
+                          <Box sx={{ display: 'flex', mb: 2 }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Email:</Typography>
+                            <Typography sx={{ color: 'text.secondary', overflow: "hidden", textOverflow: "ellipsis" }}>{item.email}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                            <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>student</Typography>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Role:</Typography>
+                            <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{item.role.identity}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}> ID:</Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>{item.student.student_id}</Typography>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}> ID:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.student_id}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>{item.student.phone_no}</Typography>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Contact:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.contact}</Typography>
                           </Box>
 
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
+                          <Box sx={{ display: 'flex', textOverflow: "ellipsis", textWrap: "nowrap", overflow: "hidden" }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Address:</Typography>
+                            <Box>
                             <Typography
                               sx={{
                                 color: 'text.secondary',
@@ -222,23 +270,52 @@ const StudentIdCard = () => {
                                 textOverflow: 'ellipsis'
                               }}
                             >
-                              {item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state},{' '}
-                              {item.student.pincode},
+                              {item?.address?.address_line_one},
                             </Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.address_line_two},
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.city}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.state} - {item?.address?.pin_code}
+                            </Typography>
+                            </Box>
                           </Box>
                         </Box>
 
-                        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-                          <TextField
-                            size="small"
-                            select
-                            width={100}
-                            label="Status"
-                            SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
-                          >
-                            <MenuItem value="1">Active</MenuItem>
-                            <MenuItem value="0">Inactive</MenuItem>
-                          </TextField>
+                        <Box sx={{ mt: 4, display: 'flex', justifyContent: "flex-end" }}>
+                          <Button variant="contained" sx={{backgroundColor:'#fcd828',color:'black' ,borderRadius:50,":hover":{backgroundColor:'#e4c424'}}} onClick={() => generateIDCardPDF(item)}>
+                            Download
+                          </Button>
                         </Box>
                       </CardContent>
                     </Card>
@@ -254,7 +331,7 @@ const StudentIdCard = () => {
               count={StudentIdCards?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllStudentIdCards({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllStudentIdCards({ branchid: selectedBranchId, page: page, instituteid: useInstitute().getInstituteId() }));
               }}
             />
           </Grid>

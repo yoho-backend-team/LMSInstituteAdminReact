@@ -11,7 +11,8 @@ import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, } from 'react-redux';
-import { Link } from 'react-router-dom';
+
+import { useInstitute } from 'utils/get-institute-details';
 
 const TeacherFilter = (props) => {
   const { selectedBranchId } = props;
@@ -22,8 +23,8 @@ const TeacherFilter = (props) => {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
-    };
+      branch_id: selectedBranchId,
+      };
     getCourses(data);
   }, [selectedBranchId]);
 
@@ -36,7 +37,7 @@ const TeacherFilter = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId, type: 'teaching' };
+    const data = { is_active: e.target.value, branchid: selectedBranchId, instituteId: useInstitute().getInstituteId()  };
     dispatch(getAllTeachingStaffs(data));
   };
 
@@ -51,40 +52,41 @@ const TeacherFilter = (props) => {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12}>
-        <Card>
-          <CardHeader title="Teaching Staff" />
+        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
+          <CardHeader  />
           <CardContent>
-            <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  fullWidth
-                  onChange={(e, newValue) => {
-                    const data = {
-                      type: 'teaching',
-                      course_id: newValue.course_id,
-                      branch_id: selectedBranchId
-                    };
-                    dispatch(getAllTeachingStaffs(data));
-                  }}
-                  options={courses}
-                  getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
-                  key={(option, index) => index}
-                />
+            <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <Grid item xs={6} sm={4}>
+              <Autocomplete
+              fullWidth
+              onChange={(e, newValue) => {
+                const courseId = newValue ? newValue._id : ''; 
+                const data = {
+                  course: courseId,
+                  branchid: selectedBranchId,
+                  instituteId: useInstitute().getInstituteId() 
+                };
+                dispatch(getAllTeachingStaffs(data));
+              }}
+              options={courses}
+              getOptionLabel={(option) => option.course_name || ''}
+              renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
+              key={(option, index) => index}
+            />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={6} sm={4}>
                 <TextField
                   select
                   fullWidth
                   label="Search By Status"
                   SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                 >
-                  <MenuItem value="">Select Status</MenuItem>
-                  <MenuItem value="1">Active</MenuItem>
-                  <MenuItem value="0">Inactive</MenuItem>
+                  <MenuItem value={null}>Select Status</MenuItem>
+                  <MenuItem value={true}>Active</MenuItem>
+                  <MenuItem value={false}>Inactive</MenuItem>
                 </TextField>
               </Grid>
-              <Grid item sm={3} xs={12}>
+              <Grid item  xs={6} sm={4}  >
                 <TextField
                   fullWidth
                   value={searchValue}
@@ -95,13 +97,7 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3} sx={{ alignItems: 'center' }}>
-                <Box component={Link} to={'teaching-staffs/add'} sx={{ p: 0, m: 0 }}>
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem' }}>
-                    Add New Staff
-                  </Button>
-                </Box>
-              </Grid>
+     
             </Grid>
           </CardContent>
         </Card>

@@ -1,22 +1,16 @@
-// groupService.js
 import axios from 'axios';
+import client from 'api/client';
+import secureLocalStorage from 'react-secure-storage';
 
-const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/community-management`;
+const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute`;
 
 export const getAllCommunities = async (data) => {
   try {
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/get-by-branch-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
+    const response = await client.community.getAll(data)
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
+      // Return the response directly, without extracting chatId
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -25,22 +19,19 @@ export const getAllCommunities = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in get all Communities:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
+
 export const getCommunityDetails = async (data) => {
   try {
     const response = await axios.get(`${COMMUNITY_API_END_POINT}/get-by-batch-id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -52,25 +43,16 @@ export const getCommunityDetails = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in get Community Details:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
-export const getAllBatchChats = async (data) => {
-  try {
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/message-get`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
 
-    console.log(response);
+export const getAllBatchChats = async (chatId) => {
+  try {
+    const response = await client.community.getCommunityMessage(chatId)
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -79,9 +61,7 @@ export const getAllBatchChats = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in get all Communities:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
 
@@ -91,10 +71,9 @@ export const sendMessage = async (data) => {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Community created successfully' };
@@ -112,12 +91,10 @@ export const deleteCommunity = async (data) => {
     const response = await axios.delete(`${COMMUNITY_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Community deleted successfully' };
@@ -135,13 +112,11 @@ export const updateCommunity = async (data) => {
     const response = await axios.post(`${COMMUNITY_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Community updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Community' };
@@ -151,3 +126,13 @@ export const updateCommunity = async (data) => {
     throw error;
   }
 };
+
+export const getAllMessages = async (data) => {
+   try {
+      const response = await  client.community.getMessages(data)
+      return response?.data
+   } catch (error) {
+     const message = error?.response?.data?.message ? error?.response?.data?.message : error?.message
+     throw new Error(message)
+   }
+}

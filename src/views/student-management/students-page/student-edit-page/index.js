@@ -17,12 +17,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import * as yup from 'yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CustomChip from 'components/mui/chip';
 import Checkbox from '@mui/material/Checkbox';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
+import { Link } from 'react-router-dom';
+import client from 'api/client';
 
 const StepperLinearWithValidation = () => {
   const location = useLocation();
@@ -71,7 +75,7 @@ const StepperLinearWithValidation = () => {
       .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
     address_line_1: yup.string().required('Address Line One is required'),
     address_line_2: yup.string().required('Address Line Two is required'),
-    date_of_birth: yup.string().required(),
+    dob: yup.string().required(),
     gender: yup.string().required(),
     username: yup
       .string()
@@ -81,7 +85,7 @@ const StepperLinearWithValidation = () => {
   });
 
   const [activeStep, setActiveStep] = useState(0);
-  console.log(activeStep);
+
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -95,7 +99,7 @@ const StepperLinearWithValidation = () => {
 
   const defaultPersonalValues = {
     last_name: '',
-    name: '',
+    first_name: '',
     email: '',
     phone_no: '',
     alternate_number: '',
@@ -104,13 +108,14 @@ const StepperLinearWithValidation = () => {
     pincode: '',
     address_line_1: '',
     address_line_2: '',
-    date_of_birth: '',
+    dob: '',
     gender: '',
     course: '',
     branch: selectedBranchId,
-    designation: '',
+    // designation: '',
     education_qualification: '',
     username: '',
+    full_name: '',
     logo: ''
   };
 
@@ -124,14 +129,13 @@ const StepperLinearWithValidation = () => {
   const {
     control: personalControl,
     setValue,
+    getValues,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
-console.log(studentData);
-console.log(activeCourse);
 
   useEffect(() => {
     if (studentData) {
@@ -144,29 +148,32 @@ console.log(activeCourse);
         state,
         city,
         pincode,
-        address_line_1,
-        address_line_2,
-        date_of_birth,
+        address1,
+        address2,
+        dob,
         gender,
-        education_qualification,
-        username
+        qualification,
+        username,
+        full_name,
+        contact_info
       } = studentData;
 
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
-      setValue('phone_no', phone_no || '');
-      setValue('alternate_number', alternate_number || '');
-      setValue('state', state || '');
-      setValue('city', city || '');
-      setValue('pincode', pincode || '');
-      setValue('address_line_1 ', address_line_1 || '');
-      setValue('address_line_2', address_line_2 || '');
-      setValue('date_of_birth', date_of_birth || '');
+      setValue('phone_no', contact_info.phone_number?.slice(3) || '');
+      setValue('alternate_number', contact_info?.alternate_phone_number?.slice(3) || '');
+      setValue('state', contact_info.state || '');
+      setValue('city', contact_info.city || '');
+      setValue('pincode', contact_info.pincode || '');
+      setValue('address_line_1', contact_info.address1 || '');
+      setValue('address_line_2', contact_info.address2 || '');
+      setValue('dob', new Date(dob) || '');
       setValue('gender', gender || '');
-      setValue('education_qualification', education_qualification || '');
-      setValue('username', username || '');
-      // setSelectedCourses(studentData?.institute_student_courses);
+      setValue('education_qualification', qualification || '');
+      setValue('username', full_name || '');
+      setValue("course",studentData?.userDetail?.course?._id)
+      setSelectedCourses([studentData?.userDetail?.course]);
     }
   }, [studentData, setValue]);
 
@@ -208,18 +215,22 @@ console.log(activeCourse);
   }));
 
   const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState(
-    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
-  );
+  const [logoSrc, setLogoSrc] = useState('');
 
-  const handleInputImageChange = (file) => {
+
+  const handleInputImageChange = async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setLogoSrc(reader.result);
-      reader.readAsDataURL(files[0]);
-      setLogo(files[0]);
+    const image = files[0]
+    if (image.size > 1048576) {
+      return toast.success("image upload lesser than 1mb")
     }
+    const data = new FormData()
+    data.append("file",files[0])
+    const file_upload = await client.file.upload(data)
+    toast.success(file_upload?.message)
+    setLogoSrc(file_upload?.data?.file)
+    setLogo(file_upload?.data?.file)
   };
 
   const handleInputImageReset = () => {
@@ -229,35 +240,34 @@ console.log(activeCourse);
     );
   };
 
-  console.log(logo);
 
   const onSubmit = useCallback(async () => {
-    const personalData = personalControl?._formValues;
-    const filteredCourseId = selectedCourses?.map((course) => course.course_id);
+    const personalData = getValues();
+    console.log('personalData:', personalData);
+    const filteredCourseId = selectedCourses?.map((course) => course._id);
     const data = new FormData();
-    filteredCourseId?.forEach((id) => {
-      data.append(`course_ids[]`, id);
-    });
-    data.append('first_name', personalData?.first_name);
-    data.append('last_name', personalData?.last_name);
-    data.append('email', personalData?.email);
-    data.append('phone_no', personalData?.phone_no);
-    data.append('alternate_number', personalData?.alternate_number);
-    data.append('branch_id', personalData?.branch);
-    data.append('course_id', personalData?.course);
-    data.append('image', logo);
-    data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_1);
-    data.append('address_line_2', personalData?.address_line_2);
-    data.append('city', personalData?.city);
-    data.append('state', personalData?.state);
-    data.append('pincode', personalData?.pincode);
-    data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    data.append('username', personalData?.username);
-    data.append('education_qualification', personalData?.education_qualification);
-    data.append('id', studentData.id);
-
-    const result = await updateStudent(data);
+    const new_user_data = {
+      course : filteredCourseId,
+      first_name : personalData?.first_name,
+      last_name : personalData?.last_name,
+      email : personalData?.email,
+      gender : personalData?.gender,
+      dob : convertDateFormat(personalData?.dob),
+      contact_info : {
+        phone_number : "+91 "+personalData?.phone_no,
+        alternate_phone_number : "+91 "+personalData?.alternate_number,
+        address1 : personalData?.address_line_1,
+        address2 : personalData?.address_line_2,
+        city : personalData?.city,
+        pincode : personalData?.pincode,
+        state : personalData?.state
+      },
+      uuid : studentData?.uuid,
+      username : personalData?.full_name,
+      image : logo ? logo : studentData?.image
+    }
+    console.log('updating data fields:', new_user_data);
+    const result = await updateStudent(new_user_data);
 
     if (result.success) {
       toast.success(result.message);
@@ -268,9 +278,13 @@ console.log(activeCourse);
 
   return (
     <Card>
+
       <CardContent>
+
         <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+
           <Grid container spacing={5}>
+
             <Grid item xs={12}>
               <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {steps[0].title}
@@ -279,9 +293,10 @@ console.log(activeCourse);
                 {steps[0].subtitle}
               </Typography>
             </Grid>
+            
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={logoSrc} alt="Profile Pic" />
+                <ImgStyled src={logo?getImageUrl(logo):getImageUrl(studentData?.image)} alt="Profile Pic" />
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload your Logo
@@ -304,7 +319,6 @@ console.log(activeCourse);
               <Controller
                 name="first_name"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -323,7 +337,6 @@ console.log(activeCourse);
               <Controller
                 name="last_name"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -342,7 +355,6 @@ console.log(activeCourse);
               <Controller
                 name="email"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -360,10 +372,10 @@ console.log(activeCourse);
 
             <Grid item xs={12} sm={6}>
               <Controller
-                name="date_of_birth"
+                name="dob"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
+                 
                   <DatePicker
                     id="issue-date"
                     dateFormat={'dd/MM/yyyy'}
@@ -372,9 +384,9 @@ console.log(activeCourse);
                     customInput={
                       <CustomInput
                         label="Date Of Birth"
-                        error={Boolean(personalErrors['date_of_birth'])}
+                        error={Boolean(personalErrors["dob"])}
                         aria-describedby="stepper-linear-personal-date_of_birth"
-                        {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
+                        {...(personalErrors["dob"] && { helperText: 'This field is required' })}
                       />
                     }
                     onChange={onChange}
@@ -386,7 +398,6 @@ console.log(activeCourse);
               <Controller
                 name="gender"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     select
@@ -399,9 +410,9 @@ console.log(activeCourse);
                     aria-describedby="stepper-linear-personal-gender"
                     helperText={personalErrors.gender?.message}
                   >
-                    <MenuItem value="male">Male</MenuItem>
-                    <MenuItem value="female">Female</MenuItem>
-                    <MenuItem value="other">Other</MenuItem>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
                   </CustomTextField>
                 )}
               />
@@ -410,18 +421,17 @@ console.log(activeCourse);
               <Controller
                 name="course"
                 control={personalControl}
-                rules={{ required: true }}
                 render={() => (
                   <Autocomplete
                     multiple
                     disableCloseOnSelect
                     id="select-multiple-chip"
-                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
+                    options={[{ _id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
                     getOptionLabel={(option) => option.course_name}
                     value={selectedCourses}
                     onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                        setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
+                      if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                        setSelectedCourses(activeCourse.filter((option) => option._id !== 'selectAll'));
                       } else {
                         setSelectedCourses(newValue);
                         setValue('course', newValue);
@@ -456,7 +466,7 @@ console.log(activeCourse);
                       <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                         {value.map((option, index) => (
                           <CustomChip
-                            key={option.course_id}
+                            key={option._id}
                             label={option.course_name}
                             onDelete={() => {
                               const updatedValue = [...value];
@@ -470,7 +480,7 @@ console.log(activeCourse);
                         ))}
                       </div>
                     )}
-                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                   />
                 )}
               />
@@ -480,7 +490,6 @@ console.log(activeCourse);
               <Controller
                 name="education_qualification"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -498,7 +507,6 @@ console.log(activeCourse);
               <Controller
                 name="state"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -516,7 +524,6 @@ console.log(activeCourse);
               <Controller
                 name="city"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -534,7 +541,6 @@ console.log(activeCourse);
               <Controller
                 name="pincode"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -554,7 +560,6 @@ console.log(activeCourse);
               <Controller
                 name="address_line_1"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -573,7 +578,6 @@ console.log(activeCourse);
               <Controller
                 name="address_line_2"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -592,11 +596,10 @@ console.log(activeCourse);
               <Controller
                 name="phone_no"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
-                    type="number"
+                    type="text"
                     value={value}
                     label="Phone Number"
                     onChange={onChange}
@@ -612,12 +615,11 @@ console.log(activeCourse);
               <Controller
                 name="alternate_number"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     value={value}
-                    type="number"
+                    type="text"
                     label="Alt Phone Number"
                     onChange={onChange}
                     placeholder="Carter"
@@ -633,7 +635,6 @@ console.log(activeCourse);
               <Controller
                 name="username"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -650,7 +651,7 @@ console.log(activeCourse);
             </Grid>
 
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button variant="tonal" color="secondary" onClick={handleBack}>
+              <Button component={Link} variant="tonal"  color="secondary" state={{id:studentData?.uuid}} to= {`/student-management/students/${studentData?.uuid}/`} >
                 Cancel
               </Button>
 

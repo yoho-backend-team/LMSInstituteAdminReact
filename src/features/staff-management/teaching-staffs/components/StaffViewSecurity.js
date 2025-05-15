@@ -77,12 +77,12 @@ const UserViewSecurity = ({ id }) => {
         <Card>
           <CardHeader title="Change Password" />
           <CardContent>
-            <Alert icon={false} severity="warning" sx={{ mb: 4 }}>
+            {/* <Alert icon={false} severity="warning" sx={{ mb: 4 }}>
               <AlertTitle sx={{ fontWeight: 500, fontSize: '1.125rem', mb: (theme) => `${theme.spacing(2.5)} !important` }}>
                 Ensure that these requirements are met
               </AlertTitle>
               Minimum 8 characters long, uppercase & symbol
-            </Alert>
+            </Alert> */}
 
             <form onSubmit={handleSubmit}>
               <Grid container spacing={4}>

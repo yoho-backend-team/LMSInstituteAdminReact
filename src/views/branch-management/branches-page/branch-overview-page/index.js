@@ -7,6 +7,7 @@ import { getAllBranches } from 'features/branch-management/redux/branchThunks';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+
 const BranchesOverviewPage = () => {
   const dispatch = useDispatch();
   const branches = useSelector(selectBranches);
@@ -20,12 +21,12 @@ const BranchesOverviewPage = () => {
   useEffect(() => {
     getAllBranchesCallback();
   }, [getAllBranchesCallback, refetchBranch]);
-
+  
   return (
     <Grid container spacing={1} className="match-height">
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <BranchHeader />
+          <BranchHeader branches={branches} setRefetchBranch={setRefetchBranch} refetchBranch={refetchBranch} />
         </Grid>
         {branchLoading ? (
           <BranchMainSkeleton />

@@ -7,6 +7,7 @@ import HelpFooter from 'features/help-center/technical-support/components/helpFo
 import HelpHeader from 'features/help-center/technical-support/components/helpHeader';
 import HelpPage from 'features/help-center/technical-support/components/helpPage';
 import { Fragment, useEffect, useState } from 'react';
+import secureLocalStorage from 'react-secure-storage';
 
 const data = {
   faqData: {
@@ -176,14 +177,13 @@ const TechnicalSupport = () => {
       url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-management/platform-faqs/show`,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     };
 
     await axios
       .request(config)
       .then((response) => {
-        console.log(response.data);
         setHelps(response.data.data);
         setActiveTab(response.data.data[0].module);
       })
@@ -192,7 +192,6 @@ const TechnicalSupport = () => {
       });
   };
 
-  console.log(helps);
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);

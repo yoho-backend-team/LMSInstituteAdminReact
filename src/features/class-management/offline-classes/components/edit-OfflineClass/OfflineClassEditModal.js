@@ -14,7 +14,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import {
+  getAllActiveNonTeachingStaffs,
+  getAllNonTeachingStaffs
+} from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
@@ -25,6 +28,7 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateOfflineClass } from '../../services/offlineClassServices';
+import { useSpinner } from 'context/spinnerContext';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -42,8 +46,10 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
+    start_time: yup.date().required('Class StartTime field is required'),
+    end_time: yup.date().required('Class EndTime field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    coordinators: yup.array().optional()
   });
 
   const defaultValues = {
@@ -66,7 +72,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-
+  // const { show, hide } = useSpinner();
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
 
@@ -82,15 +88,17 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
 
   useEffect(() => {
     if (offlineClasses) {
+      // show();
+      setSelectedCoordinates(offlineClasses?.coordinators);
+      setSelectedInstructors(offlineClasses?.instructors);
       setValue('class_name', offlineClasses.class_name || '');
       setValue('class_id', offlineClasses.class_id || '');
-      setValue('classDate', new Date(offlineClasses.class_date) || new Date());
+      setValue('classDate', new Date(offlineClasses.start_date) || new Date());
       setValue('start_time', dayjs(offlineClasses.start_time) || null);
       setValue('end_time', dayjs(offlineClasses.end_time) || null);
       setValue('instructors', offlineClasses.instructors || []);
       setValue('coordinators', offlineClasses?.coordinators || []);
-      setSelectedCoordinates(offlineClasses?.coordinators);
-      setSelectedInstructors(offlineClasses?.instructors);
+      // hide();
     }
   }, [offlineClasses, setValue]);
 
@@ -107,10 +115,10 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
       setValue('coordinators', offlineClasses.coordinators);
     }
   }, [offlineClasses, setValue]);
-
+  console.log(errors,"errors")
   const handleClose = () => {
     handleEditClose();
-    reset(defaultValues);
+    // reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
@@ -118,17 +126,19 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-    setActiveTeachingStaff(result.data.data);
+    setActiveTeachingStaff(result.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveNonTeachingStaffs(data);
-    setActiveNonTeachingStaff(result.data.data);
+    const result = await getAllNonTeachingStaffs(data);
+    setActiveNonTeachingStaff(result.data);
   };
 
   useEffect(() => {
+    // show();
     getActiveTeachingStaffs(selectedBranchId);
     getActiveNonTeachingStaffs(selectedBranchId);
+    // hide();
   }, [selectedBranchId]);
 
   function convertDateFormat(input) {
@@ -140,43 +150,59 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     return formattedDateString;
   }
 
+  console.log('hello');
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
-    var bodyFormData = new FormData();
-    filteredInstructorId?.forEach((id) => {
-      bodyFormData.append('instructor_staff_ids[]', id);
-    });
-    filteredCoordinatorId?.forEach((id) => {
-      bodyFormData.append('coordinator_staff_ids[]', id);
-    });
-    bodyFormData.append('class_name', data.class_name);
-    bodyFormData.append('class_id', offlineClasses.class_id);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('course_id', data.course_id);
-    bodyFormData.append('batch_id', data.batch_id);
-    bodyFormData.append('class_date', convertDateFormat(data.classDate));
-    bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time);
+    console.log("before hit the api , entering the function");
+    // show();
+    const formattedStartTime = data.start_time
+      ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.start_time).format('HH:mm:ss')}`).toISOString()
+      : null;
 
-    const result = await updateOfflineClass(bodyFormData);
+    const formattedEndTime = data.end_time
+      ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.end_time).format('HH:mm:ss')}`).toISOString()
+      : null;
+    const filteredInstructorId = data?.instructors?.map((staff) => staff._id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff._id);
+
+    const offline_class_data = {
+      class_name: data.class_name,
+      uuid: offlineClasses?.uuid,
+      start_date: data?.classDate,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
+      coordinators: filteredCoordinatorId,
+      instructors: filteredInstructorId
+    };
+
+    const result = await updateOfflineClass(offline_class_data);
 
     if (result.success) {
-      setRefetch((state) => !state);
+      // hide();
       toast.success(result.message);
+      setRefetch((state) => !state);
       handleClose();
     } else {
-      let errorMessage = '';
-      toast.error(errorMessage.trim());
+      // let errorMessage = '';
+      // hide();
+      toast.error(result?.message);
     }
   };
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+      sx={{
+        '& .MuiPaper-root': {
+          width: '100%',
+          maxWidth: 800,
+          background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          borderRadius: 2
+        }
+      }}
     >
       <DialogTitle
         id="user-view-edit"
@@ -184,7 +210,12 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
           textAlign: 'center',
           fontSize: '1.5rem !important',
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
+          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`],
+          background: 'linear-gradient(to right, #6b46c1, #5a67d8)',
+          color: 'white',
+          fontWeight: 'bold',
+          padding: '1rem',
+          mb: 2
         }}
       >
         Edit Offline Class
@@ -204,7 +235,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                 <Controller
                   name="class_name"
                   control={control}
-                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
@@ -214,6 +244,37 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       placeholder="John Doe"
                       error={Boolean(errors.class_name)}
                       {...(errors.class_name && { helperText: errors.class_name.message })}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black'
+                          }
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px'
+                        }
+                      }}
                     />
                   )}
                 />
@@ -223,7 +284,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                 <Controller
                   name="classDate"
                   control={control}
-                  rules={{ required: 'Class Date field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
                       selected={value}
@@ -231,7 +291,42 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       className="full-width-datepicker"
                       onChange={onChange}
                       placeholderText="Click to select a date"
-                      customInput={<CustomInput label="ClassDate" />}
+                      customInput={
+                        <CustomInput
+                          label="ClassDate"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
+                        />
+                      }
                     />
                   )}
                 />
@@ -243,7 +338,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   <Controller
                     name="start_time"
                     control={control}
-                    rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
@@ -256,6 +350,37 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                           value={value}
                           onChange={onChange}
                           label="Start Time"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -269,7 +394,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   <Controller
                     name="end_time"
                     control={control}
-                    rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
@@ -282,6 +406,37 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                           value={value}
                           onChange={onChange}
                           label="End Time"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -297,15 +452,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
-                  getOptionLabel={(option) => option.staff_name}
-                  value={selectedInstructors}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedInstructors || []}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'instructors',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
@@ -321,6 +476,37 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)'
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black'
+                          }
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px'
+                        }
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -331,15 +517,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option.id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -352,26 +538,26 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  selectalltext="Select All"
+                  selectallprops={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
-                  getOptionLabel={(option) => option.coordinate_name}
-                  value={selectedCoordinates}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeNonTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedCoordinates||[]}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'coordinators',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
@@ -387,6 +573,38 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -397,15 +615,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option.id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -418,18 +636,42 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  selectalltext="Select All"
+                  selectallprops={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Box>
-                  <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                    Submit
-                  </Button>
-                  <Button onClick={handleClose} variant="tonal" color="error">
+              </Grid> */}
+
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent="space-between">
+                  <Button
+                    onClick={handleClose}
+                    variant="tonal"
+                    color="error"
+                    sx={{
+                      border: '2px solid #D8B4FE',
+                      color: '#9333EA',
+                      backgroundColor: 'transparent',
+                      '&:hover': {
+                        backgroundColor: '#FAF5FF'
+                      }
+                    }}
+                  >
                     Cancel
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      background: 'linear-gradient(to right, #9333EA, #4F46E5)',
+                      color: 'white',
+                      '&:hover': {
+                        background: 'linear-gradient(to right, #7E22CE, #4338CA)'
+                      }
+                    }}
+                  >
+                    Submit
                   </Button>
                 </Box>
               </Grid>

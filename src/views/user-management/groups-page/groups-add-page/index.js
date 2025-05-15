@@ -17,8 +17,12 @@ import {
   TableRow,
   TextField,
   Tooltip,
-  Typography
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '@mui/material';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
 import { selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
@@ -30,6 +34,8 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { useSpinner } from 'context/spinnerContext';
+import { useInstitute } from 'utils/get-institute-details';
 
 const GroupAddPage = () => {
   // State variables
@@ -42,13 +48,15 @@ const GroupAddPage = () => {
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
+  const [SelectedPermissions,setSelectedPermissions] = useState([])
+  const {show,hide} = useSpinner()
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId }));
+    dispatch(getAllGroups({ branch_id: selectedBranchId ,institute_id:useInstitute().getInstituteId()}))
   }, [dispatch, selectedBranchId]);
-
+  
   // Fetch permissions on component mount
   useEffect(() => {
     getPermissions();
@@ -70,14 +78,17 @@ const GroupAddPage = () => {
     mode: 'onChange',
     resolver: yupResolver(addGroupYupSchema)
   });
-
+  
   // Function to handle form submission
   const onSubmit = useCallback(
     async (data) => {
+      
+      show()
       try {
         const inputData = {
-          name: data.groupName,
-          permissions: selectedCheckbox
+          identity: data.groupName,
+          permissions: SelectedPermissions,
+          institute_id : useInstitute().getInstituteId()
         };
 
         // Check if the group name already exists
@@ -91,14 +102,17 @@ const GroupAddPage = () => {
 
         if (result.success) {
           // Update groups after adding a new group
-          dispatch(getAllGroups({ branch_id: selectedBranchId }));
+          dispatch(getAllGroups({ institute_id:useInstitute().getInstituteId(),branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
+          hide()
         } else {
+          hide()
           toast.error(result.message);
         }
       } catch (error) {
         console.log(error);
+        hide()
         toast.error('Group Name Already Exists');
       }
     },
@@ -118,13 +132,22 @@ const GroupAddPage = () => {
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
+    
     if (isIndeterminateCheckbox) {
+      setSelectedPermissions([])
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
     } else {
-      const allPermissionsIds = permissions.flatMap((module) =>
-        module.screens.flatMap((screen) => screen.permissions.map((permission) => permission.id))
-      );
+      const permissionList = permissions?.map(module => ({
+        id: module.id,
+        identity: module.identity,
+        permission: module.permission.map(perm => ({
+          [perm.name]: perm.is_active,
+          _id: perm._id
+        }))
+      }));
+      setSelectedPermissions(permissionList)
+      const allPermissionsIds = permissions.flatMap((module) => module.permission.map((permission) => permission._id))
       setSelectedCheckbox(allPermissionsIds);
       setIsIndeterminateCheckbox(true);
     }
@@ -134,6 +157,7 @@ const GroupAddPage = () => {
   const getPermissions = useCallback(async () => {
     try {
       setLoading(true);
+      show()
       const result = await getAllPermissions();
       if (result.success) {
         setPermissions(result.data);
@@ -144,44 +168,170 @@ const GroupAddPage = () => {
       console.log(error);
       toast.error('An error occurred while fetching permissions');
     } finally {
+      hide()
       setLoading(false);
     }
   }, []);
 
+  const handleSelectPermissions = (module, permission, index, e) => {
+    setSelectedPermissions((prevData) => {
+      
+      const moduleIndex = prevData.findIndex((item) => item.id === module.id);
+      
+      if (moduleIndex !== -1) {
+       
+        return prevData.map((item, idx) => {
+          if (idx === moduleIndex) {
+           
+            const updatedPermissions = item.permission.map((perm) => {
+              if (perm._id === permission._id) {
+                return { ...perm, [permission.name]: e.target.checked };
+              }
+              return perm;
+            });
+  
+            if (!updatedPermissions.find((perm) => perm._id === permission._id)) {
+              updatedPermissions.push({ [permission.name]: e.target.checked, _id: permission._id });
+            }
+  
+            return { ...item, permission: updatedPermissions };
+          }
+          return item;
+        });
+      } else {
+       
+        return [
+          ...prevData,
+          {
+            id: module.id,
+            identity: module.identity,
+            permission: [{ [permission.name]: e.target.checked, _id: permission._id }],
+          },
+        ];
+      }
+    });
+  };
+  
+
   // Render permissions table rows
   const renderPermissions = useMemo(() => {
-    return permissions.map((module) =>
-      module.screens.map((screen, index) => (
-        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-child': { pl: '0 !important' } }}>
-          <TableCell
-            sx={{
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              fontSize: (theme) => theme.typography.h6.fontSize
-            }}
-          >
-            {screen.screen_name}
-          </TableCell>
-          {screen.permissions.map((permission, index) => (
-            <TableCell key={index}>
-              <FormControlLabel
-                label={permission.name}
-                sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
-                control={
-                  <Checkbox
-                    size="small"
-                    id={`${index}-write`}
-                    onChange={() => togglePermission(permission.id)}
-                    checked={selectedCheckbox.includes(permission.id)}
-                  />
-                }
-              />
-            </TableCell>
+  //   return permissions.map((module) =>
+
+  //     <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' }, '&:hover': {
+  //       backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  //       transition: 'background-color 0.2s ease'
+  //     },
+  //     borderLeft: '4px solid transparent',
+  //     '&:hover': {
+  //       backgroundColor: 'ghostwhite'
+  //     } }}>
+
+  //         <TableCell
+  //           sx={{
+  //             fontWeight: 500,
+  //             whiteSpace: 'nowrap', 
+  //             fontSize: '1.1rem',
+  //             display: 'flex',
+  //             alignItems: 'center',
+  //             gap: 1.5, 
+  //             m:2 
+  //           }}
+  //         >
+  //           {module?.identity}
+  //         </TableCell>
+
+  //         <TableCell sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+  //         {module?.permission?.map((permission, index) => (
+  //           <TableCell key={index} 
+  //           elevation={0}
+  //           sx={{
+  //             p: 1,
+  //             borderRadius: '8px',
+  //             backgroundColor: selectedCheckbox.includes(permission._id) 
+  //               ? 'rgba(25, 118, 210, 0.08)'
+  //               : ' ',
+               
+              
+  //           }}
+  //           >
+  //             <FormControlLabel
+  //               label={permission.name}
+  //               sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+  //               control={
+  //                 <Checkbox
+  //                   size="small"
+  //                   id={permission?._id}
+  //                   onChange={(e) => {togglePermission(permission._id),handleSelectPermissions(module,permission,index,e)}}
+  //                   checked={selectedCheckbox.includes(permission._id)}
+  //                   sx={{
+  //                     '& svg': {
+  //                       border: !selectedCheckbox.includes(permission._id) && '1px solid #000', 
+  //                       borderRadius: '4px',
+  //                     }
+  //                   }}
+  //                 />
+  //               }
+  //             />
+  //           </TableCell>
+  //         ))}
+  //          </TableCell>
+  //       </TableRow>
+  //   );
+  // }, [permissions, selectedCheckbox, togglePermission]);
+
+  return permissions.map((module) => (
+    <Accordion key={module?.id} sx={{ mb: 1,width:"125%" }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={{
+          "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
+          borderLeft: "4px solid transparent",
+        }}
+      >
+        <Typography sx={{ fontWeight: 500, fontSize: "1.1rem" }}>{module?.identity}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Grid container spacing={2}>
+          {module?.permission?.map((permission, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Box
+                sx={{
+                  p: 1,
+                  borderRadius: "8px",
+                  backgroundColor: selectedCheckbox.includes(permission._id)
+                    ? "rgba(25, 118, 210, 0.08)"
+                    : "transparent",
+                }}
+              >
+                <FormControlLabel
+                  label={permission.name}
+                  sx={{ "& .MuiTypography-root": { color: "text.secondary" } }}
+                  control={
+                    <Checkbox
+                      size="small"
+                      id={permission?._id}
+                      onChange={(e) => {
+                        togglePermission(permission._id)
+                        handleSelectPermissions(module, permission, index, e)
+                      }}
+                      checked={selectedCheckbox.includes(permission._id)}
+                      sx={{
+                        "& svg": {
+                          border: !selectedCheckbox.includes(permission._id) && "1px solid #000",
+                          borderRadius: "4px",
+                        },
+                      }}
+                    />
+                  }
+                />
+              </Box>
+            </Grid>
           ))}
-        </TableRow>
-      ))
-    );
-  }, [permissions, selectedCheckbox, togglePermission]);
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
+  ))
+}, [permissions, selectedCheckbox, togglePermission, handleSelectPermissions])
 
   return (
     <>
@@ -205,7 +355,7 @@ const GroupAddPage = () => {
                 px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
               }}
             >
-              <Grid sx={{ my: 4, gap: 2 }} container>
+              <Grid sx={{ m: 4,justifyContent: 'center', gap: 2 }} container>
                 <Grid item xs={12} sm={5.9}>
                   <Controller
                     name="groupName"
@@ -260,6 +410,12 @@ const GroupAddPage = () => {
                               onChange={handleSelectAllCheckbox}
                               indeterminate={isIndeterminateCheckbox}
                               checked={selectedCheckbox.length === permissions.length}
+                              sx={{
+                                '& svg': {
+                                  border: !isIndeterminateCheckbox && '1px solid #000', 
+                                  borderRadius: '4px',
+                                }
+                              }}
                             />
                           }
                         />

@@ -21,6 +21,15 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { updateUser } from '../../services/userServices';
+import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
+import { getImageUrl } from 'utils/imageUtils';
+import { useInstitute } from 'utils/get-institute-details';
+import client from 'api/client';
+import { hide } from '@popperjs/core';
+import { useSpinner } from 'context/spinnerContext';
+import {IconButton} from "@mui/material"
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { white } from 'precise-ui/dist/es6/colors';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -33,10 +42,14 @@ const showErrors = (field, valueLen, min) => {
 };
 
 const schema = yup.object().shape({
-  full_name: yup
+  first_name: yup
     .string()
     .required()
     .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
+  last_name: yup
+    .string()
+    .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
   user_name: yup
     .string()
@@ -44,38 +57,38 @@ const schema = yup.object().shape({
     .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
     .matches(/^[a-zA-Z0-9\s]+$/, ' User Name should not contain special characters'),
   email: yup.string().email().required(),
-  contact: yup
+  phone_number: yup
     .string()
     .required('Contact Number field is required')
     .matches(/^[0-9]+$/, 'Contact number must contain only digits')
-    .max(10, 'Contact number cannot exceed 10 digits'),
+    .max(13, 'Contact number cannot exceed 10 digits'),
   designation: yup
     .string()
     .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
     .max(50, `Designation can't exceed 50 characters`),
-  branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
+  // branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
 });
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => {
   const branches = useSelector((state) => state.auth.branches);
-  const image =
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-
+  
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState();
   const [groups, setGroups] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState([]);
   const defaultValues = {
-    full_name: '',
+    first_name: '',
+    last_name : '',
     user_name: '',
     email: '',
-    contact: Number(''),
+    phone_number: '',
     designation: '',
     role: '',
     branch: []
   };
+  const {show,hide} = useSpinner()
   const {
     reset,
     control,
@@ -90,21 +103,23 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (userData) {
-      setValue('full_name', userData.name || '');
+      setValue('first_name', userData.first_name || '');
+      setValue("last_name",userData?.last_name || '')
       setValue('user_name', userData.username || '');
-      setValue('email', userData?.institution_users?.email || '');
-      setValue('contact', userData?.institution_users?.mobile || '');
-      setValue('designation', userData?.institution_users?.designation || '');
-      setValue('branch', userData?.branches || []);
-      setValue('role', userData?.role_groups?.role?.id || '');
-      setSelectedBranch(userData?.branches);
+      setValue('email', userData?.email || '');
+      setValue('phone_number', userData?.phone_number?.slice(3) || '');
+      setValue('designation', userData?.designation || '');
+      setValue('branch', userData?.branche || []);
+      setValue('role', userData?.role?.id || '');
+      setSelectedBranch([userData?.branch]);
     }
   }, [userData, setValue]);
   const handleClose = () => {
-    setValue('full_name', '');
+    setValue('first_name', '');
+    setValue("last_name",'')
     setValue('user_name', '');
     setValue('email', '');
-    setValue('contact', Number(''));
+    setValue('phone_number', '');
     setValue('designation', '');
     setValue('branch', []);
     setValue('role', Number(''));
@@ -119,11 +134,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
 
   const getGroups = async () => {
     try {
-      const result = await getAllGroups();
+      const result = await getAllGroups({branch_id:selectedBranch,institute_id:useInstitute().getInstituteId()});
       if (result.success) {
         setGroups(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -144,46 +159,50 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   }));
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
+  const handleInputImageChange = async (file) => {
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
+    const image = files[0]
+     if (image.size > 1048576) {
+      toast.success("image upload lesser than 1mb")
+    }else{
+      const form_data = new FormData()
+      form_data.append("file",files[0])
+      const data = await client.file.upload(form_data)
+      toast.success(data.message)
+      setSelectedImage(data?.data?.file)
+      setImgSrc(data?.data?.file)
     }
   };
 
   const onSubmit = async (data) => {
-    console.log(data?.branch);
+    show()
+    const role = groups?.filter((i)=>i.id === data?.role)
 
-    const InputData = new FormData();
-    data?.branch.forEach((branch) => {
-      InputData.append('branch_id[]', branch.branch_id);
-    });
-    InputData.append('name', data.full_name);
-    InputData.append('user_name', data.user_name);
-    InputData.append('email', data.email);
-    InputData.append('mobile', data.contact);
-    InputData.append('designation', data.designation);
-    InputData.append('role_id', data.role);
-    InputData.append('image', selectedImage);
-    InputData.append('id', userData.id);
+    const new_form_data = {
+      first_name : data?.first_name,
+      last_name : data?.last_name,
+      username : data?.username,
+      email : data?.email,
+      phone_number : "+91"+data?.phone_number,
+      designation : data?.designation,
+      role : role?.[0]?._id,
+      userId : userData?.uuid,
+      image : selectedImage ? selectedImage : userData?.image
+    }
 
-    const result = await updateUser(InputData);
+    const result = await updateUser(new_form_data);
 
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
       handleEditClose();
+      hide()
     } else {
+      hide()
       toast.error(result.message);
     }
   };
-
+ 
   return (
     <Dialog
       open={openEdit}
@@ -193,6 +212,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 750 } }}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
+
         <DialogTitle
           id="user-view-edit"
           sx={{
@@ -204,6 +224,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
         >
           Edit User Information
         </DialogTitle>
+
         <DialogContent
           sx={{
             pb: (theme) => `${theme.spacing(3)} !important`,
@@ -213,21 +234,61 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              
+              <IconButton
+            sx={{
+              
+              position: "absolute",
+              top: 195,
+              right: 330,
+              backgroundColor:  "ghostwhite",
+              
+            }}
+            aria-label="upload picture"
+            component="label"
+          >
+          <input
+                      hidden
+                      type="file"
+                      value={inputValue}
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputImageChange}
+                      id="account-settings-upload-image"
+                    />
+            <CameraAltIcon  sx={{ fontSize: '20px' }}/>
+          </IconButton>
+
                 {!selectedImage && (
                   <ImgStyled
                     src={
-                      userData?.institution_users?.image
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`
-                        : imgSrc
+                      userData?.image
+                        ? `${getImageUrl(userData?.image)}`
+                        : profilePlaceholder
                     }
                     alt="Profile Pic"
+                    sx={{
+                      borderRadius: '50%',
+                      width: '100px',  
+                      height: '100px', 
+                      objectFit: 'cover', 
+                    }}
                   />
                 )}
 
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload New Image
+                {selectedImage && <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" />}
+                </Box>
+                <div  style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center', 
+  
+  }}>
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" sx={{ mt: 2, backgroundColor: 'white', 
+    color: 'black',           
+    '&:hover': {
+      backgroundColor: 'white', 
+      color: 'black',} }} >
+                    Upload New Image 
                     <input
                       hidden
                       type="file"
@@ -238,31 +299,49 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     />
                   </ButtonStyled>
                 </div>
-              </Box>
+              
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
-                name="full_name"
+                name="first_name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
                     value={value}
                     label="Full Name"
                     onChange={onChange}
-                    placeholder="John Doe"
-                    error={Boolean(errors.full_name)}
-                    {...(errors.full_name && { helperText: errors.full_name.message })}
+                    placeholder="John"
+                    error={Boolean(errors.first_name)}
+                    {...(errors.first_name && { helperText: errors.first_name.message })}
                   />
                 )}
               />
             </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="last_name"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    label="Last Name"
+                    onChange={onChange}
+                    placeholder="Doe"
+                    error={Boolean(errors.full_name)}
+                    {...(errors.last_name && { helperText: errors.last_name.message })}
+                  />
+                )}
+              />
+            </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="user_name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -276,11 +355,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="email"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -295,21 +374,22 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
-                name="contact"
+                name="phone_number"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
+                 
                   <TextField
                     fullWidth
-                    type="number"
+                    type="text"
                     defaultValue={value}
                     label="Contact"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
-                    error={Boolean(errors.contact)}
-                    {...(errors.contact && { helperText: errors.contact.message })}
+                    error={Boolean(errors.phone_number)}
+                    {...(errors.phone_number && { helperText: errors.phone_number.message })}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">+91</InputAdornment>
                     }}
@@ -318,13 +398,13 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            {/* <Grid item xs={12} sm={12}>
               <Autocomplete
                 multiple
                 disableCloseOnSelect
                 id="select-multiple-chip"
-                options={branches}
-                getOptionLabel={(option) => option.branch_name}
+                options={branches?branches:[]}
+                getOptionLabel={(option) => option?.branch_identity}
                 value={selectedBranch}
                 onChange={(e, newValue) => {
                   setSelectedBranch(newValue);
@@ -349,15 +429,15 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                       style={{ marginRight: 8 }}
                       checked={selected}
                     />
-                    {option.branch_name}
+                    {option.branch_identity}
                   </li>
                 )}
                 renderTags={(value) => (
                   <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                     {value.map((option, index) => (
                       <CustomChip
-                        key={option.branch_id}
-                        label={option.branch_name}
+                        key={option._id}
+                        label={option.branch_identity}
                         // defaultValue={}
                         onDelete={() => {
                           const updatedValue = [...value];
@@ -371,15 +451,14 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     ))}
                   </div>
                 )}
-                isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12} sm={6}>
               <Controller
                 name="designation"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -398,12 +477,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="role"
                 control={control}
-                rules={{ required: true }}
                 render={() => (
                   <TextField
                     select
                     fullWidth
-                    defaultValue={userData?.role_groups?.role?.id}
+                    defaultValue={userData?.role?.id}
                     onChange={(e) => {
                       setValue('role', e.target.value);
                     }}
@@ -411,7 +489,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     {/* <MenuItem value="">Select Role</MenuItem> */}
                     {groups?.map((group, index) => (
                       <MenuItem key={index} value={group?.id}>
-                        {group?.name}
+                        {group?.identity}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -420,21 +498,36 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
           </Grid>
         </DialogContent>
+
         <DialogActions
           sx={{
-            justifyContent: 'center',
+            
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
             pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          <Button type="submit" variant="contained" sx={{ mr: 2 }}>
-            Submit
-          </Button>
-          <Button variant="tonal" color="secondary" onClick={handleClose}>
+          <Button variant="tonal" color="secondary" onClick={handleClose}
+           sx={{
+            backgroundColor: '#f5f5f5', 
+            color:'black',
+            '&:hover': {
+              backgroundColor: '#e0e0e0',}}}>
             Cancel
           </Button>
+
+          <Button type="submit" variant="contained" sx={{ mr: 2,backgroundColor: 'black', 
+    color: 'white',           
+    '&:hover': {
+      backgroundColor: 'black', 
+      color: 'white',} }}>
+            Save Changes
+          </Button>
+          
+
         </DialogActions>
+
       </form>
+      
     </Dialog>
   );
 };

@@ -10,10 +10,13 @@ import {
   selectStudentAttendances,
   selectLoading
 } from 'features/attandence-management/student-attandences/redux/studentAttendanceSelectors';
+import { useInstitute } from 'utils/get-institute-details';
 const Students = () => {
   // States
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const institute_id = useInstitute().getInstituteId()
+
   const dispatch = useDispatch();
   const studentAttendance = useSelector(selectStudentAttendances);
 
@@ -21,8 +24,10 @@ const Students = () => {
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId,institute_id: institute_id , page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
+
+  
 
   return (
     <>
@@ -45,7 +50,7 @@ const Students = () => {
               count={studentAttendance?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllStudentAttendances({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllStudentAttendances({ branch_id: selectedBranchId, page: page,institute_id:useInstitute().getInstituteId() }));
               }}
             />
           </Grid>

@@ -32,7 +32,7 @@ const pages = {
           icon: icons.IconUsers,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_group_view')
+          visible: hasPermission('can_create_institute_group','Groups',"create_permission")
         },
         {
           id: 'users',
@@ -42,7 +42,7 @@ const pages = {
           url: '/user-management/admin-users',
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_admin_users_view')
+          visible: hasPermission('can_read_institute_user',"Users")
         }
       ]
     }

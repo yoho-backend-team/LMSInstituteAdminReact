@@ -35,6 +35,7 @@ import studentIdCardsReducer from 'features/id-card-management/student-id-cards/
 import staffIdCardsReducer from 'features/id-card-management/staff-id-cards/redux/staffIdcardSlice';
 
 import customerSupportsReducer from 'features/help-center/customer-support/redux/customerSupportSlice';
+import HelpCenterSlice from 'features/help-center/helpsupportAdd/redux/HelpSlices';
 import technicalSupportsReducer from 'features/help-center/technical-support/redux/technicalSupportSlice';
 
 import chats from 'features/chat/redux/chatSlicees';
@@ -54,10 +55,13 @@ import SubscriptionReducer from 'features/payment-management/subscriptions/redux
 
 import communityReducer from 'features/community/redux/communitySlice';
 
+import locationReducer from 'features/cities/redux/locationSlice'
+
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
   reducer: {
+    locations:locationReducer,
     customization: customizationReducer,
     chat: chats,
     groups: groupReducer,
@@ -100,7 +104,8 @@ const store = configureStore({
     subscriptions: SubscriptionReducer,
     communities: communityReducer,
     openTickets: openTicketSlice,
-    closedTickets: closedTicketSlice
+    closedTickets: closedTicketSlice,
+    helpcenter: HelpCenterSlice
   }
 });
 // configureStore(reducer);

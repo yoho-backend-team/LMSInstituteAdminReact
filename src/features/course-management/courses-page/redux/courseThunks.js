@@ -5,8 +5,8 @@ import { setCourses, setLoading } from './courseSlice';
 export const getAllCourses = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllCourses(data); // Implement this function in your services
-    dispatch(setCourses(response?.data.data));
+    const response = await fetchAllCourses(data); 
+    dispatch(setCourses(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

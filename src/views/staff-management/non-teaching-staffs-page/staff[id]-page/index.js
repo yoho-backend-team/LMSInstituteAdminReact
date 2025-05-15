@@ -61,14 +61,14 @@ const UserViewRight = ({ tab, setRefetch }) => {
   const [staff, setStaff] = useState('');
   const location = useLocation();
   const staffID = location.state.id;
-  console.log('staffId:', staffID);
+ 
   useEffect(() => {
     getStaffData(staffID);
   }, [staffID]);
 
-  const getStaffData = async (staffID) => {
+  const getStaffData = async (id) => {
     setLoading(true);
-    const data = { id: staffID };
+    const data = { nonstaff_id: id };
     const result = await nonTeachingStaffById(data);
     if (result.success) {
       setStaff(result.data);
@@ -76,7 +76,11 @@ const UserViewRight = ({ tab, setRefetch }) => {
     }
     setLoading(false);
   };
-  console.log('NON-Teaching-staff:', staff);
+
+  
+
+  console.log(staff,"staff")  
+  console.log(staffID,"staff")
 
   function formattedDate(inputDate) {
     const [day, month, year] = inputDate.split('/');

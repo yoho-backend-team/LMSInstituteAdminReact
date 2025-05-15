@@ -39,6 +39,8 @@ const FeesEditDrawer = (props) => {
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedDate, setSelectedDate] = useState();
+  console.log(selectedRows);
+  
   const defaultValues = {
     transaction_id: '',
     paid_amount: '',
@@ -90,9 +92,16 @@ const FeesEditDrawer = (props) => {
     inputData.append('transaction_id', data.transaction_id);
     inputData.append('paid_amount', data.paid_amount);
     inputData.append('payment_date', convertDateFormat(data.payment_date));
-    inputData.append('id', selectedRows.id);
+    inputData.append('_id', selectedRows._id);
 
-    const result = await updateStudentFee(inputData);
+    const studentfee_data = {
+      logo : selectedImage,
+      transaction_id : data.transaction_id,
+      paid_amount: data.paid_amount,
+      payment_date:data.payment_date,
+      _id : selectedRows._id
+    }
+    const result = await updateStudentFee(studentfee_data);
 
     if (result.success) {
       toast.success(result.message);
@@ -141,7 +150,7 @@ const FeesEditDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Edit Fees</Typography>
+          <Typography variant="h4"  sx={{outline:1.5,outlineColor:'#0cce7f',px:2, py:1, borderRadius:"50px"  }}>Edit Fees</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -158,9 +167,9 @@ const FeesEditDrawer = (props) => {
             <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Header>
-        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+        <Box sx={{ p: (theme) => theme.spacing(6, 6, 6),boxShadow:3,mx:2,borderRadius:'20px',display:'flex', justifyContent:'center', alignItems:'center' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4  }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Avatar
                   src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.students?.image}`}
@@ -168,11 +177,11 @@ const FeesEditDrawer = (props) => {
                 />
                 <Box>
                   <Typography variant="h5" sx={{ fontSize: '18px' }}>
-                    {selectedRows?.students?.first_name}
-                    {selectedRows?.students?.last_name}
+                    {selectedRows?.student?.full_name}
+                    {selectedRows?.student?.last_name}
                   </Typography>
                   <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: '14px' }}>
-                    {selectedRows?.students?.email}
+                    {selectedRows?.student?.email}
                   </Typography>
                 </Box>
               </Box>
@@ -181,31 +190,31 @@ const FeesEditDrawer = (props) => {
               </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-              {!selectedImage && (
-                <ImgStyled
-                  src={
-                    selectedRows?.payment_proof ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.payment_proof}` : imgSrc
-                  }
-                  alt="Profile Pic"
-                />
-              )}
-
-              {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-              <div>
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-payment">
-                  Upload New Image
-                  <input
-                    hidden
-                    type="file"
-                    value={inputValue}
-                    accept="image/png, image/jpeg"
-                    onChange={handleInputImageChange}
-                    id="account-settings-upload-payment"
+              {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
+                {!selectedImage && (
+                  <ImgStyled
+                    src={
+                      selectedRows?.payment_proof ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.payment_proof}` : imgSrc
+                    }
+                    alt="Profile Pic"
                   />
-                </ButtonStyled>
-              </div>
-            </Box>
+                )}
+
+                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                <div>
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-payment">
+                    Upload New Image
+                    <input
+                      hidden
+                      type="file"
+                      value={inputValue}
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputImageChange}
+                      id="account-settings-upload-payment"
+                    />
+                  </ButtonStyled>
+                </div>
+              </Box> */}
             <Grid container>
               <Grid item xs={12} sm={12}>
                 <Controller
@@ -228,7 +237,6 @@ const FeesEditDrawer = (props) => {
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="paid_amount"
-                  rules={{ required: true }}
                   control={control}
                   render={({ field: { onChange, value } }) => (
                     <TextField
@@ -249,7 +257,6 @@ const FeesEditDrawer = (props) => {
                 <Controller
                   name="payment_date"
                   control={control}
-                  rules={{ required: 'Payment Date field is required' }}
                   render={({ field: { onChange } }) => (
                     <DatePicker
                       selected={selectedDate}
@@ -269,7 +276,7 @@ const FeesEditDrawer = (props) => {
                 )}
               </Grid>
             </Grid>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 ,justifyContent:'center'}}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                 Submit
               </Button>

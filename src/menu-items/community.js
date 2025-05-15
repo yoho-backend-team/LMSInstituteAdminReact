@@ -25,7 +25,7 @@ const community = {
           url: '/community-management/community',
           icon: icons.IconBuildingCommunity,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_community_view')
+          visible: hasPermission('can_read_institute_community','Community')
         }
       ]
     }

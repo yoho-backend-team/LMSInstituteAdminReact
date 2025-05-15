@@ -85,3 +85,13 @@ export const formatCVC = (value, cardNumber, Payment) => {
 
   return clearValue.slice(0, maxLength);
 };
+
+
+export const formatStudentsCount = (count) => {
+   if(count !== 0 ){
+      let numberWithText = count === 1 ? `${count} student` : `${count} students` 
+      return numberWithText
+   }
+
+   return 'no students'
+}

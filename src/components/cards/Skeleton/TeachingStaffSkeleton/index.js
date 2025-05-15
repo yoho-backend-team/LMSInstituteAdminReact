@@ -2,50 +2,56 @@
 import { Card, CardContent, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
+import CustomSkeleton from '..';
 // ==============================|| SKELETON - EARNING CARD ||============================== //
 
 const TeachingStaffSkeleton = () => {
   const skeletonData = Array.from({ length: 10 });
   return (
     <>
-      <Grid container spacing={2} mt={2}>
-        {skeletonData.map((_, i) => (
-          <Grid key={i} item xs={12} sm={6} md={4}>
-            <Card sx={{ position: 'relative' }}>
+      <Grid container spacing={4}>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Grid key={i} item xs={12} sm={6} md={4} p={1} mt={3}>
+            <Card
+            sx={{
+              width: "380px",
+              height: "390px",
+              borderRadius: 3,
+              boxShadow: 5,
+              position: 'relative',
+              overflow: 'visible',
+              background: '#fff',
+            }}
+          >
+           
               <CardContent sx={{ pt: 2.5 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  <Skeleton variant="circular" width={100} height={100} />
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '16px' }}>
+                    <Box sx={{ display: 'flex', gap: '1px' }}>
+                        <CustomSkeleton variant="circular" width={100} />
+                    </Box>
+    
+</Box>
+<Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '24px',gap:"2px" }}>
+    <CustomSkeleton variant="text" width={80} height={20} />
+</Box>
+<Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '14px' }}>
+    <CustomSkeleton variant="text" width={120} height={20} />
+</Box>
 
-                  <Box sx={{ mb: 1, pt: 1, mt: 2 }}>
-                    <Skeleton variant="rectangular" height={15} width={160} />
-                  </Box>
-                  <Box sx={{ mb: 5, pt: 1 }}>
-                    <Skeleton variant="rectangular" height={15} width={150} />
-                  </Box>
-                  <Box
-                    sx={{
-                      mb: 5,
-                      gap: 2,
-                      width: '100%',
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-around'
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Skeleton variant="rectangular" height={28} width={90} />
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Skeleton variant="rectangular" height={28} width={90} />
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                    <Skeleton variant="rectangular" height={33} width={120} />
+
+<Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '24px',gap:"160px" }}>
+    <CustomSkeleton variant="text" width={50} height={30} />
+    <CustomSkeleton variant="text" width={50} height={30} />
+</Box>
+
+                
+                <Box sx={{ display: 'flex', justifyContent: 'center', textDecoration: 'none',alignItems:"center" }}>
+                  <Box sx={{marginTop:'30px'}}>
+                    <CustomSkeleton variant="text" width={160} height={30} />
                   </Box>
                 </Box>
               </CardContent>
-            </Card>
+              </Card>
           </Grid>
         ))}
       </Grid>

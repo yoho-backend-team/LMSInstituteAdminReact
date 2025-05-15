@@ -33,7 +33,7 @@ const pages = {
           icon: icons.IconReceiptRefund,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_fees_refund_management_view')
+          visible: hasPermission('inst_perm_student_fees_refund_management_view','Student Fees')
         }
       ]
     }

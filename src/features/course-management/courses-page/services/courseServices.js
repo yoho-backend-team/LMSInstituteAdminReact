@@ -1,18 +1,20 @@
 // groupService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const COURSE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses`;
+import { HTTP_END_POINTS } from 'api/client/http_end_points';
+import client from 'api/client';
 
 export const getAllCoursesByBranch = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/get-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${HTTP_END_POINTS.course.get}${data.id}/courses`, {
+      params: data,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+      }
     });
-    console.log('getAllCourses', response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -28,16 +30,16 @@ export const getAllCoursesByBranch = async (data) => {
     throw error;
   }
 };
+
 export const updateCourseStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_END_POINT}/status-change`, data, {
+    const response = await axios.put(`${HTTP_END_POINTS.course.update}${data.category}/courses/${data.id}`, { is_active: data.is_active }, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Course updated successfully' };
     } else {
@@ -48,16 +50,15 @@ export const updateCourseStatus = async (data) => {
     throw error;
   }
 };
+
 export const getCourseDetails = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/read-by-id`, {
+    const response = await axios.get(`${HTTP_END_POINTS.course.update}${data.category}/courses/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params: data
     });
-    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -73,64 +74,50 @@ export const getCourseDetails = async (data) => {
     throw error;
   }
 };
+
 export const getAllCourses = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/get-all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { data: response.data.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch ActiveCourses. Status: ${response.status}`);
-    }
+    const response = await client.course.getWithBranch(data)
+    console.log(response, "response")
+    return { data: response.data };
+
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllActu=iveCourse:', error);
-
+    return { success: false, message: error?.response?.data?.message }
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch ActiveCourses. Status: ${error}`);
   }
 };
-export const addCourse = async (data) => {
-  try {
-    const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
 
-    if (response.data.status) {
-      return { success: true, message: 'Course created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Course' };
-    }
+export const getAllInstructorsWithCourse = async (data) => {
+  try{
+  const response = await client.batch.getInstructors(data)
+  return { data: response?.data }
+  }catch(error){
+    return { success: false, message: error?.response?.data?.message }
+  }
+}
+
+export const addCourse = async (data, file) => {
+  try {
+    const response = await client.course.create(data)
+    // const add_template = await client.course.add_template({ course: response?.data?._id, file: file })
+
   } catch (error) {
     console.error('Error in addCourse:', error);
-    throw error;
+    const data = error?.response?.data?.message ? error?.response?.data?.message : error?.message
+    throw new Error(data)
   }
 };
+
 export const getStudentByCourse = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/get-by-course-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    console.log('course response before api hits: ',data)
+    const response = await client.users.getStudentsWithCourse(data)
+    console.log('course response after api hits: ',response)
 
-    console.log(response);
-
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       return { success: false, message: 'Failed to Fetch Active student' };
@@ -140,43 +127,23 @@ export const getStudentByCourse = async (data) => {
     throw error;
   }
 };
+
 export const deleteCourse = async (data) => {
   try {
-    const response = await axios.delete(`${COURSE_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Course deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Course' };
-    }
+    const response = await client.course.delete(data)
+    return { success: true, message: 'Course deleted successfully' };
   } catch (error) {
-    console.error('Error in deleteCourse:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete Course' };
   }
 };
+
 export const updateCourse = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.course.update(data)
 
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Course updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Course' };
-    }
+    return { success: true, message: 'Course updated successfully' };
   } catch (error) {
     console.error('Error in updateCourse:', error);
-    throw error;
+    return { success: false, message: 'Failed to update Course' };
   }
 };

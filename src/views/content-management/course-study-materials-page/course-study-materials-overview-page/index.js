@@ -1,17 +1,12 @@
-import { CardContent, TextField } from '@mui/material';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import { CardContent } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
-import Icon from 'components/icon';
+import StudyMaterialSkelton from 'components/cards/Skeleton/ContentSkeleton/MaterialSkelton';
 import { default as StatusChangeDialog, default as StudyMaterialDeletemodal } from 'components/modal/DeleteModel';
-import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import StudyMaterialAddDrawer from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialAddDrawer';
+import StudyMaterialCard from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialCard';
 import StudyMaterialEdit from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialEdit';
 import StudyMaterialHeader from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialTableHeader';
 import StudyMaterialView from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialView';
@@ -38,14 +33,17 @@ const StudyMaterials = () => {
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-  console.log(selectedDeleteId);
+  const [page,setPage] = useState(1)
+  
   const dispatch = useDispatch();
   const StudyMaterials = useSelector(selectCourseStudyMaterials);
   const StudyMaterialsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
+  console.log( StudyMaterials);
+  
   useEffect(() => {
-    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllCourseStudyMaterials({ branch: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -56,7 +54,7 @@ const StudyMaterials = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
@@ -67,7 +65,7 @@ const StudyMaterials = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedRow.id };
+    const data = { id: selectedRow.uuid };
     const result = await deleteCourseStudyMaterial(data);
     if (result.success) {
       toast.success(result.message);
@@ -77,10 +75,6 @@ const StudyMaterials = () => {
     }
   };
 
-  const userStatusObj = {
-    1: 'success',
-    0: 'error'
-  };
 
   const handleStatusValue = (event, users) => {
     setStatusChangeDialogOpen(true);
@@ -89,8 +83,8 @@ const StudyMaterials = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
     const response = await updateCourseStudyMaterialStatus(data);
     if (response.success) {
@@ -113,196 +107,60 @@ const StudyMaterials = () => {
     setSelectedRow(params);
   };
 
-  const RowOptions = ({ row }) => {
-    return (
-      <OptionsMenu
-        menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-        options={[
-          {
-            text: 'View',
-            icon: <Icon icon="tabler:eye" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                setViewModalOpen(true);
-                handleRowClick(row);
-              }
-            }
-          },
-          {
-            text: 'Edit',
-            icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                toggleEditUserDrawer();
-                handleRowClick(row);
-              }
-            }
-          },
-          {
-            text: 'Delete',
-            icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                handleDelete();
-                handleRowClick(row);
-              }
-            }
-          }
-        ]}
-      />
-    );
-  };
 
-  const columns = [
-    {
-      // flex: 0.4,
-      minWidth: 150,
-      headerName: 'Id',
-      field: 'employee_id',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 1,
-      minWidth: 320,
-      field: 'title',
-      headerName: 'Title',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                sx={{
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.title}
-              </Typography>
-              <Typography
-                sx={{
-                  // textAlign: 'justify',
-                  color: 'text.secondary',
-                  fontSize: '0.75rem',
-                  mt: 1
-                }}
-              >
-                {row?.description}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-
-    {
-      // flex: 1.5,
-      minWidth: 220,
-      field: 'course',
-      headerName: 'course',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography
-              sx={{
-                color: 'text.secondary',
-                textTransform: 'capitalize'
-              }}
-            >
-              {row?.institute_branch_courses?.course_name}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-
-    {
-      // flex: 0.4,
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <div>
-            <TextField
-              size="small"
-              select
-              value={row?.is_active}
-              label="status"
-              id="custom-select"
-              sx={{
-                color: userStatusObj[row?.is_active]
-              }}
-              onChange={(e) => handleStatusValue(e, row)}
-              SelectProps={{
-                sx: {
-                  borderColor: row.is_active === '1' ? 'success' : 'error',
-                  color: userStatusObj[row?.is_active]
-                }
-              }}
-            >
-              <MenuItem value={1}>Active</MenuItem>
-              <MenuItem value={0}>Inactive</MenuItem>
-            </TextField>
-          </div>
-        );
-      }
-    },
-    {
-      // flex: 0.4,
-      minWidth: 180,
-      sortable: false,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions row={row} />
-    }
-  ];
-
+  
+  console.log(StudyMaterials,"studyMaterials")
   return (
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudyMaterialHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
+          <StudyMaterialHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} />
+        </Grid>      
+      </Grid>
+      <Grid item xs={12}>
+          <Grid item xs={12}>
             {StudyMaterialsLoading ? (
-              <ContentSkeleton />
+              <StudyMaterialSkelton />
             ) : (
-              <DataGrid
-                sx={{ p: 2 }}
-                autoHeight
-                getRowHeight={() => 'auto'}
-                rows={StudyMaterials?.data}
-                columns={columns}
-                disableRowSelectionOnClick
-                hideFooterPagination
-                hideFooter
-              />
+              <Grid container spacing={2} sx={{ marginLeft: "20px", marginTop: "20px"}} >
+              {
+                StudyMaterials?.data?.map((material,index) => (
+                  <Grid item xs={12} sm={6} md={4} key={material?.id}>
+                    <StudyMaterialCard
+                      index={index}
+                      page={page}
+                      name={material?.title}
+                      description={material?.description}
+                      courseName={material?.course?.course_name}
+                      initialStatus={material?.is_active}
+                      material={material}
+                      handleStatusValue={handleStatusValue}
+                      handleRowClick={handleRowClick}
+                      setViewModalOpen={setViewModalOpen}
+                      toggleEditUserDrawer={toggleEditUserDrawer}
+                      handleDelete={handleDelete}
+                    />
+                  </Grid>
+                ))
+              }
+              </Grid>
             )}
 
-            {StudyMaterials?.last_page !== 1 && (
+            {!StudyMaterialsLoading && StudyMaterials?.last_page !== 1 && (
               <CardContent>
                 <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
                   <Pagination
                     count={StudyMaterials?.last_page}
+                    page={page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllCourseStudyMaterials({ branch: selectedBranchId, page: page }));
+                      setPage(page)
                     }}
                   />
                 </Grid>
               </CardContent>
             )}
-          </Card>
         </Grid>
         <StudyMaterialAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <StudyMaterialEdit
@@ -315,7 +173,9 @@ const StudyMaterials = () => {
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
           setOpen={setStudyMaterialDeletemodalOpen}
-          description="Are you sure you want to delete this StudyMaterials?"
+          description=" You want to Delete this StudyMaterial ?"
+          failureDescription="Delete request has been cancelled "
+          successDescription="StudyMaterial Deleted successfully"
           title="Delete"
           handleSubmit={handleContentDelete}
         />

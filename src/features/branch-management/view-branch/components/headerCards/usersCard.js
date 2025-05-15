@@ -51,7 +51,6 @@
 
 // const UsersCard = ({ isLoading, branchData }) => {
 //   const theme = useTheme();
-//   console.log('dataCheck', branchData.InstituteUserCount);
 //   return (
 //     <>
 //       {isLoading ? (
