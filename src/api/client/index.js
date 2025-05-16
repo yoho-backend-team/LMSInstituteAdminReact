@@ -215,7 +215,8 @@ class Client {
   placements = {
     getAll : (data) => httpclinet.get(HTTP_END_POINTS.placements.getAll,data),
     create : (data) => httpclinet.post(HTTP_END_POINTS.placements.create,data),
-    update : (data) => httpclinet.update(HTTP_END_POINTS.placements.update + data?.uuid,data),
+    update : (params) => httpclinet.update(HTTP_END_POINTS.placements.update ,params),
+    getById : (params) => httpclinet.get(HTTP_END_POINTS.placements.getById,params)
   };
 }
 export default new Client();
