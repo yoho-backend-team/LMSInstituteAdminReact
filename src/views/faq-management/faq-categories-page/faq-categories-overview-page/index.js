@@ -87,18 +87,6 @@ const CategoriesDataGrid = () => {
     }
   };
 
-  // const handleDeleteApi = async () => {
-  //   const data = {
-  //     id: deletingItemId,
-  //   };
-  //   const response = await deleteFaqCategory(data);
-  //   if (response.success) {
-  //     // toast.success(response.message);
-  //     setRefetch((state) => !state);
-  //   } else {
-  //     toast.error(response.message);
-  //   }
-  // };
 
   const handleDelete = (itemId) => {
     setDeletingItemId(itemId);
@@ -113,9 +101,6 @@ const CategoriesDataGrid = () => {
       const response = await deleteFaqCategory(data);
       console.log('delete response data : ', response);
 
-      // if (faqs?.data?.length === 1 && currentPage > 1) {
-      //   setCurrentPage(currentPage - 1);
-      // }
       if (response.success) {
         setSuccessDescription('Item deleted successfully!');
         setFailureDescription('');
@@ -138,13 +123,16 @@ const CategoriesDataGrid = () => {
     {
       flex: 0.5,
       headerName: 'Id',
-      field: 'employee_id',
       sortable: false,
-      renderCell: ({ row }) => (
-        <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-          {row?.id}
-        </Typography>
-      )
+      field: 'serial',
+      renderCell: (params) => {
+        const index = params.api.getAllRowIds().indexOf(params.id);
+        return (
+          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary' }}>
+            {(currentPage - 1) * rowsPerPage + index + 1}
+          </Typography>
+        );
+      }
     },
     {
       flex: 2.2,
