@@ -23,22 +23,46 @@ const EditPlacementModal = ({ open, onClose, placementId, refetch }) => {
       }
     }
   };
-  const { control, handleSubmit, setValue, reset } = useForm();
+  const { control, handleSubmit, setValue, reset } = useForm({
+    defaultValues: {
+      companyName: '',
+      companyAddress: '',
+      contactEmail: '',
+      contactNumber: '',
+      students: [],
+      jobName: '',
+      jobDescription: '',
+      jobSkills: '',
+      interviewDate: '',
+      venue: '',
+      scheduleAddress: '',
+      courseName: '',
+      education: ''
+    }
+  });
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [activeStudents, setActiveStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const fetchPlacement = async () => {
+    console.log('Calling fetchPlacement for:', placementId);
     try {
-      const { data } = await client.placements.update(placementId);
+      console.log('Fetching placement:', placementId);
+      const { data } = await client.placements.getById({ placementId });
+      console.log('Api data:', data);
+      console.log('student data:', data.student);
+
       if (data) {
+        const studentIds = data.student.map((s) => s._id);
+        console.log('selected students:', studentIds);
+        const studentObjects = data.student;
         reset({
           companyName: data.company.name,
           companyAddress: data.company.address,
           contactEmail: data.company.email,
           contactNumber: data.company.phone,
-          students: data.student.map((s) => s._id),
+          students: studentIds,
           jobName: data.job.name,
           jobDescription: data.job.description,
           jobSkills: data.job.skils.join(', '),
@@ -48,13 +72,17 @@ const EditPlacementModal = ({ open, onClose, placementId, refetch }) => {
           courseName: data.eligible.courseName,
           education: data.eligible.education.join(', ')
         });
+        setSelectedStudentIds(studentIds);
+        setSelectedStudents(data.student);
       }
     } catch (err) {
-    //   toast.error('Failed to load placement data');
+      toast.error('Failed to load placement data');
+      console.error('API fetch error:', err);
     }
   };
 
   useEffect(() => {
+    console.log('EditPlacementModal mounted with placementId:', placementId);
     if (placementId) fetchPlacement();
   }, [placementId]);
 
@@ -71,39 +99,23 @@ const EditPlacementModal = ({ open, onClose, placementId, refetch }) => {
   }, [selectedBranchId]);
 
   const handleStudentsChange = (event) => {
-    setValue('students', event.target.value);
-    const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student._id));
-    setSelectedStudentIds(event.target.value);
+    const selectedIds = event.target.value;
+    const filteredStudents = activeStudents.filter((student) => selectedIds.includes(student._id));
+    setSelectedStudentIds(selectedIds);
     setSelectedStudents(filteredStudents);
+    setValue('students', event.target.value);
   };
 
   const onSubmit = async (data) => {
     try {
       const payload = {
-        company: {
-          name: data.companyName,
-          address: data.companyAddress,
-          email: data.contactEmail,
-          phone: data.contactNumber
-        },
+        
         student: data.students,
-        job: {
-          name: data.jobName,
-          description: data.jobDescription,
-          skils: data.jobSkills.split(',').map((s) => s.trim())
-        },
-        schedule: {
-          interviewDate: data.interviewDate,
-          venue: data.venue,
-          address: data.scheduleAddress
-        },
-        eligible: {
-          courseName: data.courseName,
-          education: data.education.split(',').map((e) => e.trim())
-        }
+        
       };
+      console.log('students:', data.students);
 
-      await client.placements.update(placementId, payload); // Ensure this API exists
+      const result = await client.placements.update({placementId, payload});
       toast.success('Placement updated successfully!');
       onClose();
       refetch();
@@ -118,270 +130,283 @@ const EditPlacementModal = ({ open, onClose, placementId, refetch }) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Container
+      <Box
         sx={{
-          border: '1px solid',
-          borderColor: 'grey.200',
-          borderRadius: '8px',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          backgroundColor: 'grey.100',
-          padding: '20px'
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '90%',
+          maxWidth: 1000,
+          maxHeight: '90vh',
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 24,
+          overflow: 'hidden'
         }}
       >
-        <Typography variant="h2" fontWeight={600} color="primary" gutterBottom>
-          Edit Placement Details
-        </Typography>
+        <Box
+          sx={{
+            padding: 3,
+            overflowY: 'auto',
+            maxHeight: '90vh'
+          }}
+        >
+          <Typography variant="h2" fontWeight={600} color="primary" gutterBottom>
+            Edit Placement
+          </Typography>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={3}>
-            {/* Company Details */}
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Grid item xs={12}>
-                  <Typography variant="h3" sx={{ color: 'grey.500' }}>
-                    Company Details
-                  </Typography>
-                </Grid>
-              </Box>
-              <Box sx={boxStyle}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="companyName"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Company Name" required value={placementId.companyName}/>}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="companyAddress"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Company Address" required />}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="contactEmail"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Contact Email" required />}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="contactNumber"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Contact Number" required />}
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-            </Grid>
-
-            {/* Dotted Divider */}
-            <Grid item xs={12}>
-              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
-            </Grid>
-
-            {/* Job Details */}
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Grid item xs={12}>
-                  <Typography variant="h3" sx={{ color: 'grey.500' }}>
-                    Job Details
-                  </Typography>
-                </Grid>
-              </Box>
-              <Box sx={boxStyle}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="jobName"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Job Name" required />}
-                    />{' '}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="jobDescription"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Job Description" required />}
-                    />
-                  </Grid>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              {/* Company Details */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
                   <Grid item xs={12}>
-                    <Controller
-                      name="jobSkills"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Skills (comma-separated)" required />}
-                    />
+                    <Typography variant="h3" sx={{ color: 'grey.500' }}>
+                      Company Details
+                    </Typography>
                   </Grid>
-                </Grid>
-              </Box>
-            </Grid>
+                </Box>
+                <Box sx={boxStyle}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="companyName"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Company Name" disabled />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="companyAddress"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Company Address" disabled />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="contactEmail"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Contact Email" disabled />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="contactNumber"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Contact Number" disabled />}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
 
-            {/* Dotted Divider */}
-            <Grid item xs={12}>
-              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
-            </Grid>
+              {/* Dotted Divider */}
+              <Grid item xs={12}>
+                <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
+              </Grid>
 
-            {/* Students */}
-
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h3" sx={{ color: 'grey.500' }}>
-                  Students Details
-                </Typography>
-              </Box>
-
-              <Box sx={boxStyle}>
-                <Grid container spacing={3}>
+              {/* Job Details */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
                   <Grid item xs={12}>
-                    <Controller
-                      name="students"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          select
-                          fullWidth
-                          label="Students *"
-                          id="select-multiple-chip"
-                          SelectProps={{
-                            MenuProps,
-                            multiple: true,
-                            value: selectedStudentIds,
-                            onChange: (e) => handleStudentsChange(e),
-                            renderValue: () => (
-                              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                {selectedStudents.map((student) => (
-                                  <CustomChip
-                                    key={student?._id}
-                                    label={`${student?.full_name}`}
-                                    sx={{ m: 0.75 }}
-                                    skin="light"
-                                    color="primary"
-                                  />
-                                ))}
-                              </Box>
-                            )
-                          }}
-                          //   error={Boolean(errors.students)}
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              borderRadius: '8px',
-                              // backgroundColor: 'white',
-                              boxShadow: 'none',
-                              height: '44px'
-                            },
-                            '& .MuiInputLabel-root': {
-                              top: '-4px'
-                            },
-                            '& .MuiInputBase-root.Mui-disabled': {
-                              backgroundColor: '#f0f0f0'
-                            }
-                          }}
-                        >
-                          {activeStudents.map((student, index) => (
-                            <MenuItem key={index} value={student?._id}>
-                              {student?.full_name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
+                    <Typography variant="h3" sx={{ color: 'grey.500' }}>
+                      Job Details
+                    </Typography>
                   </Grid>
-                </Grid>
-              </Box>
-            </Grid>
+                </Box>
+                <Box sx={boxStyle}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="jobName"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Job Name" disabled />}
+                      />{' '}
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="jobDescription"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Job Description" disabled />}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="jobSkills"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Skills (comma-separated)" disabled />}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
 
-            {/* Dotted Divider */}
-            <Grid item xs={12}>
-              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
-            </Grid>
+              {/* Dotted Divider */}
+              <Grid item xs={12}>
+                <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
+              </Grid>
 
-            {/* Schedule Details */}
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Grid item xs={12}>
+              {/* Students */}
+
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
                   <Typography variant="h3" sx={{ color: 'grey.500' }}>
-                    Interview Details
+                    Students Details
                   </Typography>
-                </Grid>
-              </Box>
-              <Box sx={boxStyle}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="interviewDate"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField {...field} fullWidth label="Interview Date" type="date" InputLabelProps={{ shrink: true }} required />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="venue"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Venue" required />}
-                    />{' '}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="scheduleAddress"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Address" required />}
-                    />{' '}
-                  </Grid>
-                </Grid>
-              </Box>
-            </Grid>
+                </Box>
 
-            {/* Dotted Divider */}
-            <Grid item xs={12}>
-              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
-            </Grid>
-
-            {/* Eligibility Criteria */}
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Grid item xs={12}>
-                  <Typography variant="h3" sx={{ color: 'grey.500' }}>
-                    Eligibility Criteria
-                  </Typography>
-                </Grid>
-              </Box>
-              <Box sx={boxStyle}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="courseName"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Course Name" required />}
-                    />{' '}
+                <Box sx={boxStyle}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="students"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            select
+                            fullWidth
+                            label="Students *"
+                            id="select-multiple-chip"
+                            SelectProps={{
+                              MenuProps,
+                              multiple: true,
+                              value: selectedStudentIds,
+                              onChange: (e) => handleStudentsChange(e),
+                              renderValue: () => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                  {selectedStudents.map((student) => (
+                                    <CustomChip
+                                      key={student?._id}
+                                      label={`${student?.full_name}`}
+                                      sx={{ m: 0.75 }}
+                                      skin="light"
+                                      color="primary"
+                                    />
+                                  ))}
+                                </Box>
+                              )
+                            }}
+                            //   error={Boolean(errors.students)}
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: '8px',
+                                // backgroundColor: 'white',
+                                boxShadow: 'none',
+                                height: '44px'
+                              },
+                              '& .MuiInputLabel-root': {
+                                top: '-4px'
+                              },
+                              '& .MuiInputBase-root.Mui-disabledd': {
+                                backgroundColor: '#f0f0f0'
+                              }
+                            }}
+                          >
+                            {activeStudents.map((student, index) => (
+                              <MenuItem key={index} value={student?._id}>
+                                {student?.full_name}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        )}
+                      />
+                    </Grid>
                   </Grid>
+                </Box>
+              </Grid>
+
+              {/* Dotted Divider */}
+              <Grid item xs={12}>
+                <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
+              </Grid>
+
+              {/* Schedule Details */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
                   <Grid item xs={12}>
-                    <Controller
-                      name="education"
-                      control={control}
-                      render={({ field }) => <TextField {...field} fullWidth label="Education (comma-separated)" required />}
-                    />
+                    <Typography variant="h3" sx={{ color: 'grey.500' }}>
+                      Interview Details
+                    </Typography>
                   </Grid>
-                </Grid>
-              </Box>
-            </Grid>
+                </Box>
+                <Box sx={boxStyle}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="interviewDate"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField {...field} fullWidth label="Interview Date" type="date" InputLabelProps={{ shrink: true }} disabled />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="venue"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Venue" disabled />}
+                      />{' '}
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="scheduleAddress"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Address" disabled />}
+                      />{' '}
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
 
-            {/* Submit & Cancel Buttons */}
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 4 }}>
-              <Button variant="outlined" color="secondary" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="contained" color="primary">
-                Submit
-              </Button>
+              {/* Dotted Divider */}
+              <Grid item xs={12}>
+                <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 2 }} />
+              </Grid>
+
+              {/* Eligibility Criteria */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
+                  <Grid item xs={12}>
+                    <Typography variant="h3" sx={{ color: 'grey.500' }}>
+                      Eligibility Criteria
+                    </Typography>
+                  </Grid>
+                </Box>
+                <Box sx={boxStyle}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="courseName"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Course Name" disabled />}
+                      />{' '}
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="education"
+                        control={control}
+                        render={({ field }) => <TextField {...field} fullWidth label="Education (comma-separated)" disabled />}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+
+              {/* Submit & Cancel Buttons */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 4 }}>
+                <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button type="submit" variant="contained" color="primary">
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Container>
+          </form>
+        </Box>
+      </Box>
     </Modal>
   );
 };

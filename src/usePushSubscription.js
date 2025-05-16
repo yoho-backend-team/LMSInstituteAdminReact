@@ -5,7 +5,7 @@ import secureLocalStorage from 'react-secure-storage';
 const usePushSubscription = (role,userId,user,institute,branch) => {
 
   let subscription;
-  const LastRunDate = new Date().toISOString()
+  // const LastRunDate = new Date().toISOString()
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker.ready
         .then(async (registration) => {
@@ -19,7 +19,7 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
                     applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY) // VAPID public key
                 });
             }
-            secureLocalStorage.setItem('LastRunDate',LastRunDate)
+            // localStorage.setItem('LastRunDate',LastRunDate)
         })
         .then((sub) => {
            const subs = sub || subscription
