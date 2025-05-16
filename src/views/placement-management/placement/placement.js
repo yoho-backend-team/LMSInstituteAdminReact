@@ -18,6 +18,7 @@ const Placement = () => {
   const instituteId = useInstitute().getDetails();
 
   const [openEditModal, setOpenEditModal] = useState(false);
+  console.log('selectedplacement :',selectedPlacement);
 
   const handleEdit = () => {
     setOpenEditModal(true);
@@ -27,7 +28,7 @@ const Placement = () => {
     const getAllPlacements = async () => {
       try {
         const res = await client.placements.getAll({ institute_id: instituteId._id });
-        console.log('placements', placements);
+        console.log('placements', res);
         setPlacements(res.data);
       } catch (err) {
         console.error('Failed to fetch placements', err);
@@ -126,11 +127,11 @@ const Placement = () => {
 
       {/* Edit Placement Modal */}
       {openEditModal && (
-        <EditPlacementModal 
+        <EditPlacementModal
           open={openEditModal}
           onClose={() => setOpenEditModal(false)}
           placementId={selectedPlacement}
-          refetch={() => setRefetch(prev => !prev)}
+          refetch={() => setRefetch((prev) => !prev)}
         />
       )}
     </>
