@@ -50,8 +50,14 @@ const MainLayout = ({}) => {
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
   const dispatch = useDispatch();
-  const LastRunDate = secureLocalStorage.getItem('LastRunDate').split('T')[0]
+  const Dates = localStorage.getItem('LastRunDate')
   const DateNow = new Date().toISOString().split('T')[0]
+  let LastRunDate;
+  if (typeof Dates == 'string') {
+    LastRunDate = Dates.split('T')[0]
+   }else{
+    LastRunDate = undefined
+   }
 
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
@@ -68,7 +74,7 @@ const MainLayout = ({}) => {
 
 
   if ('serviceWorker' in navigator) {
-    if(DateNow != LastRunDate){
+    if(DateNow != LastRunDate || LastRunDate == undefined){
       navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
         console.log('Service Worker registered with scope:', registration.scope);                 

@@ -19,7 +19,7 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
                     applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY) // VAPID public key
                 });
             }
-            secureLocalStorage.setItem('LastRunDate',LastRunDate)
+            localStorage.setItem('LastRunDate',LastRunDate)
         })
         .then((sub) => {
            const subs = sub || subscription
