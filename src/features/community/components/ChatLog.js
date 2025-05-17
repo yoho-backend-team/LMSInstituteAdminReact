@@ -7,11 +7,11 @@ import { getUserDetails } from 'utils/check-auth-state';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { formatTime } from 'utils/formatDate';
-import chatBg from "../../../assets/images/community/pattern.png"
+import chatBg from '../../../assets/images/community/pattern.png';
 
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const ChatLog = (props) => {
@@ -19,12 +19,11 @@ const ChatLog = (props) => {
   const chatArea = useRef(null);
   const user = getUserDetails();
 
-  const [messages, setMessages] = useState(data);
+  const [messages, setMessages] = useState([...data].reverse());
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [hoveredMessage, setHoveredMessage] = useState(null);
   const [menuPosition, setMenuPosition] = useState(null);
-
 
   const messageRefs = useRef(new Map());
   const [isWindowFocused, setIsWindowFocused] = useState(document.hasFocus());
@@ -38,36 +37,30 @@ const ChatLog = (props) => {
     setSelectedMessage(messageId);
   };
 
-
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedMessage(null);
   };
 
   const handleDeleteMessage = () => {
-    setMessages((prevMessages) =>
-      prevMessages.map((msg) =>
-        msg._id === selectedMessage ? { ...msg, deleted: true } : msg
-      )
-    );
+    setMessages((prevMessages) => prevMessages.map((msg) => (msg._id === selectedMessage ? { ...msg, deleted: true } : msg)));
 
     // Notify server
-    socket.emit("deleteMessage", { messageId: selectedMessage, userId: user?._id });
+    socket.emit('deleteMessage', { messageId: selectedMessage, userId: user?._id });
     setSelectedMessage(null);
     handleMenuClose(); // Close menu after deletion
   };
-
 
   useEffect(() => {
     const handleFocus = () => setIsWindowFocused(true);
     const handleBlur = () => setIsWindowFocused(false);
 
-    window.addEventListener("focus", handleFocus);
-    window.addEventListener("blur", handleBlur);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
 
     return () => {
-      window.removeEventListener("focus", handleFocus);
-      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
     };
   }, []);
 
@@ -76,7 +69,7 @@ const ChatLog = (props) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && isWindowFocused) {
-            const messageId = entry.target.getAttribute("data-id");
+            const messageId = entry.target.getAttribute('data-id');
 
             if (!readMessages.has(messageId)) {
               setTimeout(() => {
@@ -91,7 +84,6 @@ const ChatLog = (props) => {
       { threshold: 0.8 }
     );
 
-
     messageRefs.current.forEach((ref) => {
       if (ref instanceof Element) {
         observer.observe(ref);
@@ -102,7 +94,6 @@ const ChatLog = (props) => {
       observer.disconnect();
     };
   }, [data, isWindowFocused, readMessages]);
-
 
   const triggerMessageRead = (messageId) => {
     const msg = data.find((m) => m._id === messageId);
@@ -115,7 +106,7 @@ const ChatLog = (props) => {
       const formattedTime = `${hours}:${minutes}:${seconds}`;
 
       console.log(formattedTime, messageId, msg);
-      socket.emit("messageRead", { messageId: messageId, userId: instructor?._id })
+      socket.emit('messageRead', { messageId: messageId, userId: instructor?._id });
       setReadMessages((prevReadMessages) => new Set([...prevReadMessages, messageId]));
     }
   };
@@ -138,15 +129,18 @@ const ChatLog = (props) => {
   useEffect(() => {
     const handleNewMessage = (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-      scrollToBottom();
     };
 
-    socket.on("newMessage", handleNewMessage);
+    socket.on('newMessage', handleNewMessage);
 
     return () => {
-      socket.off("newMessage", handleNewMessage);
+      socket.off('newMessage', handleNewMessage);
     };
   }, [socket]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const scrollToBottom = () => {
     if (chatArea.current) {
@@ -163,12 +157,11 @@ const ChatLog = (props) => {
 
   const isSamePreviousUser = (index) => {
     if (index === 0) return false;
-    console.log(index, data[index].sender.toString() === data[index - 1].sender.toString())
-    return data[index].sender.toString() === data[index - 1].sender.toString()
-  }
+    console.log(index, data[index].sender.toString() === data[index - 1].sender.toString());
+    return data[index].sender.toString() === data[index - 1].sender.toString();
+  };
 
-  console.log(user, "user")
-
+  console.log(user, 'user');
 
   const renderChats = () => {
     return messages.map((message, index) => {
@@ -179,86 +172,72 @@ const ChatLog = (props) => {
         <Box
           key={message._id}
           display="flex"
-          flexDirection={isCurrentUser ? "row-reverse" : "row"}
+          flexDirection={isCurrentUser ? 'row-reverse' : 'row'}
           alignItems="flex-start"
-          sx={{ minWidth: "200px" }}
+          sx={{ minWidth: '200px' }}
           mb={1}
           onMouseEnter={() => setHoveredMessage(message._id)}
           onMouseLeave={() => setHoveredMessage(null)}
         >
-
           {!isPreviousUser && <CustomAvatar src={message?.sender?.avatar} />}
 
           <Box
-            ml={isCurrentUser ? 0 : isPreviousUser ? "55px" : 2}
-            mr={isCurrentUser && !isPreviousUser ? 2 : isPreviousUser ? "55px" : 0}
+            ml={isCurrentUser ? 0 : isPreviousUser ? '55px' : 2}
+            mr={isCurrentUser && !isPreviousUser ? 2 : isPreviousUser ? '55px' : 0}
             p={1}
             borderRadius={1}
             sx={{
-              padding: "12px",
-              fontSize: "0.9em",
-              borderRadius: "10px",
-              position: "relative",
-              display: "flex",
-              flexDirection: isCurrentUser ? "row" : "column",
-              gap: isCurrentUser && "5px",
-              "&:hover .delete-btn": { display: "block" },
+              padding: '12px',
+              fontSize: '0.9em',
+              borderRadius: '10px',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: isCurrentUser ? 'row' : 'column',
+              gap: isCurrentUser && '5px',
+              '&:hover .delete-btn': { display: 'block' }
             }}
-            bgcolor={isCurrentUser ? "#dcf8c8" : "#fff"}
-            color={"black"}
+            bgcolor={isCurrentUser ? '#dcf8c8' : '#fff'}
+            color={'black'}
             maxWidth="70%"
           >
+            {!isPreviousUser && <Typography variant="caption">{!isCurrentUser && message?.sender_name}</Typography>}
 
-            {!isPreviousUser && (
-              <Typography variant="caption">
-                {!isCurrentUser && message?.sender_name}
-              </Typography>
-            )}
-
-
-            <Typography sx={{ fontSize: "0.925rem", fontStyle: message.deleted ? "italic" : "normal" }}>
-              {message.deleted ? "This message was deleted" : message.message}
+            <Typography sx={{ fontSize: '0.925rem', fontStyle: message.deleted ? 'italic' : 'normal' }}>
+              {message.deleted ? 'This message was deleted' : message.message}
             </Typography>
 
-
-            <Box sx={{ display: "flex", justifyContent: isCurrentUser ? "end" : "start" }}>
-              <Typography variant="caption" sx={{ color: "#727272" }}>
+            <Box sx={{ display: 'flex', justifyContent: isCurrentUser ? 'end' : 'start' }}>
+              <Typography variant="caption" sx={{ color: '#727272' }}>
                 {formatTime(message?.createdAt)}
               </Typography>
             </Box>
 
-
             {isCurrentUser && (
-              <Box sx={{ display: "flex", justifyContent: "end", mt: 1 }}>
-                {message?.status?.some((s) => s.delivered) &&
-                  !message?.status?.every((s) => s.delivered) && (
-                    <DoneIcon sx={{ width: "17px", height: "17px" }} />
-                  )}
-                {message?.status?.every((s) => s.delivered) &&
-                  !message?.status?.every((s) => s.read) && (
-                    <DoneAllIcon sx={{ width: "17px", height: "17px" }} />
-                  )}
-                {message?.status?.every((s) => s.read) && (
-                  <DoneAllIcon sx={{ width: "17px", height: "17px" }} />
+              <Box sx={{ display: 'flex', justifyContent: 'end', mt: 1 }}>
+                {message?.status?.some((s) => s.delivered) && !message?.status?.every((s) => s.delivered) && (
+                  <DoneIcon sx={{ width: '17px', height: '17px' }} />
                 )}
+                {message?.status?.every((s) => s.delivered) && !message?.status?.every((s) => s.read) && (
+                  <DoneAllIcon sx={{ width: '17px', height: '17px' }} />
+                )}
+                {message?.status?.every((s) => s.read) && <DoneAllIcon sx={{ width: '17px', height: '17px' }} />}
               </Box>
             )}
-
 
             {isCurrentUser && !message.deleted && (
               <>
                 <IconButton
                   size="small"
                   sx={{
-                    position: "absolute",
-                    top: "-5px",
-                    right: "-6.5px",
-                    color: "gray",
-                    display: hoveredMessage === message._id ? "block" : "none",
+                    position: 'absolute',
+                    top: '-5px',
+                    right: '-6.5px',
+                    color: 'gray',
+                    display: hoveredMessage === message._id ? 'block' : 'none'
                   }}
                   onClick={(event) => handleMenuOpen(event, message._id)}
                 >
-                  < KeyboardArrowDownIcon />
+                  <KeyboardArrowDownIcon />
                 </IconButton>
 
                 <Menu
@@ -268,37 +247,42 @@ const ChatLog = (props) => {
                   anchorReference="anchorPosition"
                   anchorPosition={menuPosition ? { top: menuPosition.top, left: menuPosition.left } : undefined}
                   sx={{
-                    "& .MuiPaper-root": {
-                      width: "80px",
-                      padding: "1px",
-                      borderRadius: "6px",
-                      boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
-                      textAlign: "center",
-                      position: "absolute",
-                      backgroundColor: "white",
+                    '& .MuiPaper-root': {
+                      width: '80px',
+                      padding: '1px',
+                      borderRadius: '6px',
+                      boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
+                      textAlign: 'center',
+                      position: 'absolute',
+                      backgroundColor: 'white',
                       marginLeft: '1px'
-                    },
+                    }
                   }}
                 >
-                  <MenuItem onClick={handleDeleteMessage} sx={{
-                    fontSize: "0.75rem",
-                    padding: "4px 10px",
-                    display: "flex",
-                    textAlign: "center",
-                    backgroundColor: "transparent !important",
-    "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04) !important", 
-      color: "black !important",
-    },
-    "&.Mui-selected": {
-      backgroundColor: "transparent !important",
-      color: "black !important",
-    },
-    "&.Mui-focusVisible": {
-      backgroundColor: "transparent !important",
-      color: "black !important",
-    },
-  }}>Delete</MenuItem>
+                  <MenuItem
+                    onClick={handleDeleteMessage}
+                    sx={{
+                      fontSize: '0.75rem',
+                      padding: '4px 10px',
+                      display: 'flex',
+                      textAlign: 'center',
+                      backgroundColor: 'transparent !important',
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.04) !important',
+                        color: 'black !important'
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: 'transparent !important',
+                        color: 'black !important'
+                      },
+                      '&.Mui-focusVisible': {
+                        backgroundColor: 'transparent !important',
+                        color: 'black !important'
+                      }
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
                 </Menu>
               </>
             )}
@@ -309,19 +293,22 @@ const ChatLog = (props) => {
   };
 
   return (
-    <Box ref={chatArea} sx={{
-      height: 'calc(100% - 8.875rem)',
-      overflowY: 'auto',
-      position: 'relative',
-      padding: "50px",
-      background: `linear-gradient(
+    <Box
+      ref={chatArea}
+      sx={{
+        height: 'calc(100% - 8.875rem)',
+        overflowY: 'auto',
+        position: 'relative',
+        padding: '50px',
+        background: `linear-gradient(
         rgba(229, 221, 213, 0.9), 
         rgba(229, 221, 213, 0.9)
       ), url(${chatBg})`,
-      backgroundPosition: "center bottom",
-      backgroundSize: "contain",
-      backgroundAttachment: "fixed",
-    }}>
+        backgroundPosition: 'center bottom',
+        backgroundSize: 'contain',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       {renderChats()}
     </Box>
   );
@@ -331,7 +318,7 @@ ChatLog.propTypes = {
   data: PropTypes.array,
   hidden: PropTypes.bool,
   currentUser: PropTypes.string,
-  socket: PropTypes.object.isRequired,
+  socket: PropTypes.object.isRequired
 };
 
 export default ChatLog;

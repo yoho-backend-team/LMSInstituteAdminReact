@@ -17,6 +17,7 @@ const AllActivity = () => {
   const [hasMore, setHasMore] = useState(true);
   const containerRef = useRef(null)
   const observerRef = useRef(null)
+  console.log("logs data", Logs);
 
   const getAllUserActivity = useCallback(async (page) => {
     const data = { page : page}

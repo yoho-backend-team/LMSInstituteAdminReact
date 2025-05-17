@@ -48,104 +48,115 @@ const CardPopularCourse = ({ courses }) => {
   const handleSortChange = (event) => {
     const selectedSortOption = event.target.value;
   };
-  
+
   const limitedData = data.slice(0, 3);
 
   return (
     <Box>
       {/* Header Section */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' ,mt:0.5}}>
-      <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left',mt:2 }}>
-        Popular Courses
-      </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography sx={{ mr: 1, fontSize: 13,fontWeight: 500  }}>Sort By:</Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 0.5 }}>
+        <Typography variant="h5" sx={{ mb: 1, fontWeight: 600, textAlign: 'left', mt: 2 }}>
+          Popular Courses
+        </Typography>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Typography sx={{ mr: 1, fontSize: 13, fontWeight: 500 }}>Sort By:</Typography>
           <Select
-            label="Sort By"
-            variant="outlined"
             defaultValue="best_seller"
             onChange={handleSortChange}
+            displayEmpty
             sx={{
               fontSize: 12,
               fontWeight: 'bold',
               width: 150,
-              
-              
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
-              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
-              '& .MuiSelect-icon': { color: 'primary.main' }
+              height: 40,
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent'
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent'
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'black'
+              },
+              '& .MuiSelect-icon': {
+                color: 'primary.main'
+              },
             }}
           >
-            <MenuItem value="price_low_to_high">Price - Low to High</MenuItem>
-            <MenuItem value="price_high_to_low">Price - High to Low</MenuItem>
-            <MenuItem value="best_seller">Trending</MenuItem>
+            <MenuItem value="price_low_to_high" sx={{ fontSize: 12, borderBottom: '1px solid #e0e0e0' }}>
+              Price - Low to High
+            </MenuItem>
+            <MenuItem value="price_high_to_low" sx={{ fontSize: 12, borderBottom: '1px solid #e0e0e0' }}>
+              Price - High to Low
+            </MenuItem>
+            <MenuItem value="best_seller" sx={{ fontSize: 12 }}>
+              Trending
+            </MenuItem>
           </Select>
         </Box>
       </Box>
 
       {/* Cards Section */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 2 ,mt:4.5 }}>
-  {courses?.map((item, index) => (
-    <Card
-      key={item.course_name}
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        borderRadius: '16px',
-        padding: "18px",
-        overflow: 'hidden',
-        backgroundColor: '#f0f9ff', // Light blue background color
-        '&:hover': {
-          boxShadow: '0 6px 18px rgba(0, 0, 0, 0.15)',
-          backgroundColor: '#d1e8ff', // Slightly darker blue on hover
-        },
-        height: '100%',
-        marginTop: "5px",
-        transition: '0.3s ease',
-      }}
-    >
-      {/* Course Image */}
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <img
-          width={60}
-          height={60}
-          src={getImageUrl(item?.image)}
-          alt={item.course_name}
-          style={{ borderRadius: '50%', marginRight: 16 }}
-        />
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 2, mt: 4.5 }}>
+        {courses?.map((item, index) => (
+          <Card
+            key={item.course_name}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              borderRadius: '16px',
+              padding: '18px',
+              overflow: 'hidden',
+              backgroundColor: '#f0f9ff', // Light blue background color
+              '&:hover': {
+                boxShadow: '0 6px 18px rgba(0, 0, 0, 0.15)',
+                backgroundColor: '#d1e8ff' // Slightly darker blue on hover
+              },
+              height: '100%',
+              marginTop: '5px',
+              transition: '0.3s ease'
+            }}
+          >
+            {/* Course Image */}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <img
+                width={60}
+                height={60}
+                src={getImageUrl(item?.image)}
+                alt={item.course_name}
+                style={{ borderRadius: '50%', marginRight: 16 }}
+              />
+            </Box>
+
+            {/* Course Info */}
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="body2" sx={{ color: '#4B5563', fontWeight: 'bold', fontSize: 14 }}>
+                {item.course_name}
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 500,
+                  marginTop: 1,
+                  lineHeight: '1.4',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxHeight: '3em',
+                  color: '#1F2937' // Darker text for better contrast
+                }}
+              >
+                {item.description}
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: 12, color: '#6B7280', marginTop: 1 }}>
+                {item?.coursemodules?.length || 0} Modules
+              </Typography>
+            </Box>
+          </Card>
+        ))}
       </Box>
-
-      {/* Course Info */}
-      <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="body2" sx={{ color: '#4B5563', fontWeight: 'bold', fontSize: 14 }}>
-          {item.course_name}
-        </Typography>
-        <Typography
-          variant="h6"
-          sx={{
-            fontSize: 15,
-            fontWeight: 500,
-            marginTop: 1,
-            lineHeight: '1.4',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            maxHeight: '3em',
-            color: '#1F2937', // Darker text for better contrast
-          }}
-        >
-          {item.description}
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: 12, color: '#6B7280', marginTop: 1 }}>
-          {item?.coursemodules?.length || 0} Modules
-        </Typography>
-      </Box>
-    </Card>
-  ))}
-</Box>
-
-
-
     </Box>
   );
 };

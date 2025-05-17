@@ -22,7 +22,7 @@ const FlipChart = ({ revenue, expense }) => {
             sx={{
             
               "& .MuiTab-root": {
-                fontSize: "1.1rem", // Increase tab font size
+                fontSize: "0.95rem", // Increase tab font size
                 fontWeight: "bold",
                 textTransform: "none",
               },
