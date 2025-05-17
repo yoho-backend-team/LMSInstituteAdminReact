@@ -216,7 +216,8 @@ const generateEndpoints = () => {
             create : `/api/placements/create`,
             getAll : `/api/placements/all`,
             update : `/api/placements/update`,
-            getById : `/api/placements/fetch`
+            getById : `/api/placements/fetch`,
+            delete : `/api/placements/delete/`
         }
     };
 };

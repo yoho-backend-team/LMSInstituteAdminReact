@@ -8,8 +8,11 @@ import { getImageUrl } from 'utils/imageUtils';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import OptionsMenu from 'components/option-menu';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import EditPlacementModal from 'features/placement/edit-placement';
+import DeleteDialog from 'components/modal/DeleteModel';
+import toast from 'react-hot-toast';
+
 const Placement = () => {
   const [refetch, setRefetch] = useState(false);
   const [placements, setPlacements] = useState([]);
@@ -17,8 +20,11 @@ const Placement = () => {
   const [loading, setLoading] = useState(true);
   const instituteId = useInstitute().getDetails();
 
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState(null);
+  const [successDescription, setSuccessDescription] = useState('');
+  const [failureDescription, setFailureDescription] = useState('');
   const [openEditModal, setOpenEditModal] = useState(false);
-  console.log('selectedplacement :',selectedPlacement);
 
   const handleEdit = () => {
     setOpenEditModal(true);
@@ -39,6 +45,34 @@ const Placement = () => {
 
     getAllPlacements();
   }, [refetch]);
+  console.log('delting id:',deletingItemId);
+
+  const handleDelete = (itemId) => {
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteApi = async (id) => {
+
+    try {
+      console.log('Delete response data:',id);
+      const response = await client.placements.delete(id);
+      console.log('Delete response data:', response);
+
+      if (response.success) {
+        setSuccessDescription('Item deleted successfully!');
+        setFailureDescription('');
+        setRefetch((state) => !state);
+      } else {
+        setFailureDescription('Failed to delete the item. Please try again.');
+        setSuccessDescription('');
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setFailureDescription('An error occurred while deleting the item.');
+      setSuccessDescription('');
+    }
+  };
 
   return (
     <>
@@ -63,8 +97,8 @@ const Placement = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {placements.map((placement, index) => (
-                    <TableRow key={index}>
+                  {placements.map((placement) => (
+                    <TableRow key={placement._id}>
                       <TableCell>
                         <div>
                           <div style={{ fontWeight: 'bold' }}>{placement.company.name}</div>
@@ -108,7 +142,10 @@ const Placement = () => {
                                   text: 'Delete',
                                   icon: <Icon icon="mdi:delete-outline" />,
                                   menuItemProps: {
-                                    onClick: () => handleDelete(placement?._id)
+                                    onClick: () => {
+                                    setDeletingItemId(placement?._id);
+                                    setDeleteDialogOpen(true);
+                                  }
                                   }
                                 }
                               ]}
@@ -134,6 +171,18 @@ const Placement = () => {
           refetch={() => setRefetch((prev) => !prev)}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+        handleSubmit={() => handleDeleteApi(deletingItemId)}
+        successDescription={successDescription}
+        failureDescription={failureDescription}
+        setRefetch={setRefetch}
+      />
     </>
   );
 };

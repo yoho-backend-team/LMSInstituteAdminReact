@@ -298,6 +298,7 @@ const CategoriesDataGrid = () => {
           handleSubmit={handleDeleteApi}
           successDescription={successDescription}
           failureDescription={failureDescription}
+          setRefetch={setRefetch}
         />
         <StatusDialog
           open={statusOpen}

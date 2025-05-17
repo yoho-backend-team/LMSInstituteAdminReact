@@ -156,6 +156,11 @@ const EditPlacementModal = ({ open, onClose, placementId, refetch }) => {
             Edit Placement
           </Typography>
 
+           {/* Dotted Divider */}
+              <Grid item xs={12}>
+                <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.300', width: '100%', my: 3 }} />
+              </Grid>
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={3}>
               {/* Company Details */}

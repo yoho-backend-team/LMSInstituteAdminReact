@@ -368,6 +368,7 @@ const FaqDataGrid = () => {
           handleSubmit={handleDeleteApi}
           successDescription={successDescription}
           failureDescription={failureDescription}
+          setRefetch={setRefetch}
         />
 
         <StatusDialog

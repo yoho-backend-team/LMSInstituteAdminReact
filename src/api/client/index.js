@@ -216,6 +216,7 @@ class Client {
     getAll : (data) => httpclinet.get(HTTP_END_POINTS.placements.getAll,data),
     create : (data) => httpclinet.post(HTTP_END_POINTS.placements.create,data),
     update : (params) => httpclinet.update(HTTP_END_POINTS.placements.update ,params),
+    delete : (data) => httpclinet.delete(HTTP_END_POINTS.placements.delete + data),
     getById : (params) => httpclinet.get(HTTP_END_POINTS.placements.getById,params)
   };
 }
