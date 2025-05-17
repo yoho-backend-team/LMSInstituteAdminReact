@@ -17,7 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router';
+import { Navigate, useLocation, useNavigate } from 'react-router';
 import * as yup from 'yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -55,10 +55,12 @@ const StepperLinearWithValidation = () => {
     email: yup.string().email().required('Email is required'),
     phone_no: yup
       .string()
+      .trim()
       .required('Phone No. is required')
       .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
     alternate_number: yup
       .string()
+      .trim()
       .required('Alternate Phone No. is required')
       .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
     state: yup
@@ -89,6 +91,7 @@ const StepperLinearWithValidation = () => {
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const data = {
@@ -136,6 +139,7 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
+  console.log('student edit form error : ', personalErrors);
 
   useEffect(() => {
     if (studentData) {
@@ -161,8 +165,8 @@ const StepperLinearWithValidation = () => {
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
-      setValue('phone_no', contact_info.phone_number?.slice(3) || '');
-      setValue('alternate_number', contact_info?.alternate_phone_number?.slice(3) || '');
+      setValue('phone_no', contact_info.phone_number?.slice(3).trim() || '');
+      setValue('alternate_number', contact_info?.alternate_phone_number?.slice(3).trim() || '');
       setValue('state', contact_info.state || '');
       setValue('city', contact_info.city || '');
       setValue('pincode', contact_info.pincode || '');
@@ -268,6 +272,7 @@ const StepperLinearWithValidation = () => {
     }
     console.log('updating data fields:', new_user_data);
     const result = await updateStudent(new_user_data);
+    navigate(-1);
 
     if (result.success) {
       toast.success(result.message);
